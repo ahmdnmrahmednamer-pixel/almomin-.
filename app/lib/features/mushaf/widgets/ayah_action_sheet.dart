@@ -5,8 +5,10 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/models/surah.dart';
 import '../../../core/models/ayah.dart';
 import '../../../core/services/settings_service.dart';
+import '../../../core/services/ayah_notes_service.dart';
 import '../../../core/audio/ayah_audio_player.dart';
 import 'tafsir_viewer_sheet.dart';
+import 'ayah_note_edit_dialog.dart';
 
 class AyahActionSheet extends StatelessWidget {
   final Surah surah;
@@ -181,6 +183,7 @@ class AyahActionSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isBookmarked = SettingsService.instance.isBookmarked(surah.id, ayah.ayahNumber);
+    final hasNote = AyahNotesService.instance.hasNote(surah.id, ayah.ayahNumber);
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -272,6 +275,15 @@ class AyahActionSheet extends StatelessWidget {
                         SnackBar(content: Text(added ? 'تمت إضافة الآية للمفضلة والمرجعيات' : 'تم حذف الآية من المرجعيات')),
                       );
                     }
+                  },
+                ),
+                _buildActionButton(
+                  icon: hasNote ? Icons.rate_review : Icons.rate_review_outlined,
+                  label: hasNote ? 'تعديل الخاطرة' : 'تدبر وخاطرة',
+                  color: hasNote ? AppColors.accentGold : AppColors.primaryGreen,
+                  onTap: () {
+                    Navigator.pop(context);
+                    AyahNoteEditDialog.show(context, surah: surah, ayah: ayah);
                   },
                 ),
                 _buildActionButton(

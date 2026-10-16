@@ -17,6 +17,7 @@ import '../features/onboarding/onboarding_screen.dart';
 import '../features/backup/backup_restore_screen.dart';
 import '../features/prayer/prayer_tracker_screen.dart';
 import '../features/audio/downloads_manager_screen.dart';
+import '../features/mushaf/quran_notes_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -105,6 +106,7 @@ final GoRouter appRouter = GoRouter(
         GoRoute(path: '/backup', builder: (context, state) => const BackupRestoreScreen()),
         GoRoute(path: '/prayer-tracker', builder: (context, state) => const PrayerTrackerScreen()),
         GoRoute(path: '/downloads', builder: (context, state) => const DownloadsManagerScreen()),
+        GoRoute(path: '/notes', builder: (context, state) => const QuranNotesScreen()),
         GoRoute(
           path: '/search',
           builder: (context, state) {

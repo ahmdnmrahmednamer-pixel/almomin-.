@@ -15,6 +15,8 @@ import '../prayer/hijri_calendar_screen.dart';
 import '../../core/services/khatma_service.dart';
 import '../khatma/khatma_screen.dart';
 import '../onboarding/onboarding_screen.dart';
+import '../../core/services/ayah_notes_service.dart';
+import '../mushaf/quran_notes_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -574,6 +576,42 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     },
                   ),
+                ),
+                const SizedBox(height: 12),
+
+                // Quranic Reflections & Notes Card (FR-BKM-004 / T-110)
+                AnimatedBuilder(
+                  animation: AyahNotesService.instance,
+                  builder: (context, _) {
+                    final count = AyahNotesService.instance.notesCount;
+                    return Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        leading: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryGreen.withOpacity(0.12),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.rate_review_rounded, color: AppColors.primaryGreen, size: 28),
+                        ),
+                        title: const Text('تدبراتي وخواطري القرآنية', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        subtitle: Text(
+                          count > 0 ? '$count خاطرة وتدبر مسجل على آيات الذكر الحكيم' : 'دوّن ما يفيض به قلبك من تدبرات الآيات',
+                          style: const TextStyle(fontSize: 13, color: AppColors.mutedText),
+                        ),
+                        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const QuranNotesScreen()),
+                          );
+                        },
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 12),
 
