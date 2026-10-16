@@ -6,6 +6,8 @@ import '../../core/notifications/prayer_notification_service.dart';
 import 'qibla_compass_screen.dart';
 import 'hijri_calendar_screen.dart';
 import 'battery_reliability_screen.dart';
+import 'prayer_tracker_screen.dart';
+import '../../core/services/prayer_tracker_service.dart';
 
 class PrayerScreen extends StatefulWidget {
   const PrayerScreen({super.key});
@@ -20,6 +22,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
     super.initState();
     PrayerService.instance.init();
     PrayerNotificationService.instance.init();
+    PrayerTrackerService.instance.init();
   }
 
   void _showCityPicker(BuildContext context) {
@@ -451,6 +454,83 @@ class _PrayerScreenState extends State<PrayerScreen> {
                 else
                   const Center(child: Padding(padding: EdgeInsets.all(20), child: CircularProgressIndicator())),
 
+                const SizedBox(height: 12),
+
+                // Prayer Tracker & Sunan Rawatib Card (FR-PRY-009)
+                AnimatedBuilder(
+                  animation: PrayerTrackerService.instance,
+                  builder: (context, _) {
+                    final todayRecord = PrayerTrackerService.instance.todayRecord;
+                    return Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(16),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const PrayerTrackerScreen()),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.primaryGreen.withOpacity(0.12),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: const Icon(Icons.fact_check_outlined, color: AppColors.primaryGreen, size: 22),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      const Text(
+                                        'سجل متابعة الصلوات والسنن (FR-PRY-009)',
+                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.5),
+                                      ),
+                                    ],
+                                  ),
+                                  const Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.primaryGreen),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'الصلوات المنجزة: ${todayRecord.completedObligatoryCount} من 5',
+                                    style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    'السنن الرواتب: ${todayRecord.completedRawatibRakats} / 12 ركعة',
+                                    style: const TextStyle(fontSize: 12.5, color: AppColors.accentGold, fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(4),
+                                child: LinearProgressIndicator(
+                                  value: todayRecord.completedObligatoryCount / 5.0,
+                                  minHeight: 6,
+                                  backgroundColor: Colors.grey.shade200,
+                                  valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primaryGreen),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
                 const SizedBox(height: 12),
 
                 // Qibla Direction Card (Interactive Link to Compass)

@@ -321,7 +321,7 @@ class SettingsScreen extends StatelessWidget {
               Text('عن تطبيق المؤمن', style: TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),
-          content: const Column(
+          content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

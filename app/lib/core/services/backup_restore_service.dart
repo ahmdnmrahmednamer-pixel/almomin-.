@@ -8,6 +8,7 @@ import 'settings_service.dart';
 import 'khatma_service.dart';
 import 'adhkar_service.dart';
 import 'prayer_service.dart';
+import 'prayer_tracker_service.dart';
 
 /// Result of validating a backup JSON payload
 class BackupValidationResult {
@@ -99,6 +100,14 @@ class BackupRestoreService {
       'last_city': prefs.getString('last_city') ?? 'القاهرة، مصر',
     };
 
+    final prayerTrackerJson = prefs.getString('prayer_tracker_records_v1');
+    Map<String, dynamic>? prayerTrackerData;
+    if (prayerTrackerJson != null && prayerTrackerJson.isNotEmpty) {
+      try {
+        prayerTrackerData = json.decode(prayerTrackerJson);
+      } catch (_) {}
+    }
+
     final dataPayload = {
       'settings': settings,
       'reading_position': readingPosition,
@@ -106,6 +115,7 @@ class BackupRestoreService {
       'khatma': khatmaData,
       'adhkar': adhkar,
       'location': location,
+      'prayer_tracker': prayerTrackerData,
     };
 
     final dataCanonical = json.encode(dataPayload);
@@ -375,11 +385,31 @@ class BackupRestoreService {
         }
       }
 
-      // 7. Refresh all active in-memory singletons
+      // 7. Prayer Tracker Records
+      final trackerData = data['prayer_tracker'] as Map<String, dynamic>?;
+      if (trackerData != null) {
+        if (replaceMode) {
+          await prefs.setString('prayer_tracker_records_v1', json.encode(trackerData));
+        } else {
+          final curJson = prefs.getString('prayer_tracker_records_v1');
+          if (curJson == null || curJson.isEmpty) {
+            await prefs.setString('prayer_tracker_records_v1', json.encode(trackerData));
+          } else {
+            try {
+              final cur = json.decode(curJson) as Map<String, dynamic>;
+              cur.addAll(trackerData);
+              await prefs.setString('prayer_tracker_records_v1', json.encode(cur));
+            } catch (_) {}
+          }
+        }
+      }
+
+      // 8. Refresh all active in-memory singletons
       await SettingsService.instance.init();
       await KhatmaService.instance.init();
       await AdhkarService.instance.init();
       await PrayerService.instance.init();
+      await PrayerTrackerService.instance.init();
 
       return true;
     } catch (e) {

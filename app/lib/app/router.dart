@@ -15,6 +15,7 @@ import '../features/khatma/khatma_screen.dart';
 import '../features/search/quran_search_screen.dart';
 import '../features/onboarding/onboarding_screen.dart';
 import '../features/backup/backup_restore_screen.dart';
+import '../features/prayer/prayer_tracker_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -101,6 +102,7 @@ final GoRouter appRouter = GoRouter(
         GoRoute(path: '/khatma', builder: (context, state) => const KhatmaScreen()),
         GoRoute(path: '/battery-guide', builder: (context, state) => const BatteryReliabilityScreen()),
         GoRoute(path: '/backup', builder: (context, state) => const BackupRestoreScreen()),
+        GoRoute(path: '/prayer-tracker', builder: (context, state) => const PrayerTrackerScreen()),
         GoRoute(
           path: '/search',
           builder: (context, state) {
