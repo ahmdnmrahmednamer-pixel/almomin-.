@@ -8,6 +8,7 @@ import 'hijri_calendar_screen.dart';
 import 'battery_reliability_screen.dart';
 import 'prayer_tracker_screen.dart';
 import '../../core/services/prayer_tracker_service.dart';
+import '../zakat/zakat_screen.dart';
 
 class PrayerScreen extends StatefulWidget {
   const PrayerScreen({super.key});
@@ -581,6 +582,64 @@ class _PrayerScreenState extends State<PrayerScreen> {
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(Icons.explore, color: AppColors.primaryGreen, size: 30),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // Islamic Zakat Calculator Card (FR-ZKT)
+                Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(16),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const ZakatScreen()),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Text('حاسبة الزكاة الشرعية الذكية', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                                    const SizedBox(width: 8),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.primaryGreen.withOpacity(0.12),
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: const Text('ركن الإسلام 💰', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.primaryGreen)),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                const Text(
+                                  'حساب زكاة المال والذهب والفضة والتجارة وفق النصاب الشرعي',
+                                  style: TextStyle(fontSize: 12, color: AppColors.mutedText),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: AppColors.accentGold.withOpacity(0.2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.calculate_outlined, color: AppColors.primaryGreen, size: 28),
                           ),
                         ],
                       ),

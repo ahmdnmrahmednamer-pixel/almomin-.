@@ -11,6 +11,7 @@ import 'prayer_service.dart';
 import 'prayer_tracker_service.dart';
 import 'ayah_notes_service.dart';
 import 'memorization_service.dart';
+import 'zakat_service.dart';
 
 /// Result of validating a backup JSON payload
 class BackupValidationResult {
@@ -124,6 +125,7 @@ class BackupRestoreService {
       'prayer_tracker': prayerTrackerData,
       'ayah_notes': AyahNotesService.instance.exportNotesList(),
       'memorization_items': MemorizationService.instance.exportData(),
+      'zakat_calculation': ZakatService.instance.exportData(),
     };
 
     final dataCanonical = json.encode(dataPayload);
@@ -428,7 +430,13 @@ class BackupRestoreService {
         await MemorizationService.instance.importData(importedMem, merge: !replaceMode);
       }
 
-      // 10. Refresh all active in-memory singletons
+      // 10. Islamic Zakat Calculation (FR-ZKT)
+      final importedZakat = data['zakat_calculation'] as Map<String, dynamic>?;
+      if (importedZakat != null) {
+        await ZakatService.instance.importData(importedZakat);
+      }
+
+      // 11. Refresh all active in-memory singletons
       await SettingsService.instance.init();
       await KhatmaService.instance.init();
       await AdhkarService.instance.init();
@@ -436,6 +444,7 @@ class BackupRestoreService {
       await PrayerTrackerService.instance.init();
       await AyahNotesService.instance.init();
       await MemorizationService.instance.init();
+      await ZakatService.instance.init();
 
       return true;
     } catch (e) {

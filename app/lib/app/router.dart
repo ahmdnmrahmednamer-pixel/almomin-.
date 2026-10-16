@@ -19,6 +19,7 @@ import '../features/prayer/prayer_tracker_screen.dart';
 import '../features/audio/downloads_manager_screen.dart';
 import '../features/mushaf/quran_notes_screen.dart';
 import '../features/mushaf/memorization_screen.dart';
+import '../features/zakat/zakat_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -121,6 +122,7 @@ final GoRouter appRouter = GoRouter(
             );
           },
         ),
+        GoRoute(path: '/zakat', builder: (context, state) => const ZakatScreen()),
         GoRoute(
           path: '/search',
           builder: (context, state) {

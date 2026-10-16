@@ -19,6 +19,8 @@ import '../../core/services/ayah_notes_service.dart';
 import '../mushaf/quran_notes_screen.dart';
 import '../../core/services/memorization_service.dart';
 import '../mushaf/memorization_screen.dart';
+import '../../core/services/zakat_service.dart';
+import '../zakat/zakat_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -35,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
     SettingsService.instance.init();
     KhatmaService.instance.init();
     MemorizationService.instance.init();
+    ZakatService.instance.init();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!SettingsService.instance.hasCompletedOnboarding && mounted) {
@@ -707,6 +710,33 @@ class _HomeScreenState extends State<HomeScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const QiblaCompassScreen()),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // Islamic Zakat Calculator Shortcut (FR-ZKT)
+                Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    leading: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryGreen.withOpacity(0.12),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.calculate_outlined, color: AppColors.primaryGreen, size: 28),
+                    ),
+                    title: const Text('حاسبة الزكاة الشرعية الذكية', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                    subtitle: const Text('حساب زكاة المال والذهب والفضة والتجارة وفق النصاب'),
+                    trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ZakatScreen()),
                       );
                     },
                   ),
