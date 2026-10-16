@@ -4,6 +4,7 @@ import '../../core/services/settings_service.dart';
 import '../../core/services/prayer_service.dart';
 import '../prayer/battery_reliability_screen.dart';
 import '../onboarding/onboarding_screen.dart';
+import '../backup/backup_restore_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -468,6 +469,19 @@ class SettingsScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+                    );
+                  },
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(Icons.backup_rounded, color: AppColors.primaryGreen),
+                  title: const Text('النسخ الاحتياطي والاستعادة (FR-BKM-003)', style: TextStyle(fontWeight: FontWeight.w600)),
+                  subtitle: const Text('حفظ واسترجاع العلامات المرجعية والختمة والإعدادات', style: TextStyle(color: AppColors.secondaryGreen)),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 14),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const BackupRestoreScreen()),
                     );
                   },
                 ),
