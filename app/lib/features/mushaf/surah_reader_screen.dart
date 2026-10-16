@@ -9,6 +9,7 @@ import '../../core/services/settings_service.dart';
 import '../../core/audio/ayah_audio_player.dart';
 import 'widgets/ayah_action_sheet.dart';
 import 'page_mode_mushaf_screen.dart';
+import '../../core/services/khatma_service.dart';
 
 class AyahGestureRecognizer extends PrimaryPointerGestureRecognizer {
   VoidCallback? onTap;
@@ -81,6 +82,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
       pageNumber: widget.surah.pageStart,
       surahName: widget.surah.nameAr,
     );
+    KhatmaService.instance.updateProgress(widget.surah.pageStart);
   }
 
   @override

@@ -6,6 +6,7 @@ import '../../../core/models/surah.dart';
 import '../../../core/models/ayah.dart';
 import '../../../core/services/settings_service.dart';
 import '../../../core/audio/ayah_audio_player.dart';
+import 'tafsir_viewer_sheet.dart';
 
 class AyahActionSheet extends StatelessWidget {
   final Surah surah;
@@ -43,86 +44,7 @@ class AyahActionSheet extends StatelessWidget {
 
   void _showTafseer(BuildContext context) {
     Navigator.pop(context);
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (ctx) {
-        return Directionality(
-          textDirection: TextDirection.rtl,
-          child: DraggableScrollableSheet(
-            initialChildSize: 0.6,
-            minChildSize: 0.4,
-            maxChildSize: 0.9,
-            expand: false,
-            builder: (ctx, scrollController) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                child: ListView(
-                  controller: scrollController,
-                  children: [
-                    Center(
-                      child: Container(
-                        width: 40,
-                        height: 4,
-                        margin: const EdgeInsets.only(bottom: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'التفسير الميسر — سورة ${surah.nameAr}',
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryGreen),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: AppColors.accentGold.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text('الآية ${ayah.ayahNumber}', style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primaryGreen)),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryGreen.withOpacity(0.06),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.accentGold.withOpacity(0.5)),
-                      ),
-                      child: Text(
-                        ayah.textUthmani,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 18, height: 1.9, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    const Text('بيان المعنى والتفسير:', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.secondaryGreen)),
-                    const SizedBox(height: 8),
-                    Text(
-                      ayah.tafseer != null && ayah.tafseer!.isNotEmpty
-                          ? ayah.tafseer!
-                          : 'التفسير الميسر صادر عن مجمع الملك فهد لطباعة المصحف الشريف.',
-                      style: const TextStyle(fontSize: 16, height: 1.8),
-                    ),
-                    const SizedBox(height: 24),
-                  ],
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
+    TafsirViewerSheet.show(context, surah: surah, ayah: ayah);
   }
 
   void _showIrab(BuildContext context) {

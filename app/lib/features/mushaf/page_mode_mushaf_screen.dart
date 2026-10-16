@@ -3,6 +3,7 @@ import '../../core/models/ayah.dart';
 import '../../core/models/surah.dart';
 import '../../core/services/quran_repository.dart';
 import '../../core/services/settings_service.dart';
+import '../../core/services/khatma_service.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/audio/ayah_audio_player.dart';
 import 'widgets/ayah_action_sheet.dart';
@@ -51,6 +52,7 @@ class _PageModeMushafScreenState extends State<PageModeMushafScreen> {
         pageNumber: _currentPage,
         surahName: meta.surahName,
       );
+      KhatmaService.instance.updateProgress(_currentPage);
     }
   }
 

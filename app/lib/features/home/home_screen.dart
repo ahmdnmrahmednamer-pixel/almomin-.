@@ -12,6 +12,8 @@ import '../adhkar/adhkar_screen.dart';
 import '../adhkar/tasbih_screen.dart';
 import '../prayer/qibla_compass_screen.dart';
 import '../prayer/hijri_calendar_screen.dart';
+import '../../core/services/khatma_service.dart';
+import '../khatma/khatma_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     PrayerService.instance.init();
     SettingsService.instance.init();
+    KhatmaService.instance.init();
   }
 
   @override
@@ -49,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Directionality(
         textDirection: TextDirection.rtl,
         child: AnimatedBuilder(
-          animation: Listenable.merge([PrayerService.instance, SettingsService.instance]),
+          animation: Listenable.merge([PrayerService.instance, SettingsService.instance, KhatmaService.instance]),
           builder: (context, _) {
             final prayerData = PrayerService.instance.currentData;
             final dayName = HijriDateHelper.getDayOfWeek();
@@ -379,6 +382,88 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           );
                         },
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 12),
+
+                // Khatma Planner Card (Appendix C)
+                AnimatedBuilder(
+                  animation: KhatmaService.instance,
+                  builder: (context, _) {
+                    final plan = KhatmaService.instance.activePlan;
+                    final hasPlan = KhatmaService.instance.hasActivePlan;
+
+                    return Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(16),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const KhatmaScreen()),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: AppColors.accentGold.withOpacity(0.2),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(Icons.auto_stories_rounded, color: AppColors.primaryGreen, size: 28),
+                              ),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          hasPlan ? plan!.title : 'مخطط الختمات والورد اليومي',
+                                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                                        ),
+                                        if (hasPlan)
+                                          Text(
+                                            '${(plan!.progressPercentage * 100).toInt()}%',
+                                            style: const TextStyle(color: AppColors.primaryGreen, fontWeight: FontWeight.bold, fontSize: 13),
+                                          ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      hasPlan
+                                          ? 'ورد اليوم: صفحة ${plan!.currentPage} إلى ${(plan.currentPage + plan.pagesPerDay).clamp(1, 604)}'
+                                          : 'ابدأ خطتك لختم القرآن الكريم في ٣٠ أو ٦٠ يوماً مع تتبع الإنجاز',
+                                      style: const TextStyle(fontSize: 12.5, color: AppColors.mutedText),
+                                    ),
+                                    if (hasPlan) ...[
+                                      const SizedBox(height: 8),
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(4),
+                                        child: LinearProgressIndicator(
+                                          value: plan!.progressPercentage,
+                                          backgroundColor: Colors.grey.withOpacity(0.2),
+                                          valueColor: const AlwaysStoppedAnimation<Color>(AppColors.accentGold),
+                                          minHeight: 6,
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              const Icon(Icons.arrow_forward_ios, size: 16),
+                            ],
+                          ),
+                        ),
                       ),
                     );
                   },

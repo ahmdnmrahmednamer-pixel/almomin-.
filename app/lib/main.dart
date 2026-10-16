@@ -6,12 +6,14 @@ import 'core/services/settings_service.dart';
 import 'core/services/prayer_service.dart';
 import 'core/services/adhkar_service.dart';
 import 'core/notifications/prayer_notification_service.dart';
+import 'core/services/khatma_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SettingsService.instance.init();
   PrayerService.instance.init();
   await AdhkarService.instance.init();
+  await KhatmaService.instance.init();
   await PrayerNotificationService.instance.init();
   runApp(
     const ProviderScope(
