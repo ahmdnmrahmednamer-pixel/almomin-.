@@ -318,6 +318,9 @@ class SettingsService extends ChangeNotifier {
   bool _hasCompletedOnboarding = false;
   bool get hasCompletedOnboarding => _hasCompletedOnboarding;
 
+  bool _showTutorialScreens = true;
+  bool get showTutorialScreens => _showTutorialScreens;
+
   bool _screenReaderOptimized = false;
   bool get screenReaderOptimized => _screenReaderOptimized;
 
@@ -331,6 +334,7 @@ class SettingsService extends ChangeNotifier {
   Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
     _hasCompletedOnboarding = _prefs?.getBool('has_completed_onboarding') ?? false;
+    _showTutorialScreens = _prefs?.getBool('show_tutorial_screens') ?? true;
     _mushafFontSize = _prefs?.getDouble('mushaf_font_size') ?? 24.0;
     _selectedReciterId = _prefs?.getString('selected_reciter_id') ?? 'alafasy';
     _calculationMethod = _prefs?.getString('calculation_method') ?? 'egyptian';
@@ -350,6 +354,12 @@ class SettingsService extends ChangeNotifier {
   Future<void> completeOnboarding() async {
     _hasCompletedOnboarding = true;
     await _prefs?.setBool('has_completed_onboarding', true);
+    notifyListeners();
+  }
+
+  Future<void> setShowTutorialScreens(bool show) async {
+    _showTutorialScreens = show;
+    await _prefs?.setBool('show_tutorial_screens', show);
     notifyListeners();
   }
 

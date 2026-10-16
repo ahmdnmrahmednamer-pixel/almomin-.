@@ -50,8 +50,11 @@ void main() {
       // 1. Verify App Title and Noble Dedication
       expect(find.text('تطبيق المؤمن'), findsOneWidget);
       expect(find.text('مرحباً بك في تطبيق المؤمن'), findsOneWidget);
-      expect(find.textContaining('مؤمن إبراهيم رحمه الله'), findsOneWidget);
+      expect(find.textContaining('مؤمن إبراهيم رحمهُ الله'), findsOneWidget);
       expect(find.textContaining('إهداء وصدقة جارية'), findsOneWidget);
+
+      // Verify Don't Show Again Checkbox
+      expect(find.text('عدم إظهار شاشات شرح البرنامج مرة أخرى'), findsOneWidget);
 
       // 2. Verify Navigation Controls
       expect(find.text('تخطي'), findsOneWidget);
@@ -81,6 +84,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
 
       expect(SettingsService.instance.hasCompletedOnboarding, isTrue);
+      expect(SettingsService.instance.showTutorialScreens, isFalse);
     });
   });
 }

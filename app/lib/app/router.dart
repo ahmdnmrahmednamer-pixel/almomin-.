@@ -25,6 +25,7 @@ import '../features/hadith/hadith_detail_screen.dart';
 import '../features/topics/quran_topics_screen.dart';
 import '../features/topics/topic_detail_screen.dart';
 import '../features/settings/contact_support_screen.dart';
+import '../features/home/momen_duaa_screen.dart';
 import '../core/models/quran_topic.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -85,8 +86,16 @@ class _MainScaffoldState extends State<MainScaffold> {
 
 final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
-  initialLocation: '/home',
+  initialLocation: '/momen-duaa',
   routes: [
+    GoRoute(
+      path: '/momen-duaa',
+      builder: (context, state) => const MomenDuaaScreen(),
+    ),
+    GoRoute(
+      path: '/duaa',
+      builder: (context, state) => const MomenDuaaScreen(),
+    ),
     GoRoute(
       path: '/onboarding',
       builder: (context, state) => const OnboardingScreen(),

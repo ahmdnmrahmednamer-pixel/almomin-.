@@ -21,6 +21,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   double _fontSize = 24.0;
   String _selectedReciterId = 'minshawi_murattal';
   bool _enableNotifications = true;
+  bool _dontShowAgain = true;
 
   @override
   void initState() {
@@ -28,6 +29,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     _fontSize = SettingsService.instance.mushafFontSize;
     _selectedReciterId = SettingsService.instance.selectedReciterId;
     _enableNotifications = SettingsService.instance.adhanAlertsEnabled;
+    _dontShowAgain = !SettingsService.instance.showTutorialScreens;
+    if (!SettingsService.instance.hasCompletedOnboarding) {
+      _dontShowAgain = true; // By default checked so user won't be bothered again unless they uncheck
+    }
   }
 
   @override
@@ -37,6 +42,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Future<void> _finishOnboarding() async {
+    await SettingsService.instance.setShowTutorialScreens(!_dontShowAgain);
     await SettingsService.instance.completeOnboarding();
     await SettingsService.instance.setMushafFontSize(_fontSize);
     await SettingsService.instance.setSelectedReciter(_selectedReciterId);
@@ -109,9 +115,38 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ),
 
+              // Checkbox: Don't show tutorial again
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () => setState(() => _dontShowAgain = !_dontShowAgain),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Checkbox(
+                        value: _dontShowAgain,
+                        activeColor: AppColors.primaryGreen,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        onChanged: (val) => setState(() => _dontShowAgain = val ?? true),
+                      ),
+                      const SizedBox(width: 4),
+                      const Text(
+                        'عدم إظهار شاشات شرح البرنامج مرة أخرى',
+                        style: TextStyle(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.secondaryGreen,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
               // Bottom Navigation & Page Indicator
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -266,7 +301,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
               const SizedBox(height: 12),
               const Text(
-                'صَدَقَةٌ جَارِيَةٌ عَنْ رُوحِ المَرْحُومِ بِإِذْنِ اللَّهِ تَعَالَى:\nمؤمن إبراهيم رحمه الله\n(أسكنه الله فسيح جناته ورضوانه)',
+                'صَدَقَةٌ جَارِيَةٌ عَنْ رُوحِ المَرْحُومِ بِإِذْنِ اللَّهِ تَعَالَى:\nمؤمن إبراهيم رحمهُ الله\n(الله يرحمه ويغفر له ويسكنه فسيح جناته ورضوانه)',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 17,

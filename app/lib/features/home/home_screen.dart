@@ -27,6 +27,7 @@ import '../hadith/hadith_detail_screen.dart';
 import '../../core/services/quran_topic_service.dart';
 import '../topics/quran_topics_screen.dart';
 import '../topics/topic_detail_screen.dart';
+import 'momen_duaa_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -48,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
     QuranTopicService.instance.init();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!SettingsService.instance.hasCompletedOnboarding && mounted) {
+      if (!SettingsService.instance.hasCompletedOnboarding && SettingsService.instance.showTutorialScreens && mounted) {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (_) => const OnboardingScreen()),
@@ -157,40 +158,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 InkWell(
                   borderRadius: BorderRadius.circular(12),
                   onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (ctx) => Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: AlertDialog(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-                          title: const Row(
-                            children: [
-                              Icon(Icons.volunteer_activism_rounded, color: AppColors.accentGold, size: 24),
-                              SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  'دعاء لمؤمن إبراهيم رحمه الله',
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.primaryGreen),
-                                ),
-                              ),
-                            ],
-                          ),
-                          content: const Text(
-                            '«اللَّهُمَّ اغْفِرْ لِعَبْدِكَ مُؤْمِن إِبْرَاهِيم وَارْحَمْهُ، وَعَافِهِ وَاعْفُ عَنْهُ، وَأَكْرِمْ نُزُلَهُ، وَوَسِّعْ مُدْخَلَهُ، وَاغْسِلْهُ بِالْمَاءِ وَالثَّلْجِ وَالْبَرَدِ، وَنَقِّهِ مِنَ الذُّنُوبِ كَمَا يُنَقَّى الثَّوْبُ الأَبْيَضُ مِنَ الدَّنَسِ.\n\nاللَّهُمَّ اجْعَلْ قَبْرَهُ رَوْضَةً مِنْ رِيَاضِ الجَنَّةِ، وَافْسَحْ لَهُ فِيهِ مَدَّ بَصَرِهِ، وَاجْعَلْ كُلَّ آيَةٍ تُتْلَى وَكُلَّ صَلَاةٍ وَتَسْبِيحَةٍ فِي هَذَا التَّطْبِيقِ نُوراً لَهُ فِي قَبْرِهِ وَفِي مِيزَانِ حَسَنَاتِهِ إِلَى يَوْمِ الدِّينِ.. آمِينَ يَا رَبَّ العَالَمِينَ» 🤲',
-                            style: TextStyle(fontSize: 13.5, height: 1.7),
-                          ),
-                          actions: [
-                            ElevatedButton(
-                              onPressed: () => Navigator.pop(ctx),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primaryGreen,
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                              ),
-                              child: const Text('آمِينَ يَا رَبَّ العَالَمِينَ 🤲'),
-                            ),
-                          ],
-                        ),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const MomenDuaaScreen(isFromInsideApp: true),
                       ),
                     );
                   },
@@ -208,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(width: 8),
                         Flexible(
                           child: Text(
-                            'صدقة جارية عن روح المرحوم بإذن الله: مؤمن إبراهيم رحمه الله 🤲 (اضغط للدعاء)',
+                            'صدقة جارية عن روح المرحوم بإذن الله: مؤمن إبراهيم رحمهُ الله (الله يرحمه) 🤲 (اضغط للدعاء)',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,

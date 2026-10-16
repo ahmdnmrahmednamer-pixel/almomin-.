@@ -6,6 +6,7 @@ import '../prayer/battery_reliability_screen.dart';
 import '../onboarding/onboarding_screen.dart';
 import '../backup/backup_restore_screen.dart';
 import 'contact_support_screen.dart';
+import '../home/momen_duaa_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -473,9 +474,33 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 const Divider(height: 1),
                 ListTile(
-                  leading: const Icon(Icons.volunteer_activism, color: AppColors.primaryGreen),
-                  title: const Text('جولة تعريفية وإهداء التطبيق', style: TextStyle(fontWeight: FontWeight.w600)),
-                  subtitle: const Text('صدقة جارية عن مؤمن إبراهيم رحمه الله · شاشة التهيئة الأولى', style: TextStyle(color: AppColors.secondaryGreen)),
+                  leading: const Icon(Icons.volunteer_activism_rounded, color: AppColors.accentGold),
+                  title: const Text('دعاء لمؤمن إبراهيم رحمهُ الله (ثابت عند البدء)', style: TextStyle(fontWeight: FontWeight.w600)),
+                  subtitle: const Text('صدقة جارية عن مؤمن إبراهيم رحمهُ الله (الله يرحمه) · فتح شاشة الإهداء', style: TextStyle(color: AppColors.secondaryGreen)),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 14),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const MomenDuaaScreen(isFromInsideApp: true)),
+                    );
+                  },
+                ),
+                const Divider(height: 1),
+                SwitchListTile(
+                  secondary: const Icon(Icons.menu_book_rounded, color: AppColors.primaryGreen),
+                  title: const Text('إظهار شاشات شرح البرنامج عند الفتح', style: TextStyle(fontWeight: FontWeight.w600)),
+                  subtitle: const Text('التحكم في ظهور الشاشات التعريفية التوجيهية عند تشغيل التطبيق'),
+                  activeColor: AppColors.primaryGreen,
+                  value: SettingsService.instance.showTutorialScreens,
+                  onChanged: (val) {
+                    SettingsService.instance.setShowTutorialScreens(val);
+                  },
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(Icons.help_outline_rounded, color: AppColors.primaryGreen),
+                  title: const Text('عرض شاشات شرح استخدام البرنامج', style: TextStyle(fontWeight: FontWeight.w600)),
+                  subtitle: const Text('شرح ميزات المصحف ومواقيت الصلاة والتنبيهات المخصصة', style: TextStyle(color: AppColors.secondaryGreen)),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 14),
                   onTap: () {
                     Navigator.push(
