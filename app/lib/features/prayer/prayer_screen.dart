@@ -1,0 +1,412 @@
+import 'package:flutter/material.dart';
+import '../../core/theme/app_theme.dart';
+import '../../core/services/prayer_service.dart';
+import '../../core/services/settings_service.dart';
+
+class PrayerScreen extends StatefulWidget {
+  const PrayerScreen({super.key});
+
+  @override
+  State<PrayerScreen> createState() => _PrayerScreenState();
+}
+
+class _PrayerScreenState extends State<PrayerScreen> {
+  @override
+  void initState() {
+    super.initState();
+    PrayerService.instance.init();
+  }
+
+  void _showCityPicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        String filter = '';
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            final cities = PrayerService.famousCities.where((c) {
+              if (filter.isEmpty) return true;
+              return c.name.contains(filter);
+            }).toList();
+
+            return Directionality(
+              textDirection: TextDirection.rtl,
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.75,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                child: Column(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade400,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    const Text(
+                      'اختيار المدينة يدوياً',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryGreen),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      decoration: InputDecoration(
+                        hintText: 'ابحث عن مدينتك (مثل: القاهرة، مكة، دبي...)',
+                        prefixIcon: const Icon(Icons.search, color: AppColors.primaryGreen),
+                        filled: true,
+                        fillColor: AppColors.primaryGreen.withOpacity(0.06),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                      ),
+                      onChanged: (val) {
+                        setModalState(() {
+                          filter = val.trim();
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    Expanded(
+                      child: ListView.separated(
+                        itemCount: cities.length,
+                        separatorBuilder: (_, __) => const Divider(height: 1),
+                        itemBuilder: (context, idx) {
+                          final city = cities[idx];
+                          final isCurrent = PrayerService.instance.currentData?.locationName == city.name;
+                          return ListTile(
+                            leading: Icon(
+                              Icons.location_city,
+                              color: isCurrent ? AppColors.accentGold : AppColors.primaryGreen,
+                            ),
+                            title: Text(
+                              city.name,
+                              style: TextStyle(
+                                fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
+                                color: isCurrent ? AppColors.primaryGreen : null,
+                              ),
+                            ),
+                            trailing: isCurrent
+                                ? const Icon(Icons.check_circle, color: AppColors.accentGold)
+                                : null,
+                            onTap: () async {
+                              await PrayerService.instance.setManualCity(city);
+                              if (ctx.mounted) Navigator.pop(ctx);
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('تم ضبط الموقع على: ${city.name} وتحديث المواقيت'),
+                                    backgroundColor: AppColors.primaryGreen,
+                                  ),
+                                );
+                              }
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('مواقيت الصلاة والقبلة'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.location_city),
+            tooltip: 'اختيار المدينة يدوياً',
+            onPressed: () => _showCityPicker(context),
+          ),
+          IconButton(
+            icon: const Icon(Icons.my_location),
+            tooltip: 'تحديث الموقع عبر GPS',
+            onPressed: () async {
+              final ok = await PrayerService.instance.requestGpsLocation();
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(ok ? 'تم تحديث الموقع ومواقيت الصلاة بنجاح' : (PrayerService.instance.errorMessage ?? 'تعذر تحديث الموقع')),
+                    backgroundColor: ok ? AppColors.primaryGreen : Colors.redAccent,
+                  ),
+                );
+              }
+            },
+          ),
+        ],
+      ),
+      body: Directionality(
+        textDirection: TextDirection.rtl,
+        child: AnimatedBuilder(
+          animation: Listenable.merge([PrayerService.instance, SettingsService.instance]),
+          builder: (context, _) {
+            final data = PrayerService.instance.currentData;
+            final hijriStr = HijriDateHelper.getHijriDateString();
+            final gregStr = HijriDateHelper.getGregorianDateString();
+            final dayStr = HijriDateHelper.getDayOfWeek();
+
+            return ListView(
+              padding: const EdgeInsets.all(16.0),
+              children: [
+                // Hijri and Gregorian Dates Card
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryGreen.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppColors.accentGold.withOpacity(0.6), width: 1.2),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.calendar_month, color: AppColors.primaryGreen, size: 20),
+                          const SizedBox(width: 8),
+                          Text(
+                            dayStr,
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryGreen),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        hijriStr,
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.primaryGreen),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        gregStr,
+                        style: const TextStyle(fontSize: 13, color: AppColors.mutedText),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Location and Method Banner
+                Card(
+                  color: AppColors.primaryGreen,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Icon(Icons.place, color: AppColors.softGold, size: 18),
+                                      const SizedBox(width: 4),
+                                      Expanded(
+                                        child: Text(
+                                          data?.locationName ?? 'جاري تحديد الموقع...',
+                                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    'طريقة الحساب: ${SettingsService.calculationMethods.firstWhere((m) => m['id'] == SettingsService.instance.calculationMethod)['name']}',
+                                    style: const TextStyle(color: AppColors.softGold, fontSize: 11),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                OutlinedButton.icon(
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    side: const BorderSide(color: AppColors.softGold),
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    minimumSize: Size.zero,
+                                  ),
+                                  icon: const Icon(Icons.location_city, size: 14, color: AppColors.softGold),
+                                  label: const Text('تغيير المدينة', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                                  onPressed: () => _showCityPicker(context),
+                                ),
+                                const SizedBox(height: 6),
+                                ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.accentGold,
+                                    foregroundColor: AppColors.primaryGreen,
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    minimumSize: Size.zero,
+                                  ),
+                                  icon: PrayerService.instance.isLoading
+                                      ? const SizedBox(width: 12, height: 12, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.primaryGreen))
+                                      : const Icon(Icons.refresh, size: 14),
+                                  label: const Text('تحديث GPS', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                                  onPressed: PrayerService.instance.isLoading
+                                      ? null
+                                      : () async {
+                                          final ok = await PrayerService.instance.requestGpsLocation();
+                                          if (context.mounted) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(
+                                                content: Text(ok ? 'تم تحديث الإحداثيات عبر GPS' : (PrayerService.instance.errorMessage ?? 'فشل التحديث')),
+                                                backgroundColor: ok ? AppColors.secondaryGreen : Colors.redAccent,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        if (data?.nextPrayer != null) ...[
+                          const Divider(color: Colors.white24, height: 24),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                children: [
+                                  const Text('الصلاة القادمة', style: TextStyle(color: AppColors.softGold, fontSize: 12)),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    data!.nextPrayer!.name,
+                                    style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  const Text('الوقت المتبقي', style: TextStyle(color: AppColors.softGold, fontSize: 12)),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    PrayerService.instance.formatCountdown(data.timeToNextPrayer),
+                                    style: const TextStyle(color: AppColors.accentGold, fontSize: 18, fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Prayers List
+                if (data != null)
+                  ...data.prayers.map((p) {
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      elevation: p.isNext ? 3 : 1,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        side: BorderSide(
+                          color: p.isNext ? AppColors.accentGold : Colors.transparent,
+                          width: p.isNext ? 1.5 : 0,
+                        ),
+                      ),
+                      child: ListTile(
+                        leading: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: p.isNext ? AppColors.accentGold.withOpacity(0.2) : AppColors.primaryGreen.withOpacity(0.08),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.access_time_filled,
+                            color: p.isNext ? AppColors.accentGold : AppColors.primaryGreen,
+                            size: 20,
+                          ),
+                        ),
+                        title: Row(
+                          children: [
+                            Text(p.name, style: TextStyle(fontWeight: p.isNext ? FontWeight.bold : FontWeight.w600)),
+                            if (p.isNext) ...[
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: AppColors.accentGold,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: const Text('القادمة', style: TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.bold)),
+                              ),
+                            ],
+                          ],
+                        ),
+                        trailing: Text(
+                          p.formattedTime,
+                          style: TextStyle(
+                            color: p.isNext ? AppColors.primaryGreen : AppColors.lightText,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    );
+                  })
+                else
+                  const Center(child: Padding(padding: EdgeInsets.all(20), child: CircularProgressIndicator())),
+
+                const SizedBox(height: 12),
+
+                // Qibla Direction Card
+                Card(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('اتجاه القبلة الشريفة', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                            const SizedBox(height: 4),
+                            Text(
+                              '${data?.qiblaDegrees.toStringAsFixed(1) ?? "136.0"}° من جهة الشمال',
+                              style: const TextStyle(color: AppColors.primaryGreen, fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: AppColors.accentGold.withOpacity(0.2),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.explore, color: AppColors.primaryGreen, size: 30),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}

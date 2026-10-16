@@ -1,0 +1,18 @@
+{
+  "@@locale": "ar",
+  "appName": "المؤمن",
+  "tabHome": "الرئيسية",
+  "tabMushaf": "المصحف",
+  "tabAudio": "الاستماع",
+  "tabPrayer": "العبادات",
+  "tabSettings": "الإعدادات",
+  "lastRead": "متابعة القراءة",
+  "nextPrayer": "الصلاة القادمة",
+  "searchQuran": "ابحث في القرآن الكريم...",
+  "surahList": "فهرس السور",
+  "juzList": "الأجزاء",
+  "bookmarks": "العلامات المرجعية",
+  "reciters": "القراء",
+  "download": "تحميل",
+  "offlineReady": "يعمل بالكامل بدون إنترنت"
+}

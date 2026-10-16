@@ -1,0 +1,80 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../features/home/home_screen.dart';
+import '../features/mushaf/mushaf_screen.dart';
+import '../features/audio/audio_screen.dart';
+import '../features/prayer/prayer_screen.dart';
+import '../features/settings/settings_screen.dart';
+
+final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
+
+class MainScaffold extends StatefulWidget {
+  final Widget child;
+  const MainScaffold({super.key, required this.child});
+
+  @override
+  State<MainScaffold> createState() => _MainScaffoldState();
+}
+
+class _MainScaffoldState extends State<MainScaffold> {
+  int _currentIndex = 0;
+
+  void _onItemTapped(int index, BuildContext context) {
+    setState(() => _currentIndex = index);
+    switch (index) {
+      case 0:
+        context.go('/home');
+        break;
+      case 1:
+        context.go('/mushaf');
+        break;
+      case 2:
+        context.go('/audio');
+        break;
+      case 3:
+        context.go('/prayer');
+        break;
+      case 4:
+        context.go('/settings');
+        break;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: widget.child,
+      bottomNavigationBar: Directionality(
+        textDirection: TextDirection.rtl,
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) => _onItemTapped(index, context),
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'الرئيسية'),
+            BottomNavigationBarItem(icon: Icon(Icons.menu_book_outlined), activeIcon: Icon(Icons.menu_book), label: 'المصحف'),
+            BottomNavigationBarItem(icon: Icon(Icons.headphones_outlined), activeIcon: Icon(Icons.headphones), label: 'الاستماع'),
+            BottomNavigationBarItem(icon: Icon(Icons.access_time_outlined), activeIcon: Icon(Icons.access_time_filled), label: 'العبادات'),
+            BottomNavigationBarItem(icon: Icon(Icons.settings_outlined), activeIcon: Icon(Icons.settings), label: 'الإعدادات'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+final GoRouter appRouter = GoRouter(
+  navigatorKey: _rootNavigatorKey,
+  initialLocation: '/home',
+  routes: [
+    ShellRoute(
+      builder: (context, state, child) => MainScaffold(child: child),
+      routes: [
+        GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
+        GoRoute(path: '/mushaf', builder: (context, state) => const MushafScreen()),
+        GoRoute(path: '/audio', builder: (context, state) => const AudioScreen()),
+        GoRoute(path: '/prayer', builder: (context, state) => const PrayerScreen()),
+        GoRoute(path: '/settings', builder: (context, state) => const SettingsScreen()),
+      ],
+    ),
+  ],
+);

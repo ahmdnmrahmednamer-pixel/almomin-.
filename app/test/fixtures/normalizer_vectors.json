@@ -1,0 +1,37 @@
+[
+  {
+    "input": "الرَّحْمَٰنِ",
+    "expected_loose": "الرحمن",
+    "description": "Dagger alef and tashkeel removal on Ar-Rahman"
+  },
+  {
+    "input": "ٱللَّهُ",
+    "expected_loose": "الله",
+    "description": "Alef wasla and shadda on Allah"
+  },
+  {
+    "input": "مُوسَىٰ",
+    "expected_loose": "موسي",
+    "description": "Alef maqsura to ya on Musa"
+  },
+  {
+    "input": "رَحْمَةً",
+    "expected_loose": "رحمه",
+    "description": "Ta marbuta to ha with tanween"
+  },
+  {
+    "input": "ءَايَةٌ",
+    "expected_loose": "ءايه",
+    "description": "Ayah with separate hamza and ta marbuta"
+  },
+  {
+    "input": "مُؤْمِنٌ",
+    "expected_loose": "مومن",
+    "description": "Waw with hamza normalized to waw"
+  },
+  {
+    "input": "سورة البقرة ٢٥٥",
+    "expected_loose": "سوره البقره 255",
+    "description": "Arabic-Indic digits and ta marbuta conversion"
+  }
+]

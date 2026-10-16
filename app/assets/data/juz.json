@@ -1,0 +1,212 @@
+[
+  {
+    "id": 1,
+    "start_surah": 1,
+    "start_ayah": 1,
+    "page_start": 1,
+    "name_ar": "الم"
+  },
+  {
+    "id": 2,
+    "start_surah": 2,
+    "start_ayah": 142,
+    "page_start": 22,
+    "name_ar": "سيقول السفهاء"
+  },
+  {
+    "id": 3,
+    "start_surah": 2,
+    "start_ayah": 253,
+    "page_start": 42,
+    "name_ar": "تلك الرسل"
+  },
+  {
+    "id": 4,
+    "start_surah": 3,
+    "start_ayah": 93,
+    "page_start": 62,
+    "name_ar": "لن تنالوا البر"
+  },
+  {
+    "id": 5,
+    "start_surah": 4,
+    "start_ayah": 24,
+    "page_start": 82,
+    "name_ar": "والمحصنات"
+  },
+  {
+    "id": 6,
+    "start_surah": 4,
+    "start_ayah": 148,
+    "page_start": 102,
+    "name_ar": "لا يحب الله"
+  },
+  {
+    "id": 7,
+    "start_surah": 5,
+    "start_ayah": 82,
+    "page_start": 121,
+    "name_ar": "وإذا سمعوا"
+  },
+  {
+    "id": 8,
+    "start_surah": 6,
+    "start_ayah": 111,
+    "page_start": 142,
+    "name_ar": "ولو أننا نزلنا"
+  },
+  {
+    "id": 9,
+    "start_surah": 7,
+    "start_ayah": 88,
+    "page_start": 162,
+    "name_ar": "قال الملأ"
+  },
+  {
+    "id": 10,
+    "start_surah": 8,
+    "start_ayah": 41,
+    "page_start": 182,
+    "name_ar": "واعلموا أنما"
+  },
+  {
+    "id": 11,
+    "start_surah": 9,
+    "start_ayah": 93,
+    "page_start": 201,
+    "name_ar": "يعتذرون إليكم"
+  },
+  {
+    "id": 12,
+    "start_surah": 11,
+    "start_ayah": 6,
+    "page_start": 222,
+    "name_ar": "وما من دابة"
+  },
+  {
+    "id": 13,
+    "start_surah": 12,
+    "start_ayah": 53,
+    "page_start": 242,
+    "name_ar": "وما أبرئ نفسي"
+  },
+  {
+    "id": 14,
+    "start_surah": 15,
+    "start_ayah": 1,
+    "page_start": 262,
+    "name_ar": "ربما يود"
+  },
+  {
+    "id": 15,
+    "start_surah": 17,
+    "start_ayah": 1,
+    "page_start": 282,
+    "name_ar": "سبحان الذي أسرى"
+  },
+  {
+    "id": 16,
+    "start_surah": 18,
+    "start_ayah": 75,
+    "page_start": 302,
+    "name_ar": "قال ألم أقل لك"
+  },
+  {
+    "id": 17,
+    "start_surah": 21,
+    "start_ayah": 1,
+    "page_start": 322,
+    "name_ar": "اقترب للناس"
+  },
+  {
+    "id": 18,
+    "start_surah": 23,
+    "start_ayah": 1,
+    "page_start": 342,
+    "name_ar": "قد أفلح المؤمنون"
+  },
+  {
+    "id": 19,
+    "start_surah": 25,
+    "start_ayah": 21,
+    "page_start": 362,
+    "name_ar": "وقال الذين لا يرجون"
+  },
+  {
+    "id": 20,
+    "start_surah": 27,
+    "start_ayah": 56,
+    "page_start": 382,
+    "name_ar": "فما كان جواب قومه"
+  },
+  {
+    "id": 21,
+    "start_surah": 29,
+    "start_ayah": 46,
+    "page_start": 402,
+    "name_ar": "ولا تجادلوا"
+  },
+  {
+    "id": 22,
+    "start_surah": 33,
+    "start_ayah": 31,
+    "page_start": 422,
+    "name_ar": "ومن يقنت"
+  },
+  {
+    "id": 23,
+    "start_surah": 36,
+    "start_ayah": 28,
+    "page_start": 442,
+    "name_ar": "وما أنزلنا"
+  },
+  {
+    "id": 24,
+    "start_surah": 39,
+    "start_ayah": 32,
+    "page_start": 462,
+    "name_ar": "فمن أظلم"
+  },
+  {
+    "id": 25,
+    "start_surah": 41,
+    "start_ayah": 47,
+    "page_start": 482,
+    "name_ar": "إليه يرد علم الساعة"
+  },
+  {
+    "id": 26,
+    "start_surah": 46,
+    "start_ayah": 1,
+    "page_start": 502,
+    "name_ar": "حم"
+  },
+  {
+    "id": 27,
+    "start_surah": 51,
+    "start_ayah": 31,
+    "page_start": 522,
+    "name_ar": "قال فما خطبكم"
+  },
+  {
+    "id": 28,
+    "start_surah": 58,
+    "start_ayah": 1,
+    "page_start": 542,
+    "name_ar": "قد سمع الله"
+  },
+  {
+    "id": 29,
+    "start_surah": 67,
+    "start_ayah": 1,
+    "page_start": 562,
+    "name_ar": "تبارك الذي"
+  },
+  {
+    "id": 30,
+    "start_surah": 78,
+    "start_ayah": 1,
+    "page_start": 582,
+    "name_ar": "عم يتساءلون"
+  }
+]
