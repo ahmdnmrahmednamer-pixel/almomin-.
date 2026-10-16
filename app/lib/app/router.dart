@@ -7,6 +7,8 @@ import '../features/prayer/prayer_screen.dart';
 import '../features/settings/settings_screen.dart';
 import '../features/adhkar/adhkar_screen.dart';
 import '../features/adhkar/tasbih_screen.dart';
+import '../features/prayer/qibla_compass_screen.dart';
+import '../features/prayer/hijri_calendar_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -84,6 +86,8 @@ final GoRouter appRouter = GoRouter(
           },
         ),
         GoRoute(path: '/tasbih', builder: (context, state) => const TasbihScreen()),
+        GoRoute(path: '/qibla', builder: (context, state) => const QiblaCompassScreen()),
+        GoRoute(path: '/calendar', builder: (context, state) => const HijriCalendarScreen()),
       ],
     ),
   ],

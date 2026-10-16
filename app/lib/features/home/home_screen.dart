@@ -8,6 +8,8 @@ import '../prayer/prayer_screen.dart';
 import '../search/quran_search_screen.dart';
 import '../adhkar/adhkar_screen.dart';
 import '../adhkar/tasbih_screen.dart';
+import '../prayer/qibla_compass_screen.dart';
+import '../prayer/hijri_calendar_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -56,50 +58,66 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(16.0),
               children: [
                 // Islamic Header Card with Gregorian & Hijri Dates
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 18),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [AppColors.primaryGreen, AppColors.secondaryGreen],
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
+                InkWell(
+                  borderRadius: BorderRadius.circular(16),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const HijriCalendarScreen()),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 18),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [AppColors.primaryGreen, AppColors.secondaryGreen],
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primaryGreen.withOpacity(0.3),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primaryGreen.withOpacity(0.3),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(Icons.calendar_today, color: AppColors.softGold, size: 18),
-                              const SizedBox(width: 6),
-                              Text(
-                                dayName,
-                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            gregStr,
-                            style: const TextStyle(color: AppColors.softGold, fontSize: 13),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        hijriStr,
-                        style: const TextStyle(color: AppColors.softGold, fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(Icons.calendar_today, color: AppColors.softGold, size: 18),
+                                const SizedBox(width: 6),
+                                Text(
+                                  dayName,
+                                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  gregStr,
+                                  style: const TextStyle(color: AppColors.softGold, fontSize: 13),
+                                ),
+                                const SizedBox(width: 4),
+                                const Icon(Icons.arrow_forward_ios, color: AppColors.softGold, size: 12),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          hijriStr,
+                          style: const TextStyle(color: AppColors.softGold, fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -366,7 +384,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 12),
 
-                // Qibla & Prayers Shortcut
+                // Prayers Shortcut
                 Card(
                   elevation: 2,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -378,15 +396,42 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: AppColors.secondaryGreen.withOpacity(0.1),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.explore, color: AppColors.primaryGreen, size: 28),
+                      child: const Icon(Icons.access_time_filled, color: AppColors.primaryGreen, size: 28),
                     ),
-                    title: const Text('مواقيت الصلاة والقبلة', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                    subtitle: Text(prayerData?.locationName ?? 'تحديد أوقات الصلوات والقبلة الدقيقة عبر GPS'),
+                    title: const Text('مواقيت الصلاة وتنبيهات الأذان', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                    subtitle: Text(prayerData?.locationName ?? 'حساب أوقات الصلوات والتنبيهات الدقيقة بدون إنترنت'),
                     trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const PrayerScreen()),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // Qibla Compass Shortcut
+                Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    leading: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: AppColors.accentGold.withOpacity(0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.explore, color: AppColors.primaryGreen, size: 28),
+                    ),
+                    title: const Text('بوصلة القبلة التفاعلية الحية', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                    subtitle: Text('تحديد اتجاه الكعبة المشرفة بدقة الحساس المغناطيسي (${prayerData?.qiblaDegrees.toStringAsFixed(1) ?? "136.0"}°)'),
+                    trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const QiblaCompassScreen()),
                       );
                     },
                   ),

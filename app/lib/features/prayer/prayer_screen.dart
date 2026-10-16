@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/services/prayer_service.dart';
 import '../../core/services/settings_service.dart';
+import '../../core/notifications/prayer_notification_service.dart';
+import 'qibla_compass_screen.dart';
+import 'hijri_calendar_screen.dart';
 
 class PrayerScreen extends StatefulWidget {
   const PrayerScreen({super.key});
@@ -15,6 +18,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
   void initState() {
     super.initState();
     PrayerService.instance.init();
+    PrayerNotificationService.instance.init();
   }
 
   void _showCityPicker(BuildContext context) {
@@ -128,6 +132,26 @@ class _PrayerScreenState extends State<PrayerScreen> {
         title: const Text('مواقيت الصلاة والقبلة'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.explore),
+            tooltip: 'بوصلة القبلة التفاعلية',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const QiblaCompassScreen()),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.calendar_month),
+            tooltip: 'التقويم الهجري والمناسبات',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const HijriCalendarScreen()),
+              );
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.location_city),
             tooltip: 'اختيار المدينة يدوياً',
             onPressed: () => _showCityPicker(context),
@@ -152,7 +176,11 @@ class _PrayerScreenState extends State<PrayerScreen> {
       body: Directionality(
         textDirection: TextDirection.rtl,
         child: AnimatedBuilder(
-          animation: Listenable.merge([PrayerService.instance, SettingsService.instance]),
+          animation: Listenable.merge([
+            PrayerService.instance,
+            SettingsService.instance,
+            PrayerNotificationService.instance,
+          ]),
           builder: (context, _) {
             final data = PrayerService.instance.currentData;
             final hijriStr = HijriDateHelper.getHijriDateString();
@@ -162,38 +190,70 @@ class _PrayerScreenState extends State<PrayerScreen> {
             return ListView(
               padding: const EdgeInsets.all(16.0),
               children: [
-                // Hijri and Gregorian Dates Card
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryGreen.withOpacity(0.08),
+                // Hijri and Gregorian Dates Card (Interactive link to calendar)
+                Card(
+                  elevation: 1,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  child: InkWell(
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: AppColors.accentGold.withOpacity(0.6), width: 1.2),
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const HijriCalendarScreen()),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryGreen.withOpacity(0.08),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: AppColors.accentGold.withOpacity(0.6), width: 1.2),
+                      ),
+                      child: Column(
                         children: [
-                          const Icon(Icons.calendar_month, color: AppColors.primaryGreen, size: 20),
-                          const SizedBox(width: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(Icons.calendar_month, color: AppColors.primaryGreen, size: 20),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    dayStr,
+                                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryGreen),
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: AppColors.accentGold.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text('المناسبات', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.primaryGreen)),
+                                    SizedBox(width: 2),
+                                    Icon(Icons.arrow_forward_ios, size: 10, color: AppColors.primaryGreen),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 6),
                           Text(
-                            dayStr,
-                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryGreen),
+                            hijriStr,
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.primaryGreen),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            gregStr,
+                            style: const TextStyle(fontSize: 13, color: AppColors.mutedText),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 6),
-                      Text(
-                        hijriStr,
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.primaryGreen),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        gregStr,
-                        style: const TextStyle(fontSize: 13, color: AppColors.mutedText),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -354,13 +414,35 @@ class _PrayerScreenState extends State<PrayerScreen> {
                             ],
                           ],
                         ),
-                        trailing: Text(
-                          p.formattedTime,
-                          style: TextStyle(
-                            color: p.isNext ? AppColors.primaryGreen : AppColors.lightText,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              p.formattedTime,
+                              style: TextStyle(
+                                color: p.isNext ? AppColors.primaryGreen : AppColors.lightText,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            IconButton(
+                              icon: Icon(
+                                PrayerNotificationService.instance.isPrayerEnabled(p.name)
+                                    ? Icons.notifications_active
+                                    : Icons.notifications_off_outlined,
+                                size: 20,
+                                color: PrayerNotificationService.instance.isPrayerEnabled(p.name)
+                                    ? AppColors.accentGold
+                                    : Colors.grey,
+                              ),
+                              tooltip: 'تفعيل/إلغاء التنبيه',
+                              onPressed: () {
+                                final curr = PrayerNotificationService.instance.isPrayerEnabled(p.name);
+                                PrayerNotificationService.instance.togglePrayer(p.name, !curr);
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     );
@@ -370,34 +452,57 @@ class _PrayerScreenState extends State<PrayerScreen> {
 
                 const SizedBox(height: 12),
 
-                // Qibla Direction Card
+                // Qibla Direction Card (Interactive Link to Compass)
                 Card(
+                  elevation: 2,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('اتجاه القبلة الشريفة', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                            const SizedBox(height: 4),
-                            Text(
-                              '${data?.qiblaDegrees.toStringAsFixed(1) ?? "136.0"}° من جهة الشمال',
-                              style: const TextStyle(color: AppColors.primaryGreen, fontWeight: FontWeight.bold, fontSize: 14),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: AppColors.accentGold.withOpacity(0.2),
-                            shape: BoxShape.circle,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(16),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const QiblaCompassScreen()),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Text('اتجاه القبلة الشريفة', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                                  const SizedBox(width: 8),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.accentGold.withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: const Text('بوصلة تفاعلية 🧭', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.primaryGreen)),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${data?.qiblaDegrees.toStringAsFixed(1) ?? "136.0"}° من جهة الشمال (اضغط لفتح البوصلة)',
+                                style: const TextStyle(color: AppColors.primaryGreen, fontWeight: FontWeight.bold, fontSize: 13),
+                              ),
+                            ],
                           ),
-                          child: const Icon(Icons.explore, color: AppColors.primaryGreen, size: 30),
-                        ),
-                      ],
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: AppColors.accentGold.withOpacity(0.2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.explore, color: AppColors.primaryGreen, size: 30),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
