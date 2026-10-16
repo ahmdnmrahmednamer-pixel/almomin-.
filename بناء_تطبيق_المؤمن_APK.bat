@@ -48,16 +48,25 @@ if errorlevel 1 (
     exit /b 1
 )
 
-echo 📋 نسخ الحزم إلى المجلد الرئيسي...
-copy /y "build\app\outputs\flutter-apk\app-arm64-v8a-release.apk" "%~dp0المؤمن_AlMomin_v1.0.0_arm64.apk" > nul
-copy /y "build\app\outputs\flutter-apk\app-armeabi-v7a-release.apk" "%~dp0المؤمن_AlMomin_v1.0.0_arm32.apk" > nul
+echo 📋 تنظيف أي نسخ قديمة ونسخ أحدث إصدار إلى المجلد الرئيسي...
+del /q "%~dp0*v1.0.0*.apk" 2>nul
+del /q "%~dp0*v1.1.0*.apk" 2>nul
+del /q "%~dp0*v1.2.0*.apk" 2>nul
+del /q "%~dp0app-*.apk" 2>nul
+
+if exist "build\app\outputs\flutter-apk\app-release.apk" (
+    copy /y "build\app\outputs\flutter-apk\app-release.apk" "%~dp0المؤمن_AlMomin_Latest.apk" > nul
+) else (
+    copy /y "build\app\outputs\flutter-apk\app-arm64-v8a-release.apk" "%~dp0المؤمن_AlMomin_Latest.apk" > nul
+)
 
 subst X: /D > nul 2>&1
 
 echo.
 echo ======================================================================
-echo 🎉 اكتمل بناء حزم الـ Release بنجاح فائق وتخفيض الحجم بنسبة 75%!
-echo 📱 للهواتف الحديثة (64-bit): D:\برمجة\ططبيق المؤمن\المؤمن_AlMomin_v1.0.0_arm64.apk (حوالي 31 ميجابايت)
-echo 📱 للهواتف القديمة (32-bit): D:\برمجة\ططبيق المؤمن\المؤمن_AlMomin_v1.0.0_arm32.apk (حوالي 29 ميجابايت)
+echo 🎉 اكتمل بناء أحدث نسخة من تطبيق المؤمن بنجاح!
+echo 📱 مسار النسخة الأحدث المعتمدة المباشرة للتثبيت:
+echo    D:\برمجة\ططبيق المؤمن\المؤمن_AlMomin_Latest.apk
+echo 💡 تم تنظيف وحذف كافة الإصدارات القديمة لضمان عدم تثبيت أي نسخة سابقة.
 echo ======================================================================
 pause
