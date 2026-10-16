@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/services/settings_service.dart';
 import '../../core/services/prayer_service.dart';
+import '../prayer/battery_reliability_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -422,6 +423,19 @@ class SettingsScreen extends StatelessWidget {
                   value: SettingsService.instance.adhanAlertsEnabled,
                   onChanged: (val) {
                     SettingsService.instance.toggleAdhanAlerts(val);
+                  },
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(Icons.bolt, color: AppColors.accentGold),
+                  title: const Text('دليل تثبيت الأذان وإعدادات البطارية', style: TextStyle(fontWeight: FontWeight.w600)),
+                  subtitle: const Text('خطوات منع إيقاف الأذان لهواتف شاومي، سامسونج، وهواوي', style: TextStyle(color: AppColors.secondaryGreen)),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 14),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const BatteryReliabilityScreen()),
+                    );
                   },
                 ),
                 const Divider(height: 1),

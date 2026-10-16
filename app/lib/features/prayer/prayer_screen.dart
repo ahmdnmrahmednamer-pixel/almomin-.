@@ -5,6 +5,7 @@ import '../../core/services/settings_service.dart';
 import '../../core/notifications/prayer_notification_service.dart';
 import 'qibla_compass_screen.dart';
 import 'hijri_calendar_screen.dart';
+import 'battery_reliability_screen.dart';
 
 class PrayerScreen extends StatefulWidget {
   const PrayerScreen({super.key});
@@ -501,6 +502,72 @@ class _PrayerScreenState extends State<PrayerScreen> {
                             ),
                             child: const Icon(Icons.explore, color: AppColors.primaryGreen, size: 30),
                           ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // Battery & Adhan Reliability Card (T-404)
+                Card(
+                  elevation: 2,
+                  color: AppColors.primaryGreen.withOpacity(0.04),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: const BorderSide(color: AppColors.accentGold, width: 1.2),
+                  ),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(16),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const BatteryReliabilityScreen()),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: const BoxDecoration(
+                              color: AppColors.primaryGreen,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.bolt, color: AppColors.accentGold, size: 26),
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Text(
+                                      'تثبيت الأذان وضمان التنبيهات',
+                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.5, color: AppColors.primaryGreen),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.accentGold,
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: const Text('مهم جداً ⚡', style: TextStyle(color: Colors.black, fontSize: 9.5, fontWeight: FontWeight.bold)),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                const Text(
+                                  'دليل ضبط إعدادات البطارية لتجاوز قيود شاومي وسامسونج وهواوي',
+                                  style: TextStyle(fontSize: 12, color: AppColors.lightText),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.primaryGreen),
                         ],
                       ),
                     ),

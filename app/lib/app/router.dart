@@ -10,6 +10,7 @@ import '../features/adhkar/adhkar_screen.dart';
 import '../features/adhkar/tasbih_screen.dart';
 import '../features/prayer/qibla_compass_screen.dart';
 import '../features/prayer/hijri_calendar_screen.dart';
+import '../features/prayer/battery_reliability_screen.dart';
 import '../features/khatma/khatma_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -91,6 +92,7 @@ final GoRouter appRouter = GoRouter(
         GoRoute(path: '/qibla', builder: (context, state) => const QiblaCompassScreen()),
         GoRoute(path: '/calendar', builder: (context, state) => const HijriCalendarScreen()),
         GoRoute(path: '/khatma', builder: (context, state) => const KhatmaScreen()),
+        GoRoute(path: '/battery-guide', builder: (context, state) => const BatteryReliabilityScreen()),
         GoRoute(
           path: '/mushaf-pages',
           builder: (context, state) {
