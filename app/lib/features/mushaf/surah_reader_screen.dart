@@ -8,6 +8,7 @@ import '../../core/services/quran_repository.dart';
 import '../../core/services/settings_service.dart';
 import '../../core/audio/ayah_audio_player.dart';
 import 'widgets/ayah_action_sheet.dart';
+import 'page_mode_mushaf_screen.dart';
 
 class AyahGestureRecognizer extends PrimaryPointerGestureRecognizer {
   VoidCallback? onTap;
@@ -74,6 +75,12 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
     super.initState();
     _fontSize = SettingsService.instance.mushafFontSize;
     _ayahsFuture = QuranRepository.getAyahsForSurah(widget.surah.id);
+    SettingsService.instance.saveLastRead(
+      surahId: widget.surah.id,
+      ayahNumber: widget.initialAyah,
+      pageNumber: widget.surah.pageStart,
+      surahName: widget.surah.nameAr,
+    );
   }
 
   @override
@@ -146,6 +153,18 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
       appBar: AppBar(
         title: Text('سورة ${widget.surah.nameAr}'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.auto_stories_rounded),
+            tooltip: 'الانتقال إلى نمط صفحات المصحف (604 صفحات)',
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => PageModeMushafScreen(initialPage: widget.surah.pageStart),
+                ),
+              );
+            },
+          ),
           IconButton(
             icon: Icon(themeIcon),
             tooltip: 'تغيير وضع القراءة (مصحفي / ليلي / نهاري)',

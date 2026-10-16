@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../features/home/home_screen.dart';
 import '../features/mushaf/mushaf_screen.dart';
+import '../features/mushaf/page_mode_mushaf_screen.dart';
 import '../features/audio/audio_screen.dart';
 import '../features/prayer/prayer_screen.dart';
 import '../features/settings/settings_screen.dart';
@@ -88,6 +89,13 @@ final GoRouter appRouter = GoRouter(
         GoRoute(path: '/tasbih', builder: (context, state) => const TasbihScreen()),
         GoRoute(path: '/qibla', builder: (context, state) => const QiblaCompassScreen()),
         GoRoute(path: '/calendar', builder: (context, state) => const HijriCalendarScreen()),
+        GoRoute(
+          path: '/mushaf-pages',
+          builder: (context, state) {
+            final page = int.tryParse(state.uri.queryParameters['page'] ?? '1') ?? 1;
+            return PageModeMushafScreen(initialPage: page);
+          },
+        ),
       ],
     ),
   ],

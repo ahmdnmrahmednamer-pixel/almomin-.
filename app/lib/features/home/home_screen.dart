@@ -4,6 +4,8 @@ import '../../core/services/quran_repository.dart';
 import '../../core/services/prayer_service.dart';
 import '../../core/services/settings_service.dart';
 import '../mushaf/surah_reader_screen.dart';
+import '../mushaf/page_mode_mushaf_screen.dart';
+import '../mushaf/mushaf_screen.dart';
 import '../prayer/prayer_screen.dart';
 import '../search/quran_search_screen.dart';
 import '../adhkar/adhkar_screen.dart';
@@ -327,33 +329,59 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 12),
 
-                // Quran Reading Continue Card
-                Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    leading: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryGreen.withOpacity(0.1),
-                        shape: BoxShape.circle,
+                // Dynamic Quran Reading Continue Card (FR-MSH-004 / T-106)
+                AnimatedBuilder(
+                  animation: SettingsService.instance,
+                  builder: (context, _) {
+                    final lastSurah = SettingsService.instance.lastReadSurahName;
+                    final lastAyah = SettingsService.instance.lastReadAyahNumber;
+                    final lastPage = SettingsService.instance.lastReadPageNumber;
+
+                    return Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        leading: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryGreen.withOpacity(0.12),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.menu_book_rounded, color: AppColors.primaryGreen, size: 28),
+                        ),
+                        title: const Text('متابعة قراءة القرآن الكريم', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        subtitle: Text(
+                          'آخر موضع: سورة $lastSurah (آية $lastAyah) — صفحة $lastPage',
+                          style: const TextStyle(fontSize: 13, color: AppColors.secondaryGreen, fontWeight: FontWeight.w600),
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.list_alt_rounded, color: AppColors.primaryGreen, size: 22),
+                              tooltip: 'فهرس المصحف والأجزاء',
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (_) => const MushafScreen()),
+                                );
+                              },
+                            ),
+                            const Icon(Icons.arrow_forward_ios, size: 16),
+                          ],
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => PageModeMushafScreen(initialPage: lastPage),
+                            ),
+                          );
+                        },
                       ),
-                      child: const Icon(Icons.menu_book, color: AppColors.primaryGreen, size: 28),
-                    ),
-                    title: const Text('قراءة القرآن الكريم', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                    subtitle: const Text('المصحف الشريف بالرسم العثماني كاملاً بدون إنترنت'),
-                    trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                    onTap: () async {
-                      final surah = await QuranRepository.getSurahById(1);
-                      if (context.mounted && surah != null) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => SurahReaderScreen(surah: surah)),
-                        );
-                      }
-                    },
-                  ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 12),
 
