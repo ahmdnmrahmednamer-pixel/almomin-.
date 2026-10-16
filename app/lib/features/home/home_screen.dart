@@ -6,6 +6,8 @@ import '../../core/services/settings_service.dart';
 import '../mushaf/surah_reader_screen.dart';
 import '../prayer/prayer_screen.dart';
 import '../search/quran_search_screen.dart';
+import '../adhkar/adhkar_screen.dart';
+import '../adhkar/tasbih_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -157,6 +159,155 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
+
+                // Time-Aware Daily Adhkar Banner
+                Builder(
+                  builder: (context) {
+                    final hour = DateTime.now().hour;
+                    final isMorning = hour >= 4 && hour < 16;
+                    return Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(16),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AdhkarScreen(initialCategoryIndex: isMorning ? 0 : 1),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            gradient: LinearGradient(
+                              colors: isMorning
+                                  ? [const Color(0xFFD4AF37).withOpacity(0.2), const Color(0xFFE9D8A6).withOpacity(0.3)]
+                                  : [const Color(0xFF2C3E50).withOpacity(0.2), const Color(0xFF34495E).withOpacity(0.3)],
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: isMorning ? const Color(0xFFD4AF37) : const Color(0xFF2C3E50),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  isMorning ? Icons.wb_sunny_rounded : Icons.nights_stay_rounded,
+                                  color: Colors.white,
+                                  size: 26,
+                                ),
+                              ),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      isMorning ? 'حان وقت أذكار الصباح' : 'حان وقت أذكار المساء',
+                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      isMorning
+                                          ? 'حصن يومك بذكر الله وانشراح الصدر والبركة'
+                                          : 'أمسى وأمسى الملك لله، حفظ ووقاية ليلتك',
+                                      style: const TextStyle(fontSize: 12.5, color: AppColors.mutedText),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Icon(Icons.arrow_forward_ios, size: 16),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 12),
+
+                // Quick Row: Adhkar & Smart Tasbih
+                Row(
+                  children: [
+                    Expanded(
+                      child: Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(16),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const AdhkarScreen()),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primaryGreen.withOpacity(0.12),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.menu_book_rounded, color: AppColors.primaryGreen, size: 24),
+                                ),
+                                const SizedBox(height: 8),
+                                const Text('حصن المسلم', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                                const SizedBox(height: 2),
+                                const Text('الأذكار والأدعية', style: TextStyle(fontSize: 11, color: AppColors.mutedText)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(16),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const TasbihScreen()),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.accentGold.withOpacity(0.2),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.fingerprint_rounded, color: AppColors.primaryGreen, size: 24),
+                                ),
+                                const SizedBox(height: 8),
+                                const Text('السبحة الذكية', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                                const SizedBox(height: 2),
+                                const Text('عداد الورد والتسبيح', style: TextStyle(fontSize: 11, color: AppColors.mutedText)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
 
                 // Quran Reading Continue Card
                 Card(

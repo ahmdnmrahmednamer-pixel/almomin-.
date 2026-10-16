@@ -4,11 +4,13 @@ import 'app/app.dart';
 
 import 'core/services/settings_service.dart';
 import 'core/services/prayer_service.dart';
+import 'core/services/adhkar_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SettingsService.instance.init();
   PrayerService.instance.init();
+  await AdhkarService.instance.init();
   runApp(
     const ProviderScope(
       child: AlMominApp(),

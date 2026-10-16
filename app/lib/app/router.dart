@@ -5,6 +5,8 @@ import '../features/mushaf/mushaf_screen.dart';
 import '../features/audio/audio_screen.dart';
 import '../features/prayer/prayer_screen.dart';
 import '../features/settings/settings_screen.dart';
+import '../features/adhkar/adhkar_screen.dart';
+import '../features/adhkar/tasbih_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -74,6 +76,14 @@ final GoRouter appRouter = GoRouter(
         GoRoute(path: '/audio', builder: (context, state) => const AudioScreen()),
         GoRoute(path: '/prayer', builder: (context, state) => const PrayerScreen()),
         GoRoute(path: '/settings', builder: (context, state) => const SettingsScreen()),
+        GoRoute(
+          path: '/adhkar',
+          builder: (context, state) {
+            final categoryIndex = int.tryParse(state.uri.queryParameters['index'] ?? '0') ?? 0;
+            return AdhkarScreen(initialCategoryIndex: categoryIndex);
+          },
+        ),
+        GoRoute(path: '/tasbih', builder: (context, state) => const TasbihScreen()),
       ],
     ),
   ],
