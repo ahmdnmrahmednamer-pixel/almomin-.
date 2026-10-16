@@ -12,6 +12,7 @@ import 'prayer_tracker_service.dart';
 import 'ayah_notes_service.dart';
 import 'memorization_service.dart';
 import 'zakat_service.dart';
+import 'hadith_service.dart';
 
 /// Result of validating a backup JSON payload
 class BackupValidationResult {
@@ -126,6 +127,7 @@ class BackupRestoreService {
       'ayah_notes': AyahNotesService.instance.exportNotesList(),
       'memorization_items': MemorizationService.instance.exportData(),
       'zakat_calculation': ZakatService.instance.exportData(),
+      'hadith_favorites': HadithService.instance.exportFavorites(),
     };
 
     final dataCanonical = json.encode(dataPayload);
@@ -436,7 +438,16 @@ class BackupRestoreService {
         await ZakatService.instance.importData(importedZakat);
       }
 
-      // 11. Refresh all active in-memory singletons
+      // 11. Hadith Favorites (FR-LIB-005)
+      final importedHadithFavs = (data['hadith_favorites'] as List<dynamic>?)
+          ?.map((e) => int.tryParse(e.toString()))
+          .whereType<int>()
+          .toList();
+      if (importedHadithFavs != null) {
+        await HadithService.instance.importFavorites(importedHadithFavs);
+      }
+
+      // 12. Refresh all active in-memory singletons
       await SettingsService.instance.init();
       await KhatmaService.instance.init();
       await AdhkarService.instance.init();
@@ -445,6 +456,7 @@ class BackupRestoreService {
       await AyahNotesService.instance.init();
       await MemorizationService.instance.init();
       await ZakatService.instance.init();
+      await HadithService.instance.init();
 
       return true;
     } catch (e) {

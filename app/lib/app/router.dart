@@ -20,6 +20,8 @@ import '../features/audio/downloads_manager_screen.dart';
 import '../features/mushaf/quran_notes_screen.dart';
 import '../features/mushaf/memorization_screen.dart';
 import '../features/zakat/zakat_screen.dart';
+import '../features/hadith/hadith_library_screen.dart';
+import '../features/hadith/hadith_detail_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -123,6 +125,20 @@ final GoRouter appRouter = GoRouter(
           },
         ),
         GoRoute(path: '/zakat', builder: (context, state) => const ZakatScreen()),
+        GoRoute(
+          path: '/hadith',
+          builder: (context, state) {
+            final bookId = state.uri.queryParameters['bookId'];
+            return HadithLibraryScreen(initialBookId: bookId);
+          },
+        ),
+        GoRoute(
+          path: '/hadith-detail',
+          builder: (context, state) {
+            final id = int.tryParse(state.uri.queryParameters['id'] ?? '1') ?? 1;
+            return HadithDetailScreen(hadithId: id);
+          },
+        ),
         GoRoute(
           path: '/search',
           builder: (context, state) {

@@ -21,6 +21,9 @@ import '../../core/services/memorization_service.dart';
 import '../mushaf/memorization_screen.dart';
 import '../../core/services/zakat_service.dart';
 import '../zakat/zakat_screen.dart';
+import '../../core/services/hadith_service.dart';
+import '../hadith/hadith_library_screen.dart';
+import '../hadith/hadith_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -38,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     KhatmaService.instance.init();
     MemorizationService.instance.init();
     ZakatService.instance.init();
+    HadithService.instance.init();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!SettingsService.instance.hasCompletedOnboarding && mounted) {
@@ -740,6 +744,92 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     },
                   ),
+                ),
+                const SizedBox(height: 12),
+
+                // Hadith Library Shortcut (FR-LIB-005)
+                AnimatedBuilder(
+                  animation: HadithService.instance,
+                  builder: (context, _) {
+                    final hadithToday = HadithService.instance.getHadithOfTheDay();
+                    final favCount = HadithService.instance.favoriteIds.length;
+
+                    return Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(16),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const HadithLibraryScreen()),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.accentGold.withOpacity(0.18),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(Icons.menu_book_rounded, color: AppColors.primaryGreen, size: 28),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'مكتبة الأحاديث النبوية الشريفة',
+                                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                        ),
+                                        Text(
+                                          favCount > 0
+                                              ? 'الأربعون النووية ورياض الصالحين · $favCount في المفضلة'
+                                              : 'الأربعون النووية ورياض الصالحين مع التخريج والدرجة',
+                                          style: const TextStyle(fontSize: 12.5, color: AppColors.mutedText),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const Icon(Icons.arrow_forward_ios, size: 16),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: AppColors.primaryGreen.withOpacity(0.06),
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: AppColors.primaryGreen.withOpacity(0.15)),
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.auto_awesome, color: AppColors.accentGold, size: 16),
+                                    const SizedBox(width: 6),
+                                    Expanded(
+                                      child: Text(
+                                        'حديث اليوم: «${hadithToday.title}» (${hadithToday.grading})',
+                                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.primaryGreen),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 20),
               ],
