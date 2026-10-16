@@ -22,6 +22,8 @@ import '../features/mushaf/memorization_screen.dart';
 import '../features/zakat/zakat_screen.dart';
 import '../features/hadith/hadith_library_screen.dart';
 import '../features/hadith/hadith_detail_screen.dart';
+import '../features/topics/quran_topics_screen.dart';
+import '../features/topics/topic_detail_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -137,6 +139,26 @@ final GoRouter appRouter = GoRouter(
           builder: (context, state) {
             final id = int.tryParse(state.uri.queryParameters['id'] ?? '1') ?? 1;
             return HadithDetailScreen(hadithId: id);
+          },
+        ),
+        GoRoute(
+          path: '/topics',
+          builder: (context, state) {
+            final catStr = state.uri.queryParameters['category'];
+            TopicCategory? cat;
+            if (catStr != null) {
+              try {
+                cat = TopicCategory.values.firstWhere((c) => c.name == catStr);
+              } catch (_) {}
+            }
+            return QuranTopicsScreen(initialCategory: cat);
+          },
+        ),
+        GoRoute(
+          path: '/topic-detail',
+          builder: (context, state) {
+            final id = state.uri.queryParameters['id'] ?? 'patience';
+            return TopicDetailScreen(topicId: id);
           },
         ),
         GoRoute(

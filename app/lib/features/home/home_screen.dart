@@ -24,6 +24,9 @@ import '../zakat/zakat_screen.dart';
 import '../../core/services/hadith_service.dart';
 import '../hadith/hadith_library_screen.dart';
 import '../hadith/hadith_detail_screen.dart';
+import '../../core/services/quran_topic_service.dart';
+import '../topics/quran_topics_screen.dart';
+import '../topics/topic_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -42,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
     MemorizationService.instance.init();
     ZakatService.instance.init();
     HadithService.instance.init();
+    QuranTopicService.instance.init();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!SettingsService.instance.hasCompletedOnboarding && mounted) {
@@ -817,6 +821,90 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: Text(
                                         'حديث اليوم: «${hadithToday.title}» (${hadithToday.grading})',
                                         style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.primaryGreen),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 12),
+
+                // Quran Thematic Index Shortcut (FR-TPC-001)
+                AnimatedBuilder(
+                  animation: QuranTopicService.instance,
+                  builder: (context, _) {
+                    final featured = QuranTopicService.instance.getFeaturedTopic();
+                    final totalTopics = QuranTopicService.instance.totalTopicsCount;
+
+                    return Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(16),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const QuranTopicsScreen()),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primaryGreen.withOpacity(0.12),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(Icons.category_rounded, color: AppColors.primaryGreen, size: 28),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'الفهرس الموضوعي لآيات القرآن',
+                                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                        ),
+                                        Text(
+                                          '$totalTopics موضوعاً قرآنياً في العقيدة والأخلاق والمعاملات',
+                                          style: const TextStyle(fontSize: 12.5, color: AppColors.mutedText),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const Icon(Icons.arrow_forward_ios, size: 16),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: AppColors.accentGold.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: AppColors.accentGold.withOpacity(0.25)),
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.wb_twilight_rounded, color: AppColors.accentGold, size: 16),
+                                    const SizedBox(width: 6),
+                                    Expanded(
+                                      child: Text(
+                                        'موضوع اليوم: «${featured.title}» (${featured.ayahCount} آيات)',
+                                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.brown),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
