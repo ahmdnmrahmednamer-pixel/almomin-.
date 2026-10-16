@@ -14,6 +14,7 @@ import '../prayer/qibla_compass_screen.dart';
 import '../prayer/hijri_calendar_screen.dart';
 import '../../core/services/khatma_service.dart';
 import '../khatma/khatma_screen.dart';
+import '../onboarding/onboarding_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,6 +30,15 @@ class _HomeScreenState extends State<HomeScreen> {
     PrayerService.instance.init();
     SettingsService.instance.init();
     KhatmaService.instance.init();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!SettingsService.instance.hasCompletedOnboarding && mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+        );
+      }
+    });
   }
 
   @override
@@ -125,7 +135,77 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
+
+                // Noble Dedication Banner for Momin Ibrahim
+                InkWell(
+                  borderRadius: BorderRadius.circular(12),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: AlertDialog(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                          title: const Row(
+                            children: [
+                              Icon(Icons.volunteer_activism_rounded, color: AppColors.accentGold, size: 24),
+                              SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  'دعاء لمؤمن إبراهيم رحمه الله',
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.primaryGreen),
+                                ),
+                              ),
+                            ],
+                          ),
+                          content: const Text(
+                            '«اللَّهُمَّ اغْفِرْ لِعَبْدِكَ مُؤْمِن إِبْرَاهِيم وَارْحَمْهُ، وَعَافِهِ وَاعْفُ عَنْهُ، وَأَكْرِمْ نُزُلَهُ، وَوَسِّعْ مُدْخَلَهُ، وَاغْسِلْهُ بِالْمَاءِ وَالثَّلْجِ وَالْبَرَدِ، وَنَقِّهِ مِنَ الذُّنُوبِ كَمَا يُنَقَّى الثَّوْبُ الأَبْيَضُ مِنَ الدَّنَسِ.\n\nاللَّهُمَّ اجْعَلْ قَبْرَهُ رَوْضَةً مِنْ رِيَاضِ الجَنَّةِ، وَافْسَحْ لَهُ فِيهِ مَدَّ بَصَرِهِ، وَاجْعَلْ كُلَّ آيَةٍ تُتْلَى وَكُلَّ صَلَاةٍ وَتَسْبِيحَةٍ فِي هَذَا التَّطْبِيقِ نُوراً لَهُ فِي قَبْرِهِ وَفِي مِيزَانِ حَسَنَاتِهِ إِلَى يَوْمِ الدِّينِ.. آمِينَ يَا رَبَّ العَالَمِينَ» 🤲',
+                            style: TextStyle(fontSize: 13.5, height: 1.7),
+                          ),
+                          actions: [
+                            ElevatedButton(
+                              onPressed: () => Navigator.pop(ctx),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primaryGreen,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                              ),
+                              child: const Text('آمِينَ يَا رَبَّ العَالَمِينَ 🤲'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.accentGold.withOpacity(0.14),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColors.accentGold.withOpacity(0.5), width: 1),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.volunteer_activism_rounded, size: 16, color: AppColors.primaryGreen),
+                        SizedBox(width: 8),
+                        Flexible(
+                          child: Text(
+                            'صدقة جارية عن روح المرحوم بإذن الله: مؤمن إبراهيم رحمه الله 🤲 (اضغط للدعاء)',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primaryGreen,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
 
                 // Next Prayer Live Banner Card
                 Card(

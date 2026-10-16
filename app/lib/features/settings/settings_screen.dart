@@ -3,6 +3,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/services/settings_service.dart';
 import '../../core/services/prayer_service.dart';
 import '../prayer/battery_reliability_screen.dart';
+import '../onboarding/onboarding_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -323,12 +324,31 @@ class SettingsScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'تطبيق المؤمن هو تطبيق إسلامي شامل ومفتوح المصدر، أُنشئ كصدقة جارية لوجه الله تعالى.',
-                style: TextStyle(height: 1.6),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.accentGold.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.accentGold.withOpacity(0.4)),
+                ),
+                child: const Column(
+                  children: [
+                    Text(
+                      'صَدَقَةٌ جَارِيَةٌ عَنْ رُوحِ المَرْحُومِ بِإِذْنِ اللَّهِ تَعَالَى:\nمُؤْمِن إِبْرَاهِيم (رَحِمَهُ اللَّهُ)',
+                      style: TextStyle(height: 1.5, fontWeight: FontWeight.bold, color: AppColors.primaryGreen, fontSize: 13.5),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 6),
+                    Text(
+                      '«اللَّهُمَّ اغْفِرْ لَهُ وَارْحَمْهُ وَعَافِهِ وَاعْفُ عَنْهُ، وَأَكْرِمْ نُزُلَهُ وَوَسِّعْ مُدْخَلَهُ، وَاجْعَلْ قَبْرَهُ رَوْضَةً مِنْ رِيَاضِ الجَنَّةِ» 🤲',
+                      style: TextStyle(height: 1.5, fontSize: 12, color: Color(0xFF8B6B00)),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(height: 12),
-              Text('✨ مميزات التطبيق:', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.secondaryGreen)),
+              const SizedBox(height: 12),
+              const Text('✨ مميزات التطبيق:', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.secondaryGreen)),
               SizedBox(height: 6),
               Text('• يعمل بدون إنترنت (Offline-First) لكامل نصوص وتفاسير القرآن ومواقيت الصلاة.'),
               Text('• خالٍ تماماً وبشكل دائم من أي إعلانات أو تتبع للبيانات.'),
@@ -435,6 +455,19 @@ class SettingsScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => const BatteryReliabilityScreen()),
+                    );
+                  },
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(Icons.volunteer_activism, color: AppColors.primaryGreen),
+                  title: const Text('جولة تعريفية وإهداء التطبيق', style: TextStyle(fontWeight: FontWeight.w600)),
+                  subtitle: const Text('صدقة جارية عن مؤمن إبراهيم رحمه الله · شاشة التهيئة الأولى', style: TextStyle(color: AppColors.secondaryGreen)),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 14),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const OnboardingScreen()),
                     );
                   },
                 ),

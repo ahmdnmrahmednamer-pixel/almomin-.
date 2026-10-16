@@ -13,6 +13,7 @@ import '../features/prayer/hijri_calendar_screen.dart';
 import '../features/prayer/battery_reliability_screen.dart';
 import '../features/khatma/khatma_screen.dart';
 import '../features/search/quran_search_screen.dart';
+import '../features/onboarding/onboarding_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -74,6 +75,10 @@ final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/home',
   routes: [
+    GoRoute(
+      path: '/onboarding',
+      builder: (context, state) => const OnboardingScreen(),
+    ),
     ShellRoute(
       builder: (context, state, child) => MainScaffold(child: child),
       routes: [

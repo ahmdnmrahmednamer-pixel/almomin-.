@@ -315,6 +315,9 @@ class SettingsService extends ChangeNotifier {
   int get lastReadPageNumber => _lastReadPageNumber;
   String get lastReadSurahName => _lastReadSurahName;
 
+  bool _hasCompletedOnboarding = false;
+  bool get hasCompletedOnboarding => _hasCompletedOnboarding;
+
   ReciterInfo get currentReciter {
     return availableReciters.firstWhere(
       (r) => r.id == _selectedReciterId,
@@ -324,6 +327,7 @@ class SettingsService extends ChangeNotifier {
 
   Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
+    _hasCompletedOnboarding = _prefs?.getBool('has_completed_onboarding') ?? false;
     _mushafFontSize = _prefs?.getDouble('mushaf_font_size') ?? 24.0;
     _selectedReciterId = _prefs?.getString('selected_reciter_id') ?? 'alafasy';
     _calculationMethod = _prefs?.getString('calculation_method') ?? 'egyptian';
@@ -336,6 +340,12 @@ class SettingsService extends ChangeNotifier {
     _lastReadPageNumber = _prefs?.getInt('last_read_page_number') ?? 1;
     _lastReadSurahName = _prefs?.getString('last_read_surah_name') ?? 'الفاتحة';
 
+    notifyListeners();
+  }
+
+  Future<void> completeOnboarding() async {
+    _hasCompletedOnboarding = true;
+    await _prefs?.setBool('has_completed_onboarding', true);
     notifyListeners();
   }
 
