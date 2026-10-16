@@ -18,6 +18,7 @@ import '../features/backup/backup_restore_screen.dart';
 import '../features/prayer/prayer_tracker_screen.dart';
 import '../features/audio/downloads_manager_screen.dart';
 import '../features/mushaf/quran_notes_screen.dart';
+import '../features/mushaf/memorization_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -107,6 +108,19 @@ final GoRouter appRouter = GoRouter(
         GoRoute(path: '/prayer-tracker', builder: (context, state) => const PrayerTrackerScreen()),
         GoRoute(path: '/downloads', builder: (context, state) => const DownloadsManagerScreen()),
         GoRoute(path: '/notes', builder: (context, state) => const QuranNotesScreen()),
+        GoRoute(
+          path: '/memorization',
+          builder: (context, state) {
+            final surahId = int.tryParse(state.uri.queryParameters['surahId'] ?? '1') ?? 1;
+            final fromAyah = int.tryParse(state.uri.queryParameters['fromAyah'] ?? '1') ?? 1;
+            final toAyah = int.tryParse(state.uri.queryParameters['toAyah'] ?? '7') ?? 7;
+            return MemorizationScreen(
+              initialSurahId: surahId,
+              initialFromAyah: fromAyah,
+              initialToAyah: toAyah,
+            );
+          },
+        ),
         GoRoute(
           path: '/search',
           builder: (context, state) {

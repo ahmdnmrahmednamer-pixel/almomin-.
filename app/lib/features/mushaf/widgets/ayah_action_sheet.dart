@@ -9,6 +9,7 @@ import '../../../core/services/ayah_notes_service.dart';
 import '../../../core/audio/ayah_audio_player.dart';
 import 'tafsir_viewer_sheet.dart';
 import 'ayah_note_edit_dialog.dart';
+import '../memorization_screen.dart';
 
 class AyahActionSheet extends StatelessWidget {
   final Surah surah;
@@ -284,6 +285,24 @@ class AyahActionSheet extends StatelessWidget {
                   onTap: () {
                     Navigator.pop(context);
                     AyahNoteEditDialog.show(context, surah: surah, ayah: ayah);
+                  },
+                ),
+                _buildActionButton(
+                  icon: Icons.repeat_one_rounded,
+                  label: 'تحفيظ وتكرار',
+                  color: AppColors.secondaryGreen,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => MemorizationScreen(
+                          initialSurahId: surah.id,
+                          initialFromAyah: ayah.ayahNumber,
+                          initialToAyah: (ayah.ayahNumber + 2).clamp(1, surah.ayahCount),
+                        ),
+                      ),
+                    );
                   },
                 ),
                 _buildActionButton(

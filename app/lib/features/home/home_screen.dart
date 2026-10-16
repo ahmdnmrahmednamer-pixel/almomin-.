@@ -17,6 +17,8 @@ import '../khatma/khatma_screen.dart';
 import '../onboarding/onboarding_screen.dart';
 import '../../core/services/ayah_notes_service.dart';
 import '../mushaf/quran_notes_screen.dart';
+import '../../core/services/memorization_service.dart';
+import '../mushaf/memorization_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -32,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
     PrayerService.instance.init();
     SettingsService.instance.init();
     KhatmaService.instance.init();
+    MemorizationService.instance.init();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!SettingsService.instance.hasCompletedOnboarding && mounted) {
@@ -607,6 +610,47 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => const QuranNotesScreen()),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 12),
+
+                // Quran Memorization & Ayah Loop Card (FR-MEM-001..003)
+                AnimatedBuilder(
+                  animation: MemorizationService.instance,
+                  builder: (context, _) {
+                    final tracked = MemorizationService.instance.totalTrackedAyahs;
+                    final mastered = MemorizationService.instance.totalMasteredCount;
+                    final due = MemorizationService.instance.dueReviewsCount;
+
+                    return Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        leading: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: AppColors.accentGold.withOpacity(0.18),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.repeat_one_rounded, color: AppColors.primaryGreen, size: 28),
+                        ),
+                        title: const Text('المحفظ القرآني وتكرار الآيات', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        subtitle: Text(
+                          tracked > 0
+                              ? '$mastered آية متقنة · $due للمراجعة اليوم'
+                              : 'تكرار ذكي، إخفاء الكلمات لاختبار الحفظ، وجدولة المراجعة',
+                          style: const TextStyle(fontSize: 13, color: AppColors.mutedText),
+                        ),
+                        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const MemorizationScreen()),
                           );
                         },
                       ),

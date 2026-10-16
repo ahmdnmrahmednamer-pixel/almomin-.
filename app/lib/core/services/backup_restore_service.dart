@@ -10,6 +10,7 @@ import 'adhkar_service.dart';
 import 'prayer_service.dart';
 import 'prayer_tracker_service.dart';
 import 'ayah_notes_service.dart';
+import 'memorization_service.dart';
 
 /// Result of validating a backup JSON payload
 class BackupValidationResult {
@@ -18,6 +19,7 @@ class BackupValidationResult {
   final String? createdAt;
   final int bookmarksCount;
   final int notesCount;
+  final int memorizationCount;
   final bool hasKhatma;
   final int khatmaPage;
   final String? city;
@@ -29,6 +31,7 @@ class BackupValidationResult {
     this.createdAt,
     this.bookmarksCount = 0,
     this.notesCount = 0,
+    this.memorizationCount = 0,
     this.hasKhatma = false,
     this.khatmaPage = 1,
     this.city,
@@ -120,6 +123,7 @@ class BackupRestoreService {
       'location': location,
       'prayer_tracker': prayerTrackerData,
       'ayah_notes': AyahNotesService.instance.exportNotesList(),
+      'memorization_items': MemorizationService.instance.exportData(),
     };
 
     final dataCanonical = json.encode(dataPayload);
@@ -231,6 +235,7 @@ class BackupRestoreService {
 
       final bookmarks = (data['bookmarks'] as List<dynamic>?)?.cast<String>() ?? [];
       final notes = (data['ayah_notes'] as List<dynamic>?) ?? [];
+      final memItems = (data['memorization_items'] as List<dynamic>?) ?? [];
       final khatma = data['khatma'] as Map<String, dynamic>?;
       final location = data['location'] as Map<String, dynamic>?;
       final createdAt = decoded['created_at'] as String?;
@@ -240,6 +245,7 @@ class BackupRestoreService {
         createdAt: createdAt,
         bookmarksCount: bookmarks.length,
         notesCount: notes.length,
+        memorizationCount: memItems.length,
         hasKhatma: khatma != null,
         khatmaPage: (khatma?['currentPage'] as int?) ?? 1,
         city: location?['last_city'] as String?,
@@ -416,13 +422,20 @@ class BackupRestoreService {
         await AyahNotesService.instance.restoreNotesList(importedNotes, replace: replaceMode);
       }
 
-      // 9. Refresh all active in-memory singletons
+      // 9. Quran Memorization & Leitner Data (FR-MEM-001..003)
+      final importedMem = data['memorization_items'] as List<dynamic>?;
+      if (importedMem != null) {
+        await MemorizationService.instance.importData(importedMem, merge: !replaceMode);
+      }
+
+      // 10. Refresh all active in-memory singletons
       await SettingsService.instance.init();
       await KhatmaService.instance.init();
       await AdhkarService.instance.init();
       await PrayerService.instance.init();
       await PrayerTrackerService.instance.init();
       await AyahNotesService.instance.init();
+      await MemorizationService.instance.init();
 
       return true;
     } catch (e) {
