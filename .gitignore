@@ -67,10 +67,12 @@ app/build/
 *.keystore
 *.jks
 
-# Environment variables
+# Environment & Key properties
 .env
 .env.*
 !.env.example
+**/android/key.properties
+!**/android/key.properties.example
 
 # Automation scripts
 *.bat
