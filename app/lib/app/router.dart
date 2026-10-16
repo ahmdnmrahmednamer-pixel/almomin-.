@@ -24,6 +24,7 @@ import '../features/hadith/hadith_library_screen.dart';
 import '../features/hadith/hadith_detail_screen.dart';
 import '../features/topics/quran_topics_screen.dart';
 import '../features/topics/topic_detail_screen.dart';
+import '../features/settings/contact_support_screen.dart';
 import '../core/models/quran_topic.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -175,6 +176,10 @@ final GoRouter appRouter = GoRouter(
             final page = int.tryParse(state.uri.queryParameters['page'] ?? '1') ?? 1;
             return PageModeMushafScreen(initialPage: page);
           },
+        ),
+        GoRoute(
+          path: '/support',
+          builder: (context, state) => const ContactSupportScreen(),
         ),
       ],
     ),
