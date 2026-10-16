@@ -318,6 +318,9 @@ class SettingsService extends ChangeNotifier {
   bool _hasCompletedOnboarding = false;
   bool get hasCompletedOnboarding => _hasCompletedOnboarding;
 
+  bool _screenReaderOptimized = false;
+  bool get screenReaderOptimized => _screenReaderOptimized;
+
   ReciterInfo get currentReciter {
     return availableReciters.firstWhere(
       (r) => r.id == _selectedReciterId,
@@ -333,6 +336,7 @@ class SettingsService extends ChangeNotifier {
     _calculationMethod = _prefs?.getString('calculation_method') ?? 'egyptian';
     _themeMode = _prefs?.getString('theme_mode') ?? 'light';
     _adhanAlertsEnabled = _prefs?.getBool('adhan_alerts') ?? true;
+    _screenReaderOptimized = _prefs?.getBool('screen_reader_optimized') ?? false;
     _bookmarks = _prefs?.getStringList('bookmarks') ?? [];
 
     _lastReadSurahId = _prefs?.getInt('last_read_surah_id') ?? 1;
@@ -395,6 +399,12 @@ class SettingsService extends ChangeNotifier {
   Future<void> toggleAdhanAlerts(bool enabled) async {
     _adhanAlertsEnabled = enabled;
     await _prefs?.setBool('adhan_alerts', _adhanAlertsEnabled);
+    notifyListeners();
+  }
+
+  Future<void> toggleScreenReaderOptimization(bool enabled) async {
+    _screenReaderOptimized = enabled;
+    await _prefs?.setBool('screen_reader_optimized', enabled);
     notifyListeners();
   }
 

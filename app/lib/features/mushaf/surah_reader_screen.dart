@@ -10,46 +10,7 @@ import '../../core/audio/ayah_audio_player.dart';
 import 'widgets/ayah_action_sheet.dart';
 import 'page_mode_mushaf_screen.dart';
 import '../../core/services/khatma_service.dart';
-
-class AyahGestureRecognizer extends PrimaryPointerGestureRecognizer {
-  VoidCallback? onTap;
-  VoidCallback? onLongPress;
-  Timer? _timer;
-
-  AyahGestureRecognizer({super.debugOwner});
-
-  @override
-  void handlePrimaryPointer(PointerEvent event) {
-    if (event is PointerDownEvent) {
-      _timer?.cancel();
-      _timer = Timer(const Duration(milliseconds: 450), () {
-        resolve(GestureDisposition.accepted);
-        onLongPress?.call();
-        _timer = null;
-      });
-    } else if (event is PointerUpEvent) {
-      if (_timer != null && _timer!.isActive) {
-        _timer!.cancel();
-        _timer = null;
-        resolve(GestureDisposition.accepted);
-        onTap?.call();
-      }
-    } else if (event is PointerCancelEvent) {
-      _timer?.cancel();
-      _timer = null;
-      resolve(GestureDisposition.rejected);
-    }
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
-
-  @override
-  String get debugDescription => 'AyahGestureRecognizer';
-}
+import '../../core/services/quran_accessibility_service.dart';
 
 class SurahReaderScreen extends StatefulWidget {
   final Surah surah;
@@ -68,12 +29,15 @@ class SurahReaderScreen extends StatefulWidget {
 class _SurahReaderScreenState extends State<SurahReaderScreen> {
   late double _fontSize;
   late Future<List<Ayah>> _ayahsFuture;
-  final List<AyahGestureRecognizer> _recognizers = [];
+  final List<TapGestureRecognizer> _recognizers = [];
   int _themeModeIndex = 0; // 0: تلقائي/النظام, 1: مصحفي ورقي, 2: ليلي داكن, 3: نهاري أبيض
+  bool _isAccessibleMode = false;
+  final Set<int> _expandedTafseerAyahs = {};
 
   @override
   void initState() {
     super.initState();
+    _isAccessibleMode = SettingsService.instance.screenReaderOptimized;
     _fontSize = SettingsService.instance.mushafFontSize;
     _ayahsFuture = QuranRepository.getAyahsForSurah(widget.surah.id);
     SettingsService.instance.saveLastRead(
@@ -168,6 +132,29 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
             },
           ),
           IconButton(
+            icon: Icon(
+              _isAccessibleMode ? Icons.view_headline_rounded : Icons.accessibility_new_rounded,
+              color: _isAccessibleMode ? AppColors.accentGold : null,
+            ),
+            tooltip: _isAccessibleMode
+                ? 'العودة إلى نمط المصحف المتصل'
+                : 'نمط قارئات الشاشة والنفاذية (TalkBack)',
+            onPressed: () {
+              setState(() {
+                _isAccessibleMode = !_isAccessibleMode;
+              });
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(_isAccessibleMode
+                      ? 'تم تفعيل نمط قارئات الشاشة (قائمة آية بآية)'
+                      : 'تم العودة إلى نمط المصحف المتصل'),
+                  duration: const Duration(seconds: 1),
+                ),
+              );
+            },
+          ),
+          IconButton(
             icon: Icon(themeIcon),
             tooltip: 'تغيير وضع القراءة (مصحفي / ليلي / نهاري)',
             onPressed: _cycleReadingTheme,
@@ -241,35 +228,54 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
             return ValueListenableBuilder<String?>(
               valueListenable: AyahAudioPlayer.instance.currentPlayingKey,
               builder: (context, playingKey, _) {
+                if (_isAccessibleMode) {
+                  return _buildAccessibleAyahList(
+                    ayahs: ayahs,
+                    playingKey: playingKey,
+                    isDark: isDark,
+                    isSepia: isSepia,
+                    textColor: textColor,
+                    pageBg: pageBg,
+                  );
+                }
+
                 return ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
                   children: [
                     // Decorative Surah Header Frame
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 20),
-                      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
-                      decoration: BoxDecoration(
-                        color: headerBg,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: headerBorder, width: 1.5),
+                    Semantics(
+                      label: QuranAccessibilityService.buildSurahHeaderSemanticLabel(
+                        surahName: widget.surah.nameAr,
+                        isMakki: widget.surah.isMakki,
+                        ayahCount: widget.surah.ayahCount,
+                        revelationOrder: widget.surah.revelationOrder,
                       ),
-                      child: Column(
-                        children: [
-                          Text(
-                            'سورة ${widget.surah.nameAr}',
-                            style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: headerTitleColor),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            '${widget.surah.isMakki ? "مكية" : "مدنية"} — آياتها ${widget.surah.ayahCount} — ترتيبها ${widget.surah.revelationOrder}',
-                            style: TextStyle(fontSize: 14, color: isDark ? Colors.white70 : AppColors.mutedText),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '💡 اضغط على الآية للاستماع · اضغط ضغطة مطولة للخيارات والتفسير',
-                            style: TextStyle(fontSize: 12, color: isDark ? AppColors.softGold : AppColors.secondaryGreen),
-                          ),
-                        ],
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 20),
+                        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+                        decoration: BoxDecoration(
+                          color: headerBg,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: headerBorder, width: 1.5),
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              'سورة ${widget.surah.nameAr}',
+                              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: headerTitleColor),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              '${widget.surah.isMakki ? "مكية" : "مدنية"} — آياتها ${widget.surah.ayahCount} — ترتيبها ${widget.surah.revelationOrder}',
+                              style: TextStyle(fontSize: 14, color: isDark ? Colors.white70 : AppColors.mutedText),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '💡 اضغط على الآية للاستماع · اضغط ضغطة مطولة للخيارات والتفسير',
+                              style: TextStyle(fontSize: 12, color: isDark ? AppColors.softGold : AppColors.secondaryGreen),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
 
@@ -277,38 +283,34 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                     if (widget.surah.hasBasmala && widget.surah.id != 1)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 24.0),
-                        child: Text(
-                          'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: basmalaColor,
+                        child: Semantics(
+                          label: 'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ',
+                          child: Text(
+                            'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: basmalaColor,
+                            ),
                           ),
                         ),
                       ),
 
-                    // Text Mode Ayah Flow with Uthmani text
+                    // Text Mode Ayah Flow with Uthmani text & Accessibility Semantics
                     RichText(
                       textAlign: TextAlign.justify,
                       text: TextSpan(
                         children: ayahs.map((ayah) {
                           final isPlaying = playingKey == '${widget.surah.id}:${ayah.ayahNumber}';
 
-                          final rec = AyahGestureRecognizer()
+                          final rec = TapGestureRecognizer()
                             ..onTap = () {
                               AyahAudioPlayer.instance.playAyah(
                                 context,
                                 widget.surah.id,
                                 ayah.ayahNumber,
                                 surahName: widget.surah.nameAr,
-                              );
-                            }
-                            ..onLongPress = () {
-                              AyahActionSheet.show(
-                                context,
-                                surah: widget.surah,
-                                ayah: ayah,
                               );
                             };
                           _recognizers.add(rec);
@@ -317,6 +319,11 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                             children: [
                               TextSpan(
                                 text: '${ayah.textUthmani} ',
+                                semanticsLabel: QuranAccessibilityService.buildAyahSemanticLabel(
+                                  surahName: widget.surah.nameAr,
+                                  ayahNumber: ayah.ayahNumber,
+                                  uthmaniText: ayah.textUthmani,
+                                ),
                                 recognizer: rec,
                                 style: TextStyle(
                                   fontSize: _fontSize,
@@ -332,42 +339,44 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                                   ],
                                 ),
                               ),
-                              // Ayah Number Bracket Ornament ﴿١﴾
+                              // Ayah Number Bracket Ornament ﴿١﴾ (Excluded from redundant screen reader reading)
                               WidgetSpan(
                                 alignment: PlaceholderAlignment.middle,
-                                child: InkWell(
-                                  onTap: () {
-                                    AyahAudioPlayer.instance.playAyah(
-                                      context,
-                                      widget.surah.id,
-                                      ayah.ayahNumber,
-                                      surahName: widget.surah.nameAr,
-                                    );
-                                  },
-                                  onLongPress: () {
-                                    AyahActionSheet.show(
-                                      context,
-                                      surah: widget.surah,
-                                      ayah: ayah,
-                                    );
-                                  },
-                                  child: Container(
-                                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                                    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                                    decoration: BoxDecoration(
-                                      color: isPlaying ? AppColors.accentGold : (isDark ? AppColors.accentGold.withOpacity(0.25) : AppColors.accentGold.withOpacity(0.15)),
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: isPlaying ? AppColors.accentGold : (isDark ? AppColors.softGold : AppColors.accentGold),
-                                        width: isPlaying ? 1.5 : 0.8,
+                                child: ExcludeSemantics(
+                                  child: InkWell(
+                                    onTap: () {
+                                      AyahAudioPlayer.instance.playAyah(
+                                        context,
+                                        widget.surah.id,
+                                        ayah.ayahNumber,
+                                        surahName: widget.surah.nameAr,
+                                      );
+                                    },
+                                    onLongPress: () {
+                                      AyahActionSheet.show(
+                                        context,
+                                        surah: widget.surah,
+                                        ayah: ayah,
+                                      );
+                                    },
+                                    child: Container(
+                                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                                      decoration: BoxDecoration(
+                                        color: isPlaying ? AppColors.accentGold : (isDark ? AppColors.accentGold.withOpacity(0.25) : AppColors.accentGold.withOpacity(0.15)),
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: isPlaying ? AppColors.accentGold : (isDark ? AppColors.softGold : AppColors.accentGold),
+                                          width: isPlaying ? 1.5 : 0.8,
+                                        ),
                                       ),
-                                    ),
-                                    child: Text(
-                                      '﴿${_toArabicIndic(ayah.ayahNumber)}﴾',
-                                      style: TextStyle(
-                                        fontSize: _fontSize * 0.72,
-                                        fontWeight: FontWeight.bold,
-                                        color: isPlaying ? Colors.black : (isDark ? AppColors.softGold : AppColors.secondaryGreen),
+                                      child: Text(
+                                        '﴿${_toArabicIndic(ayah.ayahNumber)}﴾',
+                                        style: TextStyle(
+                                          fontSize: _fontSize * 0.72,
+                                          fontWeight: FontWeight.bold,
+                                          color: isPlaying ? Colors.black : (isDark ? AppColors.softGold : AppColors.secondaryGreen),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -387,6 +396,283 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
           },
         ),
       ),
+    );
+  }
+
+  Widget _buildAccessibleAyahList({
+    required List<Ayah> ayahs,
+    required String? playingKey,
+    required bool isDark,
+    required bool isSepia,
+    required Color textColor,
+    required Color pageBg,
+  }) {
+    return ListView.separated(
+      padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 16.0),
+      itemCount: ayahs.length + 1,
+      separatorBuilder: (_, __) => const SizedBox(height: 12),
+      itemBuilder: (context, index) {
+        if (index == 0) {
+          return Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF1E2823) : AppColors.primaryGreen.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.primaryGreen.withOpacity(0.3)),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.accessibility_rounded, color: AppColors.primaryGreen, size: 28),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    'نمط النفاذية وقارئ الشاشة (TalkBack): تصفح الآيات آيةً بآية مع نطق صوتي فصيح وتسميات دلالية كاملة.',
+                    style: TextStyle(
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? Colors.white70 : AppColors.secondaryGreen,
+                      height: 1.4,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        final ayah = ayahs[index - 1];
+        final isPlaying = playingKey == '${widget.surah.id}:${ayah.ayahNumber}';
+        final isTafseerExpanded = _expandedTafseerAyahs.contains(ayah.ayahNumber);
+        final isBookmarked = SettingsService.instance.isBookmarked(widget.surah.id, ayah.ayahNumber);
+        final spokenText = QuranAccessibilityService.toScreenReaderText(ayah.textUthmani);
+
+        return Semantics(
+          container: true,
+          label: QuranAccessibilityService.buildAyahSemanticLabel(
+            surahName: widget.surah.nameAr,
+            ayahNumber: ayah.ayahNumber,
+            uthmaniText: ayah.textUthmani,
+          ),
+          hint: QuranAccessibilityService.ayahSemanticHint,
+          child: Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF1C221F) : Colors.white,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: isPlaying
+                    ? AppColors.accentGold
+                    : (isDark ? Colors.grey.shade800 : Colors.grey.shade200),
+                width: isPlaying ? 2.0 : 1.0,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(isDark ? 0.2 : 0.03),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: isPlaying ? AppColors.accentGold : AppColors.primaryGreen.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        'آية ${_toArabicIndic(ayah.ayahNumber)} / ${_toArabicIndic(widget.surah.ayahCount)}',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: isPlaying ? Colors.black : AppColors.primaryGreen,
+                        ),
+                      ),
+                    ),
+                    if (isPlaying)
+                      const Row(
+                        children: [
+                          Icon(Icons.volume_up_rounded, color: AppColors.accentGold, size: 18),
+                          SizedBox(width: 4),
+                          Text(
+                            'جاري الاستماع',
+                            style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.accentGold),
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+
+                // Quranic Text
+                Text(
+                  ayah.textUthmani,
+                  textAlign: TextAlign.justify,
+                  style: TextStyle(
+                    fontSize: _fontSize,
+                    height: 2.1,
+                    fontWeight: FontWeight.w600,
+                    color: isPlaying ? AppColors.accentGold : textColor,
+                    fontFamilyFallback: const [
+                      'Traditional Arabic',
+                      'Scheherazade New',
+                      'Amiri',
+                      'serif',
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                // Phonetic Screen Reader Spoken Guide
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: isDark ? Colors.white.withOpacity(0.04) : Colors.grey.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.record_voice_over_outlined, size: 16, color: AppColors.secondaryGreen),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          spokenText,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: isDark ? Colors.white60 : Colors.grey.shade700,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const Divider(height: 18),
+
+                // Accessible Action Buttons Row (WCAG AA Target >= 48px)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    IconButton(
+                      iconSize: 26,
+                      icon: Icon(
+                        isPlaying ? Icons.pause_circle_filled_rounded : Icons.play_circle_fill_rounded,
+                        color: isPlaying ? AppColors.accentGold : AppColors.primaryGreen,
+                      ),
+                      tooltip: isPlaying ? 'إيقاف التلاوة' : 'استماع للتلاوة',
+                      onPressed: () {
+                        if (isPlaying) {
+                          AyahAudioPlayer.instance.stop();
+                        } else {
+                          AyahAudioPlayer.instance.playAyah(
+                            context,
+                            widget.surah.id,
+                            ayah.ayahNumber,
+                            surahName: widget.surah.nameAr,
+                          );
+                        }
+                      },
+                    ),
+                    IconButton(
+                      iconSize: 22,
+                      icon: Icon(
+                        isTafseerExpanded ? Icons.menu_book_rounded : Icons.menu_book_outlined,
+                        color: isTafseerExpanded ? AppColors.accentGold : AppColors.secondaryGreen,
+                      ),
+                      tooltip: isTafseerExpanded ? 'إخفاء التفسير الميسر' : 'عرض التفسير الميسر',
+                      onPressed: () {
+                        setState(() {
+                          if (isTafseerExpanded) {
+                            _expandedTafseerAyahs.remove(ayah.ayahNumber);
+                          } else {
+                            _expandedTafseerAyahs.add(ayah.ayahNumber);
+                          }
+                        });
+                      },
+                    ),
+                    IconButton(
+                      iconSize: 22,
+                      icon: Icon(
+                        isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
+                        color: isBookmarked ? AppColors.accentGold : Colors.grey,
+                      ),
+                      tooltip: isBookmarked ? 'إزالة من العلامات المرجعية' : 'حفظ في العلامات المرجعية',
+                      onPressed: () async {
+                        final added = await SettingsService.instance.toggleBookmark(widget.surah.id, ayah.ayahNumber);
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(added ? 'تم حفظ الآية في العلامات المرجعية' : 'تمت إزالة الآية من العلامات'),
+                              duration: const Duration(seconds: 1),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                    IconButton(
+                      iconSize: 22,
+                      icon: const Icon(Icons.more_horiz_rounded, color: AppColors.primaryGreen),
+                      tooltip: 'خيارات الآية، التكرار، والنسخ',
+                      onPressed: () {
+                        AyahActionSheet.show(
+                          context,
+                          surah: widget.surah,
+                          ayah: ayah,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+
+                // Inline Tafseer Expansion
+                if (isTafseerExpanded) ...[
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.accentGold.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: AppColors.accentGold.withOpacity(0.3)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Row(
+                          children: [
+                            Icon(Icons.auto_stories_rounded, size: 16, color: AppColors.accentGold),
+                            SizedBox(width: 6),
+                            Text(
+                              'التفسير الميسر:',
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.accentGold),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          ayah.tafseer ?? 'التفسير غير متوفر لهذه الآية حالياً.',
+                          style: TextStyle(
+                            fontSize: 13.5,
+                            height: 1.6,
+                            color: isDark ? Colors.white70 : Colors.black87,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

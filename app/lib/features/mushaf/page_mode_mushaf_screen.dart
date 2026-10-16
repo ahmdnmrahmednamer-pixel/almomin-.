@@ -8,6 +8,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/audio/ayah_audio_player.dart';
 import 'widgets/ayah_action_sheet.dart';
 import 'surah_reader_screen.dart';
+import '../../core/services/quran_accessibility_service.dart';
 
 class PageModeMushafScreen extends StatefulWidget {
   final int initialPage;
@@ -518,77 +519,83 @@ class _PageModeMushafScreenState extends State<PageModeMushafScreen> {
                   WidgetSpan(
                     alignment: PlaceholderAlignment.baseline,
                     baseline: TextBaseline.alphabetic,
-                    child: InkWell(
-                      onTap: () {
-                        AyahAudioPlayer.instance.playAyah(
-                          context,
-                          ayah.surahId,
-                          ayah.ayahNumber,
-                        );
-                      },
-                      onLongPress: () async {
-                        final surah = await QuranRepository.getSurahById(ayah.surahId);
-                        if (surah != null && context.mounted) {
-                          AyahActionSheet.show(
+                    child: Semantics(
+                      label: 'آية رقم ${ayah.ayahNumber}: ${QuranAccessibilityService.toScreenReaderText(ayah.textUthmani)}',
+                      hint: QuranAccessibilityService.ayahSemanticHint,
+                      child: InkWell(
+                        onTap: () {
+                          AyahAudioPlayer.instance.playAyah(
                             context,
-                            surah: surah,
-                            ayah: ayah,
+                            ayah.surahId,
+                            ayah.ayahNumber,
                           );
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 2),
-                        decoration: BoxDecoration(
-                          color: isPlaying ? AppColors.accentGold.withOpacity(0.25) : Colors.transparent,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          '${ayah.textUthmani} ',
-                          style: TextStyle(
-                            fontSize: _fontSize,
-                            height: 2.1,
-                            color: isPlaying ? AppColors.accentGold : textColor,
-                            fontWeight: isPlaying ? FontWeight.bold : FontWeight.w500,
+                        },
+                        onLongPress: () async {
+                          final surah = await QuranRepository.getSurahById(ayah.surahId);
+                          if (surah != null && context.mounted) {
+                            AyahActionSheet.show(
+                              context,
+                              surah: surah,
+                              ayah: ayah,
+                            );
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 2),
+                          decoration: BoxDecoration(
+                            color: isPlaying ? AppColors.accentGold.withOpacity(0.25) : Colors.transparent,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            '${ayah.textUthmani} ',
+                            style: TextStyle(
+                              fontSize: _fontSize,
+                              height: 2.1,
+                              color: isPlaying ? AppColors.accentGold : textColor,
+                              fontWeight: isPlaying ? FontWeight.bold : FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                  // Ayah Number Bracket ﴿١﴾
+                  // Ayah Number Bracket ﴿١﴾ (Excluded from redundant screen reader reading)
                   WidgetSpan(
                     alignment: PlaceholderAlignment.middle,
-                    child: InkWell(
-                      onTap: () {
-                        AyahAudioPlayer.instance.playAyah(
-                          context,
-                          ayah.surahId,
-                          ayah.ayahNumber,
-                        );
-                      },
-                      onLongPress: () async {
-                        final surah = await QuranRepository.getSurahById(ayah.surahId);
-                        if (surah != null && context.mounted) {
-                          AyahActionSheet.show(
+                    child: ExcludeSemantics(
+                      child: InkWell(
+                        onTap: () {
+                          AyahAudioPlayer.instance.playAyah(
                             context,
-                            surah: surah,
-                            ayah: ayah,
+                            ayah.surahId,
+                            ayah.ayahNumber,
                           );
-                        }
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 3),
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                        decoration: BoxDecoration(
-                          color: isPlaying ? AppColors.accentGold : AppColors.accentGold.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: AppColors.accentGold, width: 0.8),
-                        ),
-                        child: Text(
-                          '﴿${_toArabicIndic(ayah.ayahNumber)}﴾',
-                          style: TextStyle(
-                            fontSize: _fontSize * 0.68,
-                            fontWeight: FontWeight.bold,
-                            color: isPlaying ? Colors.black : (isDark ? AppColors.softGold : AppColors.secondaryGreen),
+                        },
+                        onLongPress: () async {
+                          final surah = await QuranRepository.getSurahById(ayah.surahId);
+                          if (surah != null && context.mounted) {
+                            AyahActionSheet.show(
+                              context,
+                              surah: surah,
+                              ayah: ayah,
+                            );
+                          }
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 3),
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                          decoration: BoxDecoration(
+                            color: isPlaying ? AppColors.accentGold : AppColors.accentGold.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: AppColors.accentGold, width: 0.8),
+                          ),
+                          child: Text(
+                            '﴿${_toArabicIndic(ayah.ayahNumber)}﴾',
+                            style: TextStyle(
+                              fontSize: _fontSize * 0.68,
+                              fontWeight: FontWeight.bold,
+                              color: isPlaying ? Colors.black : (isDark ? AppColors.softGold : AppColors.secondaryGreen),
+                            ),
                           ),
                         ),
                       ),

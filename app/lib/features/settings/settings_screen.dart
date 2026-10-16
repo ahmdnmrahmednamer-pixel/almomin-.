@@ -448,6 +448,17 @@ class SettingsScreen extends StatelessWidget {
                   },
                 ),
                 const Divider(height: 1),
+                SwitchListTile(
+                  secondary: const Icon(Icons.accessibility_new_rounded, color: AppColors.primaryGreen),
+                  title: const Text('تحسين التوافق مع قارئات الشاشة (TalkBack)', style: TextStyle(fontWeight: FontWeight.w600)),
+                  subtitle: const Text('نطق صوتي فصيح للآيات واستبعاد الرموز المشوشة ونمط آية بآية'),
+                  activeColor: AppColors.primaryGreen,
+                  value: SettingsService.instance.screenReaderOptimized,
+                  onChanged: (val) {
+                    SettingsService.instance.toggleScreenReaderOptimization(val);
+                  },
+                ),
+                const Divider(height: 1),
                 ListTile(
                   leading: const Icon(Icons.bolt, color: AppColors.accentGold),
                   title: const Text('دليل تثبيت الأذان وإعدادات البطارية', style: TextStyle(fontWeight: FontWeight.w600)),
