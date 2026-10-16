@@ -67,6 +67,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
   late double _fontSize;
   late Future<List<Ayah>> _ayahsFuture;
   final List<AyahGestureRecognizer> _recognizers = [];
+  int _themeModeIndex = 0; // 0: تلقائي/النظام, 1: مصحفي ورقي, 2: ليلي داكن, 3: نهاري أبيض
 
   @override
   void initState() {
@@ -92,12 +93,64 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
     }).join();
   }
 
+  void _cycleReadingTheme() {
+    setState(() {
+      _themeModeIndex = (_themeModeIndex + 1) % 4;
+    });
+    final names = ['تلقائي حسب نظام الهاتف', 'ورقي مصحفي دافئ', 'ليلي مريح للعين', 'نهاري ناصع'];
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('وضع القراءة: ${names[_themeModeIndex]}'),
+        duration: const Duration(milliseconds: 900),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isSysDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = _themeModeIndex == 2 || (_themeModeIndex == 0 && isSysDark);
+    final isSepia = _themeModeIndex == 1;
+
+    final Color pageBg = isSepia
+        ? const Color(0xFFF7F1E3)
+        : (isDark ? const Color(0xFF141716) : const Color(0xFFFCFCFA));
+
+    final Color textColor = isSepia
+        ? const Color(0xFF262019)
+        : (isDark ? const Color(0xFFF7F7F7) : const Color(0xFF181C1A));
+
+    final Color basmalaColor = isSepia
+        ? const Color(0xFF2D5A27)
+        : (isDark ? AppColors.softGold : AppColors.primaryGreen);
+
+    final Color headerBg = isSepia
+        ? const Color(0xFFEFE6D2)
+        : (isDark ? const Color(0xFF1E2522) : AppColors.primaryGreen.withOpacity(0.08));
+
+    final Color headerBorder = isSepia
+        ? const Color(0xFFC9A84D)
+        : (isDark ? AppColors.accentGold : AppColors.accentGold);
+
+    final Color headerTitleColor = isSepia
+        ? const Color(0xFF2D5A27)
+        : (isDark ? AppColors.accentGold : AppColors.primaryGreen);
+
+    final IconData themeIcon = _themeModeIndex == 1
+        ? Icons.menu_book
+        : (_themeModeIndex == 2 ? Icons.nightlight_round : (_themeModeIndex == 3 ? Icons.wb_sunny : Icons.brightness_auto));
+
     return Scaffold(
+      backgroundColor: pageBg,
       appBar: AppBar(
         title: Text('سورة ${widget.surah.nameAr}'),
         actions: [
+          IconButton(
+            icon: Icon(themeIcon),
+            tooltip: 'تغيير وضع القراءة (مصحفي / ليلي / نهاري)',
+            onPressed: _cycleReadingTheme,
+          ),
           IconButton(
             icon: const Icon(Icons.format_size),
             tooltip: 'تغيير حجم الخط',
@@ -175,25 +228,25 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                       margin: const EdgeInsets.only(bottom: 20),
                       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
                       decoration: BoxDecoration(
-                        color: AppColors.primaryGreen.withOpacity(0.08),
+                        color: headerBg,
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: AppColors.accentGold, width: 1.5),
+                        border: Border.all(color: headerBorder, width: 1.5),
                       ),
                       child: Column(
                         children: [
                           Text(
                             'سورة ${widget.surah.nameAr}',
-                            style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: AppColors.primaryGreen),
+                            style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: headerTitleColor),
                           ),
                           const SizedBox(height: 6),
                           Text(
                             '${widget.surah.isMakki ? "مكية" : "مدنية"} — آياتها ${widget.surah.ayahCount} — ترتيبها ${widget.surah.revelationOrder}',
-                            style: const TextStyle(fontSize: 14, color: AppColors.mutedText),
+                            style: TextStyle(fontSize: 14, color: isDark ? Colors.white70 : AppColors.mutedText),
                           ),
                           const SizedBox(height: 4),
-                          const Text(
+                          Text(
                             '💡 اضغط على الآية للاستماع · اضغط ضغطة مطولة للخيارات والتفسير',
-                            style: TextStyle(fontSize: 12, color: AppColors.secondaryGreen),
+                            style: TextStyle(fontSize: 12, color: isDark ? AppColors.softGold : AppColors.secondaryGreen),
                           ),
                         ],
                       ),
@@ -201,15 +254,15 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
 
                     // Separate Decorative Basmala (not in Surah 9 At-Tawbah, not separate in Fatihah)
                     if (widget.surah.hasBasmala && widget.surah.id != 1)
-                      const Padding(
-                        padding: EdgeInsets.only(bottom: 24.0),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 24.0),
                         child: Text(
                           'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.primaryGreen,
+                            color: basmalaColor,
                           ),
                         ),
                       ),
@@ -247,9 +300,15 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                                 style: TextStyle(
                                   fontSize: _fontSize,
                                   height: 2.2,
-                                  color: isPlaying ? AppColors.accentGold : AppColors.lightText,
-                                  backgroundColor: isPlaying ? AppColors.accentGold.withOpacity(0.12) : Colors.transparent,
+                                  color: isPlaying ? AppColors.accentGold : textColor,
+                                  backgroundColor: isPlaying ? AppColors.accentGold.withOpacity(0.18) : Colors.transparent,
                                   fontWeight: isPlaying ? FontWeight.bold : FontWeight.w500,
+                                  fontFamilyFallback: const [
+                                    'Traditional Arabic',
+                                    'Scheherazade New',
+                                    'Amiri',
+                                    'serif',
+                                  ],
                                 ),
                               ),
                               // Ayah Number Bracket Ornament ﴿١﴾
@@ -275,10 +334,10 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                                     margin: const EdgeInsets.symmetric(horizontal: 4),
                                     padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                                     decoration: BoxDecoration(
-                                      color: isPlaying ? AppColors.accentGold.withOpacity(0.3) : AppColors.accentGold.withOpacity(0.15),
+                                      color: isPlaying ? AppColors.accentGold : (isDark ? AppColors.accentGold.withOpacity(0.25) : AppColors.accentGold.withOpacity(0.15)),
                                       borderRadius: BorderRadius.circular(12),
                                       border: Border.all(
-                                        color: isPlaying ? AppColors.primaryGreen : AppColors.accentGold,
+                                        color: isPlaying ? AppColors.accentGold : (isDark ? AppColors.softGold : AppColors.accentGold),
                                         width: isPlaying ? 1.5 : 0.8,
                                       ),
                                     ),
@@ -287,7 +346,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                                       style: TextStyle(
                                         fontSize: _fontSize * 0.72,
                                         fontWeight: FontWeight.bold,
-                                        color: isPlaying ? AppColors.primaryGreen : AppColors.secondaryGreen,
+                                        color: isPlaying ? Colors.black : (isDark ? AppColors.softGold : AppColors.secondaryGreen),
                                       ),
                                     ),
                                   ),

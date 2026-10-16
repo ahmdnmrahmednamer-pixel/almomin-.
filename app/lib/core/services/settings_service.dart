@@ -130,4 +130,40 @@ class SettingsService extends ChangeNotifier {
     final aStr = ayahNumber.toString().padLeft(3, '0');
     return 'https://everyayah.com/data/$sub/$sStr$aStr.mp3';
   }
+
+  /// Builds the high-speed CDN MP3Quran streaming URL for an entire Surah
+  String getSurahAudioUrl(int surahId, [String? reciterId]) {
+    final rid = reciterId ?? _selectedReciterId;
+    final sStr = surahId.toString().padLeft(3, '0');
+    switch (rid) {
+      case 'alafasy':
+        return 'https://server8.mp3quran.net/afs/$sStr.mp3';
+      case 'abdulbasit_murattal':
+        return 'https://server7.mp3quran.net/basit/$sStr.mp3';
+      case 'abdulbasit_mujawwad':
+        return 'https://server7.mp3quran.net/basit_mjwd/$sStr.mp3';
+      case 'minshawi_murattal':
+        return 'https://server10.mp3quran.net/minsh/$sStr.mp3';
+      case 'minshawi_mujawwad':
+        return 'https://server10.mp3quran.net/minsh_mjwd/$sStr.mp3';
+      case 'husary':
+        return 'https://server13.mp3quran.net/husr/$sStr.mp3';
+      case 'husary_mujawwad':
+        return 'https://server13.mp3quran.net/husr_mjwd/$sStr.mp3';
+      case 'maher':
+        return 'https://server12.mp3quran.net/maher/$sStr.mp3';
+      case 'sudais':
+        return 'https://server11.mp3quran.net/sds/$sStr.mp3';
+      case 'ghamadi':
+        return 'https://server7.mp3quran.net/s_gmd/$sStr.mp3';
+      case 'ajamy':
+        return 'https://server10.mp3quran.net/ajm/$sStr.mp3';
+      case 'shuraym':
+        return 'https://server7.mp3quran.net/shur/$sStr.mp3';
+      case 'hudhaify':
+        return 'https://server9.mp3quran.net/hthfi/$sStr.mp3';
+      default:
+        return 'https://server8.mp3quran.net/afs/$sStr.mp3';
+    }
+  }
 }
