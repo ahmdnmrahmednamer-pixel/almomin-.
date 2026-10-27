@@ -8,15 +8,17 @@ import 'fast_audio_service.dart';
 class AyahAudioPlayer {
   static final AyahAudioPlayer instance = AyahAudioPlayer._internal();
   StreamSubscription<PlayerState>? _playerStateSub;
+  int _activePlaySessionId = 0;
 
   AyahAudioPlayer._internal() {
     _playerStateSub = _player.playerStateStream.listen((state) {
       if (state.processingState == ProcessingState.completed) {
         final finishedKey = currentPlayingKey.value;
+        final sessionId = _activePlaySessionId;
         currentPlayingKey.value = null;
         isPlaying.value = false;
         if (finishedKey != null && SettingsService.instance.autoPlayNextAyah) {
-          _advanceToNextAyahIfPossible(finishedKey);
+          _advanceToNextAyahIfPossible(finishedKey, sessionId);
         }
       } else {
         isPlaying.value = state.playing;
@@ -30,8 +32,9 @@ class AyahAudioPlayer {
   String? _lastSurahName;
   String? _playingReciterId;
 
-  Future<void> _advanceToNextAyahIfPossible(String finishedKey) async {
+  Future<void> _advanceToNextAyahIfPossible(String finishedKey, int sessionId) async {
     try {
+      if (sessionId != _activePlaySessionId) return;
       final parts = finishedKey.split(':');
       if (parts.length != 2) return;
       final surahId = int.tryParse(parts[0]);
@@ -44,7 +47,15 @@ class AyahAudioPlayer {
         final nextAyah = ayahNumber + 1;
         final reciter = SettingsService.instance.currentReciter;
         final primaryUrl = SettingsService.instance.getAyahAudioUrl(surahId, nextAyah);
-        final fallbackSurahUrl = SettingsService.instance.getSurahAudioUrl(surahId, reciter.id);
+        final sStr = surahId.toString().padLeft(3, '0');
+        final aStr = nextAyah.toString().padLeft(3, '0');
+        final fallbackAyahUrls = [
+          'https://everyayah.com/data/Minshawy_Murattal_128kbps/$sStr$aStr.mp3',
+          'https://everyayah.com/data/Husary_128kbps/$sStr$aStr.mp3',
+          'https://everyayah.com/data/Alafasy_128kbps/$sStr$aStr.mp3',
+        ].where((u) => u != primaryUrl).toList();
+
+        final nextSessionId = ++_activePlaySessionId;
         currentPlayingKey.value = '$surahId:$nextAyah';
         _playingReciterId = reciter.id;
         isPlaying.value = true;
@@ -54,10 +65,13 @@ class AyahAudioPlayer {
           primaryUrl,
           player: _player,
           primaryUrl: primaryUrl,
-          fallbackUrls: [fallbackSurahUrl],
+          fallbackUrls: fallbackAyahUrls,
           cacheKey: cacheKey,
           onStopCallback: stop,
         );
+
+        if (nextSessionId != _activePlaySessionId) return;
+
         if (!ok) {
           currentPlayingKey.value = null;
           isPlaying.value = false;
@@ -90,15 +104,25 @@ class AyahAudioPlayer {
       return;
     }
 
-    try {
-      await _player.stop();
-      final primaryUrl = SettingsService.instance.getAyahAudioUrl(surahId, ayahNumber);
-      // Fallback to the EXACT SAME reciter's surah stream if EveryAyah subfolder is unavailable
-      final fallbackSurahUrl = SettingsService.instance.getSurahAudioUrl(surahId, reciter.id);
+    final sessionId = ++_activePlaySessionId;
 
+    try {
       currentPlayingKey.value = key;
       _playingReciterId = reciter.id;
       isPlaying.value = true;
+
+      await _player.stop();
+      if (sessionId != _activePlaySessionId) return;
+
+      final primaryUrl = SettingsService.instance.getAyahAudioUrl(surahId, ayahNumber);
+      final sStr = surahId.toString().padLeft(3, '0');
+      final aStr = ayahNumber.toString().padLeft(3, '0');
+      // Authentic verse-by-verse fallbacks for the EXACT requested ayah (never whole surah!)
+      final fallbackAyahUrls = [
+        'https://everyayah.com/data/Minshawy_Murattal_128kbps/$sStr$aStr.mp3',
+        'https://everyayah.com/data/Husary_128kbps/$sStr$aStr.mp3',
+        'https://everyayah.com/data/Alafasy_128kbps/$sStr$aStr.mp3',
+      ].where((u) => u != primaryUrl).toList();
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -128,10 +152,12 @@ class AyahAudioPlayer {
         primaryUrl,
         player: _player,
         primaryUrl: primaryUrl,
-        fallbackUrls: [fallbackSurahUrl],
+        fallbackUrls: fallbackAyahUrls,
         cacheKey: cacheKey,
         onStopCallback: stop,
       );
+
+      if (sessionId != _activePlaySessionId) return;
 
       if (!ok) {
         throw Exception('Could not stream reciter ${reciter.id}');
@@ -145,15 +171,17 @@ class AyahAudioPlayer {
         unawaited(FastAudioService.instance.prefetchAudio(nextUrl, nextCacheKey));
       }
     } catch (e) {
-      currentPlayingKey.value = null;
-      isPlaying.value = false;
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('تعذر تشغيل صوت القارئ ${reciter.nameAr}. يرجى التحقق من الاتصال بالإنترنت.'),
-            backgroundColor: Colors.redAccent,
-          ),
-        );
+      if (sessionId == _activePlaySessionId) {
+        currentPlayingKey.value = null;
+        isPlaying.value = false;
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('تعذر تشغيل صوت القارئ ${reciter.nameAr}. يرجى التحقق من الاتصال بالإنترنت.'),
+              backgroundColor: Colors.redAccent,
+            ),
+          );
+        }
       }
     }
   }
@@ -197,6 +225,7 @@ class AyahAudioPlayer {
   }
 
   Future<void> stop() async {
+    _activePlaySessionId++;
     try {
       await _player.stop();
     } catch (_) {}

@@ -10,6 +10,7 @@ class ReciterInfo {
   final String style; // 'مرتل', 'مجود', 'المعلم', 'تلاوة خاشعة'
   final String serverUrl; // MP3Quran CDN Base
   final String subfolder; // EveryAyah subfolder
+  final bool hasVerseAudio; // Whether this Sheikh has authentic verse-by-verse recordings on EveryAyah CDN
 
   const ReciterInfo({
     required this.id,
@@ -17,6 +18,7 @@ class ReciterInfo {
     required this.style,
     required this.serverUrl,
     required this.subfolder,
+    this.hasVerseAudio = true,
   });
 }
 
@@ -45,7 +47,8 @@ class SettingsService extends ChangeNotifier {
       nameAr: 'رعد محمد الكردي',
       style: 'تلاوة خاشعة',
       serverUrl: 'https://server6.mp3quran.net/kurdi/',
-      subfolder: 'Raad_Al-Kurdi_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'akhdar',
@@ -59,7 +62,8 @@ class SettingsService extends ChangeNotifier {
       nameAr: 'العيون الكوشي (رواية ورش)',
       style: 'مرتل',
       serverUrl: 'https://server8.mp3quran.net/koshi/',
-      subfolder: 'Kouchi_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'husary',
@@ -101,14 +105,15 @@ class SettingsService extends ChangeNotifier {
       nameAr: 'محمود علي البنا (مرتل)',
       style: 'مرتل',
       serverUrl: 'https://server8.mp3quran.net/bna/',
-      subfolder: 'Banna_32kbps',
+      subfolder: 'mahmoud_ali_al_banna_32kbps',
     ),
     ReciterInfo(
       id: 'rifaat',
       nameAr: 'محمد رفعت (تلاوات نادرة)',
       style: 'مجود',
       serverUrl: 'https://server14.mp3quran.net/refat/',
-      subfolder: 'Rifat_32kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'tablawi',
@@ -192,7 +197,8 @@ class SettingsService extends ChangeNotifier {
       nameAr: 'إدريس أبكر',
       style: 'تلاوة خاشعة',
       serverUrl: 'https://server6.mp3quran.net/abkr/',
-      subfolder: 'Idrees_Abkar_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'basfar',
@@ -213,21 +219,21 @@ class SettingsService extends ChangeNotifier {
       nameAr: 'عبد الله عواد الجهني',
       style: 'مرتل',
       serverUrl: 'https://server11.mp3quran.net/jhn/',
-      subfolder: 'Abdullaah_3wwad_Al-Juhaynee_128kbps',
+      subfolder: 'Abdullaah_3awwaad_Al-Juhaynee_128kbps',
     ),
     ReciterInfo(
       id: 'bukhatir',
       nameAr: 'صلاح بو خاطر',
       style: 'مرتل',
       serverUrl: 'https://server8.mp3quran.net/bu_khtr/',
-      subfolder: 'Salah_Bukhatir_128kbps',
+      subfolder: 'Salaah_AbdulRahman_Bukhatir_128kbps',
     ),
     ReciterInfo(
       id: 'fares_abbad',
       nameAr: 'فارس عباد',
       style: 'مرتل',
       serverUrl: 'https://server8.mp3quran.net/frs_a/',
-      subfolder: 'Fares_Abbad_128kbps',
+      subfolder: 'Fares_Abbad_64kbps',
     ),
     ReciterInfo(
       id: 'muhammad_ayyoub',
@@ -241,14 +247,16 @@ class SettingsService extends ChangeNotifier {
       nameAr: 'عبد الباري الثبيتي',
       style: 'مرتل',
       serverUrl: 'https://server6.mp3quran.net/thubti/',
-      subfolder: 'Abdulbari_Ath-Thubaity_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'khalid_jalil',
       nameAr: 'خالد الجليل',
       style: 'تلاوة خاشعة',
       serverUrl: 'https://server10.mp3quran.net/jleel/',
-      subfolder: 'Khalid_Al-Jileel_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'ali_jaber',
@@ -262,42 +270,48 @@ class SettingsService extends ChangeNotifier {
       nameAr: 'منصور السالمي',
       style: 'تلاوة خاشعة',
       serverUrl: 'https://server16.mp3quran.net/mansor/',
-      subfolder: 'Mansoor_Al-Salimi_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'islam_sobhi',
       nameAr: 'إسلام صبحي',
       style: 'تلاوة خاشعة',
       serverUrl: 'https://server14.mp3quran.net/islam/Rewayat-Hafs-A-n-Assem/',
-      subfolder: 'Islam_Sobhi_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'hazza_albalushi',
       nameAr: 'هزاع البلوشي',
       style: 'تلاوة خاشعة',
       serverUrl: 'https://server11.mp3quran.net/hazza/',
-      subfolder: 'Hazza_Al-Balushi_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'omar_qazabri',
       nameAr: 'عمر القزابري (رواية ورش)',
       style: 'مرتل',
       serverUrl: 'https://server9.mp3quran.net/omar_warsh/',
-      subfolder: 'Omar_Al-Qazabri_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'abdulrasheed_soufi',
       nameAr: 'عبد الرشيد صوفي (رواية خلف)',
       style: 'مرتل',
       serverUrl: 'https://server16.mp3quran.net/soufi/Rewayat-Khalaf-A-n-Hamzah/',
-      subfolder: 'AbdulRasheed_Soufi_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'badr_turki',
       nameAr: 'بدر التركي',
       style: 'تلاوة خاشعة',
       serverUrl: 'https://server16.mp3quran.net/badr/Rewayat-Hafs-A-n-Assem/',
-      subfolder: 'Badr_Al-Turki_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'jbrl',
@@ -311,56 +325,61 @@ class SettingsService extends ChangeNotifier {
       nameAr: 'بندر بليلة (إمام الحرم المكي)',
       style: 'مرتل',
       serverUrl: 'https://server6.mp3quran.net/balilah/',
-      subfolder: 'Bandar_Balila_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'mohna',
       nameAr: 'خالد المهنا (إمام المسجد النبوي)',
       style: 'تلاوة خاشعة',
       serverUrl: 'https://server11.mp3quran.net/mohna/',
-      subfolder: 'Khalid_Al-Mohanna_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'mtrod',
       nameAr: 'عبد الله المطرود',
       style: 'مرتل',
       serverUrl: 'https://server8.mp3quran.net/mtrod/',
-      subfolder: 'Abdullah_Al-Matroud_128kbps',
+      subfolder: 'Abdullah_Matroud_128kbps',
     ),
     ReciterInfo(
       id: 'tnjy',
       nameAr: 'خليفة الطنيجي',
       style: 'مرتل',
       serverUrl: 'https://server12.mp3quran.net/tnjy/',
-      subfolder: 'Khalifa_Al-Tunaiji_128kbps',
+      subfolder: 'khalefa_al_tunaiji_64kbps',
     ),
     ReciterInfo(
       id: 'hawashi',
       nameAr: 'أحمد الحواشي (رحمه الله)',
       style: 'تلاوة خاشعة',
       serverUrl: 'https://server11.mp3quran.net/hawashi/',
-      subfolder: 'Ahmed_Al-Hawashi_64kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 's_budair',
       nameAr: 'صلاح البدير (إمام المسجد النبوي)',
       style: 'مرتل',
       serverUrl: 'https://server6.mp3quran.net/s_bud/',
-      subfolder: 'Salah_Al-Budair_128kbps',
+      subfolder: 'Salah_Al_Budair_128kbps',
     ),
     ReciterInfo(
       id: 'lahidan',
       nameAr: 'محمد اللحيدان',
       style: 'تلاوة خاشعة',
       serverUrl: 'https://server8.mp3quran.net/lhdan/',
-      subfolder: 'Mohammad_Al-Lohaidan_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'bu_snnh',
       nameAr: 'عادل ريان',
       style: 'تلاوة خاشعة',
       serverUrl: 'https://server8.mp3quran.net/ryan/',
-      subfolder: 'Adel_Rayan_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'ali_hajjaj',
@@ -374,84 +393,94 @@ class SettingsService extends ChangeNotifier {
       nameAr: 'نبيل الرفاعي',
       style: 'تلاوة خاشعة',
       serverUrl: 'https://server6.mp3quran.net/nabil/',
-      subfolder: 'Nabil_Rifai_128kbps',
+      subfolder: 'Nabil_Rifa3i_48kbps',
     ),
     ReciterInfo(
       id: 'abdulwali_arkani',
       nameAr: 'عبد الولي الأركاني',
       style: 'تلاوة خاشعة',
       serverUrl: 'https://server6.mp3quran.net/arkani/',
-      subfolder: 'Abdulwali_Al-Arkani_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'khaled_qahtani',
       nameAr: 'خالد القحطاني',
       style: 'مرتل',
       serverUrl: 'https://server10.mp3quran.net/qht/',
-      subfolder: 'Khaled_Al-Qahtani_128kbps',
+      subfolder: 'Khaalid_Abdullaah_al-Qahtaanee_192kbps',
     ),
     ReciterInfo(
       id: 'abdullah_kamel',
       nameAr: 'عبد الله كامل (رحمه الله)',
       style: 'تلاوة خاشعة',
       serverUrl: 'https://server16.mp3quran.net/kamel/Rewayat-Hafs-A-n-Assem/',
-      subfolder: 'Abdullah_Kamel_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'alzain',
       nameAr: 'الزين محمد أحمد',
       style: 'مرتل',
       serverUrl: 'https://server9.mp3quran.net/alzain/',
-      subfolder: 'Alzain_Mohammad_Ahmad_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'ahmed_trabulsi',
       nameAr: 'أحمد الطرابلسي (رواية قالون)',
       style: 'مرتل',
       serverUrl: 'https://server10.mp3quran.net/trabulsi/',
-      subfolder: 'Ahmed_Al-Trabulsi_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'saber_abdulhakam',
       nameAr: 'صابر عبد الحكم',
       style: 'مرتل',
       serverUrl: 'https://server12.mp3quran.net/hkm/',
-      subfolder: 'Saber_Abdulhakam_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'hatem_farid',
       nameAr: 'حاتم فريد الواعر',
       style: 'تلاوة خاشعة',
       serverUrl: 'https://server11.mp3quran.net/hatem/',
-      subfolder: 'Hatem_Fareed_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'khalid_abdulkhafi',
       nameAr: 'خالد عبد الكافي',
       style: 'مرتل',
       serverUrl: 'https://server11.mp3quran.net/kafi/',
-      subfolder: 'Khalid_Abdulkafi_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'yasser_qurashi',
       nameAr: 'ياسر القرشي',
       style: 'تلاوة خاشعة',
       serverUrl: 'https://server9.mp3quran.net/qurashi/',
-      subfolder: 'Yasser_Al-Qurashi_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'muhammad_osman',
       nameAr: 'محمد عثمان خان',
       style: 'مرتل',
       serverUrl: 'https://server6.mp3quran.net/khan/',
-      subfolder: 'Muhammad_Osman_Khan_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
     ReciterInfo(
       id: 'jamal_shaker',
       nameAr: 'جمال شاكر عبد الله',
       style: 'مرتل',
       serverUrl: 'https://server8.mp3quran.net/jamal/',
-      subfolder: 'Jamal_Shaker_Abdullah_128kbps',
+      subfolder: 'Minshawy_Murattal_128kbps',
+      hasVerseAudio: false,
     ),
   ];
 
@@ -828,8 +857,13 @@ class SettingsService extends ChangeNotifier {
   }
 
   /// Builds the EveryAyah URL for an ayah given the current reciter
-  String getAyahAudioUrl(int surahId, int ayahNumber) {
-    final sub = currentReciter.subfolder;
+  String getAyahAudioUrl(int surahId, int ayahNumber, [String? reciterId]) {
+    final rid = reciterId ?? _selectedReciterId;
+    final reciter = availableReciters.firstWhere(
+      (r) => r.id == rid,
+      orElse: () => availableReciters.first,
+    );
+    final sub = reciter.hasVerseAudio ? reciter.subfolder : 'Minshawy_Murattal_128kbps';
     final sStr = surahId.toString().padLeft(3, '0');
     final aStr = ayahNumber.toString().padLeft(3, '0');
     return 'https://everyayah.com/data/$sub/$sStr$aStr.mp3';

@@ -233,15 +233,15 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
 
             final ayahs = snapshot.data!;
 
-            // Clear old recognizers
-            for (final r in _recognizers) {
-              r.dispose();
-            }
-            _recognizers.clear();
-
             return ValueListenableBuilder<String?>(
               valueListenable: AyahAudioPlayer.instance.currentPlayingKey,
               builder: (context, playingKey, _) {
+                // Clear and dispose old gesture recognizers before creating new ones for this state
+                for (final r in _recognizers) {
+                  r.dispose();
+                }
+                _recognizers.clear();
+
                 if (_readingDisplayMode == 'cards' || MediaQuery.accessibleNavigationOf(context)) {
                   return _buildAccessibleAyahList(
                     ayahs: ayahs,
