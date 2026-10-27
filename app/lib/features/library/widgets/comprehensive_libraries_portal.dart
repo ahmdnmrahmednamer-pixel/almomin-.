@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/localization/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/ui/adaptive_screen_layouts.dart';
@@ -49,8 +50,12 @@ class _ComprehensiveLibrariesPortalState
   String _selectedGarden = 'garden_all';
 
   List<StructuredScreenItem> _buildAllLibraryItems(BuildContext context) {
-    void push(Widget screen) {
-      Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
+    void push(Widget screen, [String? route]) {
+      if (route != null) {
+        context.push(route);
+      } else {
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
+      }
     }
 
     final gScholars = context.tr('garden_scholars');
@@ -69,7 +74,7 @@ class _ComprehensiveLibrariesPortalState
         category: gScholars,
         icon: Icons.mic_external_on_rounded,
         accentColor: const Color(0xFF0F5B45),
-        onTap: () => push(const ScholarsAudioLibraryScreen()),
+        onTap: () => push(const ScholarsAudioLibraryScreen(), '/scholars-audio'),
       ),
       StructuredScreenItem(
         id: 'lib_egypt_heritage',
@@ -80,7 +85,7 @@ class _ComprehensiveLibrariesPortalState
         category: gScholars,
         icon: Icons.radio_rounded,
         accentColor: const Color(0xFF0A4D3C),
-        onTap: () => push(const EgyptianHeritageScreen()),
+        onTap: () => push(const EgyptianHeritageScreen(), '/egypt-heritage'),
       ),
       StructuredScreenItem(
         id: 'lib_unified_search',
@@ -91,7 +96,7 @@ class _ComprehensiveLibrariesPortalState
         category: gScholars,
         icon: Icons.manage_search_rounded,
         accentColor: AppColors.primaryGreen,
-        onTap: () => push(const UnifiedLibrarySearchScreen()),
+        onTap: () => push(const UnifiedLibrarySearchScreen(), '/library-search'),
       ),
 
       // ================= الروضة ٢: مشكاة النبوة والسيرة والقصص =================
@@ -104,7 +109,7 @@ class _ComprehensiveLibrariesPortalState
         category: gProphethood,
         icon: Icons.collections_bookmark_rounded,
         accentColor: const Color(0xFF0F5B45),
-        onTap: () => push(const RiyadAlSalihinScreen()),
+        onTap: () => push(const RiyadAlSalihinScreen(), '/riyad-alsalihin'),
       ),
       StructuredScreenItem(
         id: 'lib_hadith',
@@ -115,7 +120,7 @@ class _ComprehensiveLibrariesPortalState
         category: gProphethood,
         icon: Icons.auto_stories_rounded,
         accentColor: AppColors.primaryGreen,
-        onTap: () => push(const HadithLibraryScreen()),
+        onTap: () => push(const HadithLibraryScreen(), '/hadith'),
       ),
       StructuredScreenItem(
         id: 'lib_asma_shamail',
@@ -126,7 +131,7 @@ class _ComprehensiveLibrariesPortalState
         category: gProphethood,
         icon: Icons.stars_rounded,
         accentColor: const Color(0xFFB88917),
-        onTap: () => push(const AsmaAllahShamailScreen()),
+        onTap: () => push(const AsmaAllahShamailScreen(), '/asma-shamail'),
       ),
       StructuredScreenItem(
         id: 'lib_islamic_history',
@@ -137,7 +142,7 @@ class _ComprehensiveLibrariesPortalState
         category: gProphethood,
         icon: Icons.history_edu_rounded,
         accentColor: const Color(0xFF6B4C35),
-        onTap: () => push(const IslamicHistoryScreen()),
+        onTap: () => push(const IslamicHistoryScreen(), '/islamic-history'),
       ),
       StructuredScreenItem(
         id: 'lib_stories',
@@ -147,7 +152,7 @@ class _ComprehensiveLibrariesPortalState
         category: gProphethood,
         icon: Icons.record_voice_over_rounded,
         accentColor: const Color(0xFF2E5A44),
-        onTap: () => push(const StoriesScreen()),
+        onTap: () => push(const StoriesScreen(), '/stories'),
       ),
 
       // ================= الروضة ٣: بصائر القرآن والمتون العلمية =================
@@ -160,7 +165,7 @@ class _ComprehensiveLibrariesPortalState
         category: gQuran,
         icon: Icons.compare_arrows_rounded,
         accentColor: const Color(0xFF1B4332),
-        onTap: () => push(const ComparativeTafsirScreen()),
+        onTap: () => push(const ComparativeTafsirScreen(), '/comparative-tafsir'),
       ),
       StructuredScreenItem(
         id: 'lib_gharib_quran',
@@ -171,7 +176,7 @@ class _ComprehensiveLibrariesPortalState
         category: gQuran,
         icon: Icons.translate_rounded,
         accentColor: const Color(0xFF1565C0),
-        onTap: () => push(const GharibQuranScreen()),
+        onTap: () => push(const GharibQuranScreen(), '/gharib-quran'),
       ),
       StructuredScreenItem(
         id: 'lib_quran_sciences',
@@ -181,7 +186,7 @@ class _ComprehensiveLibrariesPortalState
         category: gQuran,
         icon: Icons.menu_book_rounded,
         accentColor: const Color(0xFF1F6E58),
-        onTap: () => push(const QuranSciencesScreen()),
+        onTap: () => push(const QuranSciencesScreen(), '/quran-sciences'),
       ),
       StructuredScreenItem(
         id: 'lib_islamic_mutoon',
@@ -192,7 +197,7 @@ class _ComprehensiveLibrariesPortalState
         category: gQuran,
         icon: Icons.school_rounded,
         accentColor: const Color(0xFF8E6C18),
-        onTap: () => push(const IslamicMutoonScreen()),
+        onTap: () => push(const IslamicMutoonScreen(), '/islamic-mutoon'),
       ),
       StructuredScreenItem(
         id: 'lib_tajweed_topics',
@@ -203,7 +208,7 @@ class _ComprehensiveLibrariesPortalState
         category: gQuran,
         icon: Icons.graphic_eq_rounded,
         accentColor: const Color(0xFF1565C0),
-        onTap: () => push(const TajweedScreen()),
+        onTap: () => push(const TajweedScreen(), '/tajweed'),
       ),
 
       // ================= الروضة ٤: فقه العبادات وطُهرة المال والمناسك =================
@@ -216,7 +221,7 @@ class _ComprehensiveLibrariesPortalState
         category: gFiqh,
         icon: Icons.explore_rounded,
         accentColor: const Color(0xFF0F5B45),
-        onTap: () => push(const HajjUmrahCompanionScreen()),
+        onTap: () => push(const HajjUmrahCompanionScreen(), '/hajj-umrah'),
       ),
       StructuredScreenItem(
         id: 'lib_fiqh',
@@ -227,7 +232,7 @@ class _ComprehensiveLibrariesPortalState
         category: gFiqh,
         icon: Icons.balance_rounded,
         accentColor: const Color(0xFF0D5C46),
-        onTap: () => push(const FiqhLibraryScreen()),
+        onTap: () => push(const FiqhLibraryScreen(), '/fiqh-library'),
       ),
       StructuredScreenItem(
         id: 'lib_kaffarah_fidyah',
@@ -238,7 +243,7 @@ class _ComprehensiveLibrariesPortalState
         category: gFiqh,
         icon: Icons.volunteer_activism_rounded,
         accentColor: const Color(0xFF27AE60),
-        onTap: () => push(const KaffarahFidyahScreen()),
+        onTap: () => push(const KaffarahFidyahScreen(), '/kaffarah-fidyah'),
       ),
       StructuredScreenItem(
         id: 'lib_mawarith_calc',
@@ -249,7 +254,7 @@ class _ComprehensiveLibrariesPortalState
         category: gFiqh,
         icon: Icons.calculate_rounded,
         accentColor: const Color(0xFF27AE60),
-        onTap: () => push(const MawarithCalculatorScreen()),
+        onTap: () => push(const MawarithCalculatorScreen(), '/mawarith-calculator'),
       ),
 
       // ================= الروضة ٥: تزكية القلوب ومواسم الخيرات =================
@@ -262,7 +267,7 @@ class _ComprehensiveLibrariesPortalState
         category: gHearts,
         icon: Icons.favorite_rounded,
         accentColor: const Color(0xFF1E8260),
-        onTap: () => push(const SpiritualMoodRemedyScreen()),
+        onTap: () => push(const SpiritualMoodRemedyScreen(), '/spiritual-mood'),
       ),
       StructuredScreenItem(
         id: 'lib_tadabbur_journal',
@@ -273,7 +278,7 @@ class _ComprehensiveLibrariesPortalState
         category: gHearts,
         icon: Icons.psychology_alt_rounded,
         accentColor: const Color(0xFF1565C0),
-        onTap: () => push(const TadabburJournalScreen()),
+        onTap: () => push(const TadabburJournalScreen(), '/tadabbur-journal'),
       ),
       StructuredScreenItem(
         id: 'lib_sunan_rawatib',
@@ -284,7 +289,7 @@ class _ComprehensiveLibrariesPortalState
         category: gHearts,
         icon: Icons.mosque_rounded,
         accentColor: const Color(0xFF0F5B45),
-        onTap: () => push(const SunanRawatibScreen()),
+        onTap: () => push(const SunanRawatibScreen(), '/sunan-rawatib'),
       ),
       StructuredScreenItem(
         id: 'lib_voluntary_fasting',
@@ -295,7 +300,7 @@ class _ComprehensiveLibrariesPortalState
         category: gHearts,
         icon: Icons.wb_twilight_rounded,
         accentColor: const Color(0xFFB88917),
-        onTap: () => push(const VoluntaryFastingScreen()),
+        onTap: () => push(const VoluntaryFastingScreen(), '/voluntary-fasting'),
       ),
       StructuredScreenItem(
         id: 'lib_daily_wird_studio',
@@ -306,7 +311,7 @@ class _ComprehensiveLibrariesPortalState
         category: gHearts,
         icon: Icons.task_alt_rounded,
         accentColor: const Color(0xFF8E6C18),
-        onTap: () => push(const DailyWirdScreen()),
+        onTap: () => push(const DailyWirdScreen(), '/daily-wird'),
       ),
     ];
   }

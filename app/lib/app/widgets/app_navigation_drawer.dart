@@ -202,6 +202,95 @@ class AppNavigationDrawer extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             vertical: 8, horizontal: 8),
                         children: [
+                          // ================= البطاقة التوجيهية: فهرس الشاشات ودليل الأبواب الشامل =================
+                          Container(
+                            margin: const EdgeInsets.fromLTRB(6, 4, 6, 12),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFF0F5B45), Color(0xFF1B6B4E)],
+                                begin: Alignment.topRight,
+                                end: Alignment.bottomLeft,
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: AppColors.accentGold.withOpacity(0.5),
+                                width: 1.2,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.12),
+                                  blurRadius: 6,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(12),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  context.push('/app-directory');
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 10),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 38,
+                                        height: 38,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.accentGold.withOpacity(0.2),
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: AppColors.accentGold,
+                                            width: 1.2,
+                                          ),
+                                        ),
+                                        child: const Icon(
+                                          Icons.dashboard_customize_rounded,
+                                          color: AppColors.accentGold,
+                                          size: 20,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      const Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'دليل وفهرس الشاشات الشامل',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w900,
+                                                fontSize: 13.5,
+                                              ),
+                                            ),
+                                            SizedBox(height: 2),
+                                            Text(
+                                              'خريطة لكافة أبواب وخدمات التطبيق (٥٨ شاشة)',
+                                              style: TextStyle(
+                                                color: Color(0xFFFFEFA6),
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        color: AppColors.accentGold,
+                                        size: 14,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
                           // ================= المجموعة ١: المقامات الإيمانية الخمسة =================
                           _buildGroupLabel(context.tr('drawer_group_sanctuaries')),
                           _buildDrawerTile(
@@ -267,12 +356,7 @@ class AppNavigationDrawer extends StatelessWidget {
                             color: const Color(0xFF1E8260),
                             onTap: () {
                               Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        const SpiritualMoodRemedyScreen()),
-                              );
+                              context.push('/spiritual-mood');
                             },
                           ),
                           _buildDrawerTile(
@@ -302,11 +386,7 @@ class AppNavigationDrawer extends StatelessWidget {
                             color: const Color(0xFF0F5B45),
                             onTap: () {
                               Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const SunanRawatibScreen()),
-                              );
+                              context.push('/sunan-rawatib');
                             },
                           ),
                           _buildDrawerTile(
@@ -317,12 +397,7 @@ class AppNavigationDrawer extends StatelessWidget {
                             color: const Color(0xFFB88917),
                             onTap: () {
                               Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        const VoluntaryFastingScreen()),
-                              );
+                              context.push('/voluntary-fasting');
                             },
                           ),
                           _buildDrawerTile(
@@ -332,12 +407,7 @@ class AppNavigationDrawer extends StatelessWidget {
                             color: const Color(0xFF1565C0),
                             onTap: () {
                               Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        const TadabburJournalScreen()),
-                              );
+                              context.push('/tadabbur-journal');
                             },
                           ),
 
@@ -352,13 +422,7 @@ class AppNavigationDrawer extends StatelessWidget {
                             color: const Color(0xFF0F5B45),
                             onTap: () {
                               Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) =>
-                                      const ScholarsAudioLibraryScreen(),
-                                ),
-                              );
+                              context.push('/scholars-audio');
                             },
                           ),
                           _buildDrawerTile(
@@ -368,12 +432,7 @@ class AppNavigationDrawer extends StatelessWidget {
                             color: const Color(0xFF1B4332),
                             onTap: () {
                               Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        const ComparativeTafsirScreen()),
-                              );
+                              context.push('/comparative-tafsir');
                             },
                           ),
                           _buildDrawerTile(
@@ -383,11 +442,7 @@ class AppNavigationDrawer extends StatelessWidget {
                             color: const Color(0xFF1565C0),
                             onTap: () {
                               Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const GharibQuranScreen()),
-                              );
+                              context.push('/gharib-quran');
                             },
                           ),
                           _buildDrawerTile(
@@ -397,12 +452,7 @@ class AppNavigationDrawer extends StatelessWidget {
                             color: const Color(0xFF0F5B45),
                             onTap: () {
                               Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        const RiyadAlSalihinScreen()),
-                              );
+                              context.push('/riyad-alsalihin');
                             },
                           ),
                           _buildDrawerTile(
@@ -413,12 +463,7 @@ class AppNavigationDrawer extends StatelessWidget {
                             color: const Color(0xFF8E6C18),
                             onTap: () {
                               Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        const IslamicMutoonScreen()),
-                              );
+                              context.push('/islamic-mutoon');
                             },
                           ),
                           _buildDrawerTile(
@@ -429,12 +474,7 @@ class AppNavigationDrawer extends StatelessWidget {
                             color: const Color(0xFF0F5B45),
                             onTap: () {
                               Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        const HajjUmrahCompanionScreen()),
-                              );
+                              context.push('/hajj-umrah');
                             },
                           ),
                           _buildDrawerTile(
@@ -445,12 +485,7 @@ class AppNavigationDrawer extends StatelessWidget {
                             color: const Color(0xFF27AE60),
                             onTap: () {
                               Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        const KaffarahFidyahScreen()),
-                              );
+                              context.push('/kaffarah-fidyah');
                             },
                           ),
                           _buildDrawerTile(
@@ -461,12 +496,7 @@ class AppNavigationDrawer extends StatelessWidget {
                             color: const Color(0xFF27AE60),
                             onTap: () {
                               Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        const MawarithCalculatorScreen()),
-                              );
+                              context.push('/mawarith-calculator');
                             },
                           ),
                           _buildDrawerTile(
@@ -522,12 +552,7 @@ class AppNavigationDrawer extends StatelessWidget {
                             color: const Color(0xFF25739B),
                             onTap: () {
                               Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        const ContactSupportScreen()),
-                              );
+                              context.push('/support');
                             },
                           ),
                           _buildDrawerTile(

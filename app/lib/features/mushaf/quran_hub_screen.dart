@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../app/widgets/app_navigation_drawer.dart';
 import '../../core/audio/ayah_audio_player.dart';
 import '../../core/localization/app_localizations.dart';
@@ -151,13 +152,7 @@ class _QuranHubScreenState extends State<QuranHubScreen>
                 IconButton(
                   icon: const Icon(Icons.download_for_offline_outlined),
                   tooltip: context.tr('download'),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const DownloadsManagerScreen()),
-                    );
-                  },
+                  onPressed: () => context.push('/downloads'),
                 ),
               ],
               bottom: PreferredSize(
@@ -220,15 +215,7 @@ class _QuranHubScreenState extends State<QuranHubScreen>
                           color: Colors.transparent,
                           child: InkWell(
                             borderRadius: BorderRadius.circular(16),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => PageModeMushafScreen(
-                                      initialPage: lastPage),
-                                ),
-                              );
-                            },
+                            onTap: () => context.push('/mushaf-pages?page=$lastPage'),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 12),
@@ -390,39 +377,17 @@ class _QuranHubScreenState extends State<QuranHubScreen>
                       icon: const Icon(Icons.auto_stories_outlined,
                           color: AppColors.primaryGreen, size: 20),
                       tooltip: 'صفحات المصحف',
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => PageModeMushafScreen(
-                                initialPage: surah.pageStart),
-                          ),
-                        );
-                      },
+                      onPressed: () => context.push('/mushaf-pages?page=${surah.pageStart}'),
                     ),
                     IconButton(
                       icon: const Icon(Icons.format_align_right_rounded,
                           color: AppColors.accentGold, size: 20),
                       tooltip: 'تلاوة وتفسير وإعراب',
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => SurahReaderScreen(surah: surah),
-                          ),
-                        );
-                      },
+                      onPressed: () => context.push('/surah-reader?surahId=${surah.id}', extra: surah),
                     ),
                   ],
                 ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => SurahReaderScreen(surah: surah),
-                    ),
-                  );
-                },
+                onTap: () => context.push('/surah-reader?surahId=${surah.id}', extra: surah),
               );
             },
           ),
@@ -496,13 +461,7 @@ class _QuranHubScreenState extends State<QuranHubScreen>
                 title: 'حفظ السور للاستماع',
                 subtitle: 'تلاوة متصلة بدون إنترنت',
                 color: const Color(0xFF16A085),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => const DownloadsManagerScreen()),
-                  );
-                },
+                onTap: () => context.push('/downloads'),
               ),
             ),
             const SizedBox(width: 12),
@@ -512,13 +471,7 @@ class _QuranHubScreenState extends State<QuranHubScreen>
                 title: context.tr('memorization'),
                 subtitle: 'تثبيت الحفظ بالتكرار',
                 color: const Color(0xFFB8893A),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => const MemorizationScreen()),
-                  );
-                },
+                onTap: () => context.push('/memorization'),
               ),
             ),
           ],
@@ -598,10 +551,7 @@ class _QuranHubScreenState extends State<QuranHubScreen>
               'مقارنة معاني الآيات في ٩ تفاسير معتمدة مع الإعراب وأسباب النزول',
           color: const Color(0xFF0F5B45),
           isDark: isDark,
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const ComparativeTafsirScreen()),
-          ),
+          onTap: () => context.push('/comparative-tafsir'),
         ),
         const SizedBox(height: 12),
         _buildToolBanner(
@@ -611,10 +561,7 @@ class _QuranHubScreenState extends State<QuranHubScreen>
               'بيان الكلمات القرآنية وجذورها اللغوية ولطائفها البلاغية واختبار الفهم',
           color: const Color(0xFF1565C0),
           isDark: isDark,
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const GharibQuranScreen()),
-          ),
+          onTap: () => context.push('/gharib-quran'),
         ),
         const SizedBox(height: 12),
         _buildToolBanner(
@@ -623,10 +570,7 @@ class _QuranHubScreenState extends State<QuranHubScreen>
           subtitle: 'أسباب النزول المحققة وفضائل السور والمكي والمدني',
           color: const Color(0xFF8E6C18),
           isDark: isDark,
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const QuranSciencesScreen()),
-          ),
+          onTap: () => context.push('/quran-sciences'),
         ),
         const SizedBox(height: 12),
         _buildToolBanner(
@@ -635,10 +579,7 @@ class _QuranHubScreenState extends State<QuranHubScreen>
           subtitle: 'البحث اللحظي بأي كلمة أو جزء من آية في المصحف الشريف',
           color: AppColors.primaryGreen,
           isDark: isDark,
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const QuranSearchScreen()),
-          ),
+          onTap: () => context.push('/search'),
         ),
       ],
     );
@@ -659,12 +600,7 @@ class _QuranHubScreenState extends State<QuranHubScreen>
           title: context.tr('khatma'),
           subtitle: 'تنظيم الورد اليومي ومتابعة ختمات القرآن الكريم',
           color: AppColors.primaryGreen,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const KhatmaScreen()),
-            );
-          },
+          onTap: () => context.push('/khatma'),
           isDark: isDark,
         ),
         const SizedBox(height: 12),
@@ -673,12 +609,7 @@ class _QuranHubScreenState extends State<QuranHubScreen>
           title: context.tr('tadabbur_journal'),
           subtitle: 'تدوين الرسالة الإيمانية والعمل التطبيقي والدعاء من الآيات',
           color: const Color(0xFF1565C0),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const TadabburJournalScreen()),
-            );
-          },
+          onTap: () => context.push('/tadabbur-journal'),
           isDark: isDark,
         ),
         const SizedBox(height: 12),
@@ -687,12 +618,7 @@ class _QuranHubScreenState extends State<QuranHubScreen>
           title: context.tr('tajweed_rules'),
           subtitle: 'مخارج الحروف وأحكام النون والميم والمدود بالأمثلة',
           color: const Color(0xFF16A085),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const TajweedScreen()),
-            );
-          },
+          onTap: () => context.push('/tajweed'),
           isDark: isDark,
         ),
         const SizedBox(height: 12),
@@ -701,12 +627,7 @@ class _QuranHubScreenState extends State<QuranHubScreen>
           title: context.tr('memorization'),
           subtitle: 'تكرار الآيات الكريمة وتثبيت المحفوظ ومراجعته',
           color: const Color(0xFF2E7D32),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const MemorizationScreen()),
-            );
-          },
+          onTap: () => context.push('/memorization'),
           isDark: isDark,
         ),
         const SizedBox(height: 12),
@@ -715,12 +636,7 @@ class _QuranHubScreenState extends State<QuranHubScreen>
           title: context.tr('quran_notes'),
           subtitle: 'حفظ الخواطر والفوائد الإيمانية حول آيات الكتاب العزيز',
           color: const Color(0xFFB8860B),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const QuranNotesScreen()),
-            );
-          },
+          onTap: () => context.push('/notes'),
           isDark: isDark,
         ),
       ],

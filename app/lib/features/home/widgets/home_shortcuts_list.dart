@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/localization/app_localizations.dart';
 import '../../../core/services/prayer_service.dart';
 import '../../../core/services/stories_service.dart';
@@ -53,98 +54,63 @@ class HomeShortcutsList extends StatelessWidget {
                   title: context.tr('scholars_gatherings'),
                   icon: Icons.mic_external_on_rounded,
                   color: const Color(0xFF0F5B45),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => const ScholarsAudioLibraryScreen()),
-                  ),
+                  onTap: () => context.push('/scholars-audio'),
                 ),
                 _buildSpiritualDoorTile(
                   context,
                   title: context.tr('spiritual_mood_remedy'),
                   icon: Icons.favorite_rounded,
                   color: const Color(0xFF1E8260),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => const SpiritualMoodRemedyScreen()),
-                  ),
+                  onTap: () => context.push('/spiritual-mood'),
                 ),
                 _buildSpiritualDoorTile(
                   context,
                   title: context.tr('sunan_rawatib'),
                   icon: Icons.mosque_rounded,
                   color: const Color(0xFF1B4332),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => const SunanRawatibScreen()),
-                  ),
+                  onTap: () => context.push('/sunan-rawatib'),
                 ),
                 _buildSpiritualDoorTile(
                   context,
                   title: context.tr('comparative_tafsir'),
                   icon: Icons.auto_stories_rounded,
                   color: const Color(0xFF8E6C18),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => const ComparativeTafsirScreen()),
-                  ),
+                  onTap: () => context.push('/comparative-tafsir'),
                 ),
                 _buildSpiritualDoorTile(
                   context,
                   title: context.tr('tadabbur_journal'),
                   icon: Icons.psychology_alt_rounded,
                   color: const Color(0xFF1565C0),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => const TadabburJournalScreen()),
-                  ),
+                  onTap: () => context.push('/tadabbur-journal'),
                 ),
                 _buildSpiritualDoorTile(
                   context,
                   title: context.tr('voluntary_fasting'),
                   icon: Icons.wb_twilight_rounded,
                   color: const Color(0xFFB88917),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => const VoluntaryFastingScreen()),
-                  ),
+                  onTap: () => context.push('/voluntary-fasting'),
                 ),
                 _buildSpiritualDoorTile(
                   context,
                   title: context.tr('hajj_umrah_companion'),
                   icon: Icons.explore_rounded,
                   color: const Color(0xFF2E5A44),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => const HajjUmrahCompanionScreen()),
-                  ),
+                  onTap: () => context.push('/hajj-umrah'),
                 ),
                 _buildSpiritualDoorTile(
                   context,
                   title: context.tr('hadith_library'),
                   icon: Icons.collections_bookmark_rounded,
                   color: const Color(0xFF0D5C46),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => const HadithLibraryScreen()),
-                  ),
+                  onTap: () => context.push('/hadith'),
                 ),
                 _buildSpiritualDoorTile(
                   context,
                   title: context.tr('daily_wird'),
                   icon: Icons.task_alt_rounded,
                   color: const Color(0xFF27AE60),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const DailyWirdScreen()),
-                  ),
+                  onTap: () => context.push('/daily-wird'),
                 ),
               ],
             );
@@ -217,11 +183,7 @@ class HomeShortcutsList extends StatelessWidget {
 
   Widget _buildEgyptianHeritageBanner(BuildContext context, bool isDark) {
     return InkWell(
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => const EgyptianHeritageScreen()),
-        );
-      },
+      onTap: () => context.push('/egypt-heritage'),
       borderRadius: BorderRadius.circular(18),
       child: Container(
         padding: const EdgeInsets.all(15),
@@ -300,12 +262,7 @@ class HomeShortcutsList extends StatelessWidget {
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const StoriesScreen()),
-          );
-        },
+        onTap: () => context.push('/stories'),
         child: Padding(
           padding: const EdgeInsets.all(14.0),
           child: Row(

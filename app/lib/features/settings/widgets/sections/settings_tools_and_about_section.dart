@@ -6,6 +6,7 @@ import '../../../adhkar/widgets/sharawi_post_prayer_card.dart';
 import '../../../audio/widgets/islamic_audio_player_sheet.dart';
 import '../../../backup/backup_restore_screen.dart';
 import '../../../home/momen_duaa_screen.dart';
+import '../../../home/screens/app_screen_directory_screen.dart';
 import '../../../khatma/khatma_screen.dart';
 import '../../../onboarding/onboarding_screen.dart';
 import '../../../prayer/battery_reliability_screen.dart';
@@ -25,6 +26,19 @@ class SettingsToolsAndAboutSection extends StatelessWidget {
         SettingsSectionHeader(
           title: context.tr('section_tools_about'),
           icon: Icons.build_circle_outlined,
+        ),
+        ListTile(
+          leading: const Icon(Icons.dashboard_customize_rounded,
+              color: AppColors.accentGold),
+          title: const Text('دليل وفهرس الشاشات الشامل',
+              style: TextStyle(fontWeight: FontWeight.w900)),
+          subtitle: const Text('خريطة لكافة أبواب وخدمات نور المؤمن (٥٨ شاشة)',
+              style: TextStyle(fontSize: 12)),
+          trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
+          onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => const AppScreenDirectoryScreen())),
         ),
         ListTile(
           leading: const Icon(Icons.auto_stories_rounded,

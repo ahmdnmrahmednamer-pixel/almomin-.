@@ -3,12 +3,23 @@ import '../features/prayer/sunan_rawatib_screen.dart';
 import '../features/library/screens/islamic_mutoon_screen.dart';
 import '../features/zakat/mawarith_calculator_screen.dart';
 import '../features/mushaf/tadabbur_journal_screen.dart';
+import '../features/mushaf/comparative_tafsir_screen.dart';
+import '../features/mushaf/surah_reader_screen.dart';
+import '../features/stories/story_detail_screen.dart';
+import '../features/tajweed/rule_detail_screen.dart';
+import '../features/home/screens/app_screen_directory_screen.dart';
 import '../features/audio/scholars_audio_library_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../core/localization/app_localizations.dart';
 import '../core/models/quran_topic.dart';
+import '../core/models/surah.dart';
+import '../core/models/prophet_story.dart';
+import '../core/models/tajweed_rule.dart';
 import '../core/services/settings_service.dart';
+import '../core/services/stories_service.dart';
+import '../core/services/tajweed_service.dart';
+import '../core/services/quran_repository.dart';
 import '../core/theme/app_theme.dart';
 import '../features/adhkar/adhkar_hub_screen.dart';
 import '../features/adhkar/adhkar_screen.dart';
@@ -85,6 +96,7 @@ class _MainScaffoldState extends State<MainScaffold> {
         location.startsWith('/quran-hub') ||
         location.startsWith('/mushaf-reader') ||
         location.startsWith('/mushaf-pages') ||
+        location.startsWith('/surah-reader') ||
         location.startsWith('/audio') ||
         location.startsWith('/scholars-audio') ||
         location.startsWith('/notes') ||
@@ -94,7 +106,10 @@ class _MainScaffoldState extends State<MainScaffold> {
         location.startsWith('/search') ||
         location.startsWith('/khatma') ||
         location.startsWith('/gharib-quran') ||
-        location.startsWith('/tajweed')) {
+        location.startsWith('/comparative-tafsir') ||
+        location.startsWith('/tadabbur-journal') ||
+        location.startsWith('/tajweed') ||
+        location.startsWith('/tajweed-rule')) {
       return 1;
     }
     if (location.startsWith('/prayer') ||
@@ -103,6 +118,7 @@ class _MainScaffoldState extends State<MainScaffold> {
         location.startsWith('/calendar') ||
         location.startsWith('/prayer-tracker') ||
         location.startsWith('/fajr-qiyam-alarm') ||
+        location.startsWith('/sunan-rawatib') ||
         location.startsWith('/voluntary-fasting') ||
         location.startsWith('/battery-guide')) {
       return 2;
@@ -117,8 +133,10 @@ class _MainScaffoldState extends State<MainScaffold> {
         location.startsWith('/hadith') ||
         location.startsWith('/hadith-detail') ||
         location.startsWith('/stories') ||
+        location.startsWith('/story-detail') ||
         location.startsWith('/ramadan') ||
         location.startsWith('/zakat') ||
+        location.startsWith('/mawarith-calculator') ||
         location.startsWith('/kaffarah-fidyah') ||
         location.startsWith('/hajj-umrah') ||
         location.startsWith('/downloads') ||
@@ -127,6 +145,8 @@ class _MainScaffoldState extends State<MainScaffold> {
         location.startsWith('/quran-sciences') ||
         location.startsWith('/asma-shamail') ||
         location.startsWith('/islamic-history') ||
+        location.startsWith('/islamic-mutoon') ||
+        location.startsWith('/riyad-alsalihin') ||
         location.startsWith('/library-search') ||
         location.startsWith('/daily-wird') ||
         location.startsWith('/daawah-studio')) {
@@ -409,6 +429,92 @@ final GoRouter appRouter = GoRouter(
         GoRoute(
           path: '/support',
           builder: (context, state) => const ContactSupportScreen(),
+        ),
+        GoRoute(
+          path: '/sunan-rawatib',
+          builder: (context, state) => const SunanRawatibScreen(),
+        ),
+        GoRoute(
+          path: '/riyad-alsalihin',
+          builder: (context, state) => const RiyadAlSalihinScreen(),
+        ),
+        GoRoute(
+          path: '/islamic-mutoon',
+          builder: (context, state) => const IslamicMutoonScreen(),
+        ),
+        GoRoute(
+          path: '/mawarith-calculator',
+          builder: (context, state) => const MawarithCalculatorScreen(),
+        ),
+        GoRoute(
+          path: '/tadabbur-journal',
+          builder: (context, state) => const TadabburJournalScreen(),
+        ),
+        GoRoute(
+          path: '/comparative-tafsir',
+          builder: (context, state) => const ComparativeTafsirScreen(),
+        ),
+        GoRoute(
+          path: '/app-directory',
+          builder: (context, state) => const AppScreenDirectoryScreen(),
+        ),
+        GoRoute(
+          path: '/surah-reader',
+          builder: (context, state) {
+            if (state.extra is Surah) {
+              final initialAyah = int.tryParse(state.uri.queryParameters['ayah'] ?? '1') ?? 1;
+              return SurahReaderScreen(surah: state.extra as Surah, initialAyah: initialAyah);
+            }
+            final surahId = int.tryParse(state.uri.queryParameters['surahId'] ?? '1') ?? 1;
+            final initialAyah = int.tryParse(state.uri.queryParameters['ayah'] ?? '1') ?? 1;
+            return FutureBuilder<Surah?>(
+              future: QuranRepository.getSurahById(surahId),
+              builder: (context, snapshot) {
+                if (snapshot.hasData && snapshot.data != null) {
+                  return SurahReaderScreen(surah: snapshot.data!, initialAyah: initialAyah);
+                }
+                final defaultSurah = Surah(
+                  id: surahId,
+                  nameAr: 'الفاتحة',
+                  nameSimple: 'Al-Fatihah',
+                  revelationPlace: 'makkah',
+                  revelationOrder: 5,
+                  ayahCount: 7,
+                  hasBasmala: false,
+                  pageStart: 1,
+                  pageEnd: 1,
+                );
+                return SurahReaderScreen(surah: defaultSurah, initialAyah: initialAyah);
+              },
+            );
+          },
+        ),
+        GoRoute(
+          path: '/story-detail',
+          builder: (context, state) {
+            if (state.extra is ProphetAudioStory) {
+              return StoryDetailScreen(story: state.extra as ProphetAudioStory);
+            }
+            final id = state.uri.queryParameters['id'] ?? 'adam';
+            final stories = StoriesService.instance.getAllStories();
+            final story = stories.firstWhere(
+              (s) => s.id == id,
+              orElse: () => stories.first,
+            );
+            return StoryDetailScreen(story: story);
+          },
+        ),
+        GoRoute(
+          path: '/tajweed-rule',
+          builder: (context, state) {
+            if (state.extra is TajweedRule) {
+              return RuleDetailScreen(rule: state.extra as TajweedRule);
+            }
+            final id = state.uri.queryParameters['id'] ?? 'noon_sakina_ithhar';
+            final rule = TajweedService.instance.getRuleById(id) ??
+                TajweedService.instance.getRulesByCategory(TajweedCategory.nunTanween).first;
+            return RuleDetailScreen(rule: rule);
+          },
         ),
       ],
     ),

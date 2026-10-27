@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../app/widgets/app_navigation_drawer.dart';
 import '../../core/localization/app_localizations.dart';
 import '../../core/services/daily_wird_service.dart';
@@ -97,6 +98,11 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Text(context.tr('app_name')),
               actions: [
                 IconButton(
+                  icon: const Icon(Icons.dashboard_customize_rounded),
+                  tooltip: 'فهرس ودليل الشاشات الشامل',
+                  onPressed: () => context.push('/app-directory'),
+                ),
+                IconButton(
                   icon: const Icon(Icons.language_rounded),
                   tooltip: context.tr('app_language'),
                   onPressed: () => showSettingsLanguageModal(context),
@@ -109,14 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 IconButton(
                   icon: const Icon(Icons.search_rounded),
                   tooltip: context.tr('quran_search'),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const QuranSearchScreen(),
-                      ),
-                    );
-                  },
+                  onPressed: () => context.push('/search'),
                 ),
               ],
             ),
