@@ -335,6 +335,8 @@ class HajjUmrahService extends ChangeNotifier {
     }
   }
 
+  Future<void> incrementTawaf() => incrementTawafLap();
+
   Future<void> resetTawaf() async {
     _tawafLap = 0;
     final prefs = await SharedPreferences.getInstance();

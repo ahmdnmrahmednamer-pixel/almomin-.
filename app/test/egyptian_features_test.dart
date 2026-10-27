@@ -90,6 +90,11 @@ void main() {
   group('Egyptian Heritage & Zakat UI Widget Tests', () {
     testWidgets('EgyptianHeritageScreen renders all 4 tabs and switches cleanly',
         (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(1080, 2400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
       await tester.pumpWidget(
         const MaterialApp(
           home: EgyptianHeritageScreen(),
@@ -116,6 +121,11 @@ void main() {
 
     testWidgets('ZakatScreen renders Egyptian gold quick-add chips',
         (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(1080, 2400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
       await tester.pumpWidget(
         const MaterialApp(
           home: ZakatScreen(),

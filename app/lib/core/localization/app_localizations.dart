@@ -164,6 +164,12 @@ class AppLocalizations {
   bool get isRtl => appLanguage.isRtl;
   TextDirection get textDirection => appLanguage.textDirection;
 
+  static List<String> get allKeys => _localizedValues['ar']?.keys.toList() ?? [];
+  static String translateKey(String key, {String? langCode}) {
+    final code = langCode ?? 'ar';
+    return _localizedValues[code]?[key] ?? _localizedValues['ar']?[key] ?? key;
+  }
+
   static final Map<String, Map<String, String>> _localizedValues = {
     'ar': {
       'app_name': 'نور المؤمن',
@@ -209,7 +215,7 @@ class AppLocalizations {
       'prayer_tab_muezzins': 'نداء الحق والمؤذنون',
       'prayer_tab_qibla': 'القبلة والأيام',
       'prayer_tab_covenant': 'عهد الصلاة والرواتب',
-      'dawn_awakening': 'نسائم السَّحَر ومناجاة الفجر',
+      'dawn_awakening': 'منبّه الاستعداد للفجر وقيام الليل',
       'dawn_awakening_sub': 'تنبيه روحي هادئ للاستعداد للفجر وقيام الليل',
       'holy_quran': 'رحاب القرآن الكريم',
       'quran_tab_mushaf': 'المصحف المرتل',
@@ -1284,4 +1290,10 @@ extension LocalizationExtension on BuildContext {
   bool get isArabic => loc.isArabic;
   bool get isEnglish => loc.isEnglish;
   bool get isRtl => loc.isRtl;
+}
+
+class AppStrings {
+  static List<String> get allKeys => AppLocalizations.allKeys;
+  static String of(String key, {String? langOverride}) =>
+      AppLocalizations.translateKey(key, langCode: langOverride);
 }

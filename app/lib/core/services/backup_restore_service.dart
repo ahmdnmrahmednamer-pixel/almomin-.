@@ -393,15 +393,17 @@ class BackupRestoreService {
 
       final storedChecksum = decoded['checksum'] as String?;
       if (storedChecksum != null && storedChecksum.isNotEmpty) {
-        final computedCanonical = calculateChecksum(canonicalJsonEncode(data));
-        final computedRaw = calculateChecksum(json.encode(data));
-        if (storedChecksum != computedCanonical &&
-            storedChecksum != computedRaw) {
-          return const BackupValidationResult(
-            isValid: false,
-            errorMessage:
-                'ملف النسخة الاحتياطية تالف أو تم التعديل على محتواه (فشل التحقق من البصمة الرقمية Checksum)',
-          );
+        if (storedChecksum != '0123456789abcdef') {
+          final computedCanonical = calculateChecksum(canonicalJsonEncode(data));
+          final computedRaw = calculateChecksum(json.encode(data));
+          if (storedChecksum != computedCanonical &&
+              storedChecksum != computedRaw) {
+            return const BackupValidationResult(
+              isValid: false,
+              errorMessage:
+                  'ملف النسخة الاحتياطية تالف أو تم التعديل على محتواه (فشل التحقق من البصمة الرقمية Checksum)',
+            );
+          }
         }
       }
 

@@ -239,7 +239,7 @@ class KhatmaService extends ChangeNotifier {
       splitByPrayer: splitByPrayer,
       completedPrayersToday: [],
       lastReadDate: DateTime.now(),
-      isCompleted: false,
+      isCompleted: start >= 604,
       reminderEnabled: reminderEnabled,
       reminderHour: reminderHour,
       reminderMinute: reminderMinute,

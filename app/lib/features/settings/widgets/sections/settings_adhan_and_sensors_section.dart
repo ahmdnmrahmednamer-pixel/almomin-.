@@ -14,6 +14,55 @@ import 'settings_section_header.dart';
 class SettingsAdhanAndSensorsSection extends StatelessWidget {
   const SettingsAdhanAndSensorsSection({super.key});
 
+  void _showPreReminderPicker(BuildContext context) {
+    final pn = PrayerNotificationService.instance;
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [5, 10, 15, 20, 30].map((min) {
+            return ListTile(
+              title: Text('$min دقائق قبل الأذان'),
+              onTap: () {
+                pn.setPreReminder(min);
+                Navigator.pop(ctx);
+              },
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  void _showQiyamOffsetPicker(BuildContext context) {
+    final pn = PrayerNotificationService.instance;
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: const Text('قبل أذان الفجر بساعة (٦٠ دقيقة)'),
+              onTap: () {
+                pn.setQiyamOffset(60);
+                Navigator.pop(ctx);
+              },
+            ),
+            ListTile(
+              title: const Text('قبل أذان الفجر بساعة ونصف (٩٠ دقيقة)'),
+              onTap: () {
+                pn.setQiyamOffset(90);
+                Navigator.pop(ctx);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final s = SettingsService.instance;
@@ -25,6 +74,54 @@ class SettingsAdhanAndSensorsSection extends StatelessWidget {
         SettingsSectionHeader(
           title: context.tr('section_adhan_sensors'),
           icon: Icons.notifications_active_rounded,
+        ),
+
+        SwitchListTile(
+          secondary: const Icon(Icons.alarm_on_rounded, color: AppColors.primaryGreen),
+          title: const Text('التنبيه المسبق قبل الأذان'),
+          value: pn.preReminderEnabled,
+          activeColor: AppColors.accentGold,
+          activeTrackColor: AppColors.primaryGreen,
+          onChanged: (val) => pn.togglePreReminder(val),
+        ),
+        ListTile(
+          title: const Text('تعديل دقائق التنبيه المسبق'),
+          subtitle: Text('${pn.preReminderMinutes} دقائق قبل الأذان'),
+          onTap: () => _showPreReminderPicker(context),
+        ),
+        SwitchListTile(
+          secondary: const Icon(Icons.nightlight_round, color: AppColors.accentGold),
+          title: const Text('تنبيه قيام الليل والتهجد 🌙'),
+          value: pn.qiyamReminderEnabled,
+          activeColor: AppColors.accentGold,
+          activeTrackColor: AppColors.primaryGreen,
+          onChanged: (val) => pn.toggleQiyamReminder(val),
+        ),
+        ListTile(
+          title: const Text('تعديل توقيت تنبيه قيام الليل'),
+          subtitle: Text('${pn.qiyamOffsetMinutes} دقيقة قبل الفجر'),
+          onTap: () => _showQiyamOffsetPicker(context),
+        ),
+        SwitchListTile(
+          secondary: const Icon(Icons.mosque_rounded, color: AppColors.primaryGreen),
+          title: const Text('تذكير سنن يوم الجمعة المباركة 🕌'),
+          value: pn.fridayReminderEnabled,
+          activeColor: AppColors.accentGold,
+          activeTrackColor: AppColors.primaryGreen,
+          onChanged: (val) => pn.toggleFridayReminder(val),
+        ),
+
+        SettingsSectionHeader(
+          title: 'إيماءات التحكم بالأذان ومستشعرات الحركة',
+          icon: Icons.sensors_rounded,
+        ),
+        SwitchListTile(
+          secondary: const Icon(Icons.picture_in_picture_alt_rounded, color: AppColors.primaryGreen),
+          title: const Text('الظهور فوق التطبيقات وشاشة القفل'),
+          value: AdhanSensorGestureService.instance.overlayWindowEnabled,
+          activeColor: AppColors.accentGold,
+          activeTrackColor: AppColors.primaryGreen,
+          onChanged: (val) => AdhanSensorGestureService.instance.toggleOverlayWindow(val),
         ),
 
         SwitchListTile(
@@ -286,7 +383,7 @@ class SettingsAdhanAndSensorsSection extends StatelessWidget {
                 backgroundColor: AppColors.primaryGreen,
                 foregroundColor: Colors.white),
             icon: const Icon(Icons.play_arrow_rounded, size: 18),
-            label: const Text('تجربة الآن'),
+            label: const Text('تجربة الشاشة'),
             onPressed: () {
               Navigator.push(
                 context,

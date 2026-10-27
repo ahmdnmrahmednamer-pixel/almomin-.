@@ -12,7 +12,7 @@ void main() {
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
     await SettingsService.instance.init();
-    await PrayerService.instance.init();
+    await PrayerService.instance.init(forceReload: true);
   });
 
   group('Arab Countries & Cities Dataset Completeness Tests', () {

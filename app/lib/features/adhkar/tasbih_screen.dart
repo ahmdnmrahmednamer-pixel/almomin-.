@@ -63,7 +63,9 @@ class _TasbihScreenState extends State<TasbihScreen>
   void _syncVolumeInterceptionState() {
     final enabled = AdhkarService.instance.volumeButtonTasbihEnabled;
     try {
-      _volumeChannel.invokeMethod('setVolumeInterception', {'enabled': enabled});
+      _volumeChannel
+          .invokeMethod('setVolumeInterception', {'enabled': enabled})
+          .catchError((_) => null);
     } catch (_) {}
   }
 
@@ -71,7 +73,9 @@ class _TasbihScreenState extends State<TasbihScreen>
   void dispose() {
     AdhkarService.instance.removeListener(_syncVolumeInterceptionState);
     try {
-      _volumeChannel.invokeMethod('setVolumeInterception', {'enabled': false});
+      _volumeChannel
+          .invokeMethod('setVolumeInterception', {'enabled': false})
+          .catchError((_) => null);
       _volumeChannel.setMethodCallHandler(null);
     } catch (_) {}
     _keyboardFocusNode.dispose();
@@ -298,9 +302,13 @@ class _TasbihScreenState extends State<TasbihScreen>
               body: SafeArea(
                 child: LayoutBuilder(
                   builder: (context, constraints) {
+                    final isVeryCompact = constraints.maxHeight < 600;
                     final isCompact = constraints.maxHeight < 680;
-                    final buttonSize = isCompact ? 175.0 : 220.0;
-                    final ringSize = buttonSize - 22.0;
+                    final buttonSize = isVeryCompact
+                        ? 130.0
+                        : (isCompact ? 165.0 : 220.0);
+                    final ringSize =
+                        buttonSize - (isVeryCompact ? 16.0 : 22.0);
 
                     return Column(
                       children: [
@@ -564,7 +572,10 @@ class _TasbihScreenState extends State<TasbihScreen>
                             ),
                           ),
 
-                        const Spacer(),
+                        if (!isCompact)
+                          const Spacer()
+                        else
+                          const SizedBox(height: 6),
 
                         // 5. Large Interactive Tactile Tasbih Button
                         TasbihMainButton(
@@ -579,7 +590,10 @@ class _TasbihScreenState extends State<TasbihScreen>
                           ringSize: ringSize,
                         ),
 
-                        const Spacer(),
+                        if (!isCompact)
+                          const Spacer()
+                        else
+                          const SizedBox(height: 6),
 
                         // 6. Bottom Stats Card (Cycles, Today's Total, Fast Reset)
                         TasbihStatsBar(

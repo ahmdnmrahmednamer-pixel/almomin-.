@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:almomin/core/services/adhkar_service.dart';
+import 'package:almomin/core/localization/app_localizations.dart';
 import 'package:almomin/features/adhkar/tasbih_screen.dart';
 
 void main() {
@@ -32,10 +33,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Verify AppBar title
-      expect(find.text('السبحة الإلكترونية الذكية'), findsOneWidget);
+      expect(find.text(AppLocalizations(const Locale('ar')).tr('electronic_tasbih')), findsOneWidget);
 
       // Verify Sound & Vibration action icons
-      expect(find.byIcon(Icons.volume_up_rounded), findsOneWidget);
+      expect(find.descendant(of: find.byType(AppBar), matching: find.byIcon(Icons.volume_up_rounded)), findsOneWidget);
       expect(find.byIcon(Icons.vibration), findsOneWidget);
 
       // Verify initial Dhikr pill

@@ -21,6 +21,9 @@ class KaffarahCalculationResult {
     required this.shariahEvidence,
     required this.fiqhNotes,
   });
+
+  double get totalFeedingCost => totalCashAmountEgp;
+  int get fastingDaysIfUnable => (beneficiariesOrDaysCount ~/ 10) * 3;
 }
 
 /// خدمة حاسبة زكاة الفطر وفدية الصيام وكفارة اليمين والنذر
@@ -83,11 +86,12 @@ class KaffarahFidyahService extends ChangeNotifier {
   /// حساب كفارة اليمين المنعقدة (أو كفارة النذر عند الحنث)
   /// إطعام 10 مساكين أو كسوتهم أو تحرير رقبة، فمن لم يجد فصيام 3 أيام
   KaffarahCalculationResult calculateOathKaffarah({
-    required int oathsCount,
-    required double mealCostPerPoorPersonEgp,
+    int oathsCount = 1,
+    double? mealCostPerPoorPersonEgp,
+    double? mealCostPerPerson,
   }) {
     final safeOaths = oathsCount.clamp(1, 50);
-    final safeMealCost = mealCostPerPoorPersonEgp.clamp(10.0, 5000.0);
+    final safeMealCost = (mealCostPerPerson ?? mealCostPerPoorPersonEgp ?? 50.0).clamp(10.0, 5000.0);
     final totalPoorPeople = safeOaths * 10;
     final totalCash = totalPoorPeople * safeMealCost;
     final totalKg = totalPoorPeople * 1.5;

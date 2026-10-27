@@ -541,6 +541,16 @@ class AppNavigationDrawer extends StatelessWidget {
                             },
                           ),
                           _buildDrawerTile(
+                            icon: Icons.volunteer_activism_rounded,
+                            title: 'الدعاء للمرحوم مؤمن إبراهيم',
+                            subtitle: 'صدقة جارية ودعاء بالرحمة والمغفرة',
+                            color: AppColors.accentGold,
+                            onTap: () {
+                              Navigator.pop(context);
+                              showSettingsAboutModal(context);
+                            },
+                          ),
+                          _buildDrawerTile(
                             icon: Icons.share_rounded,
                             title: context.tr('share_app'),
                             subtitle: 'انشر الخير وشارك الأجر والثواب',

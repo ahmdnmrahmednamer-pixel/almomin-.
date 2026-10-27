@@ -82,6 +82,9 @@ class ScholarProfile {
     required this.famousSeries,
     this.isFeatured = false,
   });
+
+  List<ScholarAudioLecture> get lectures =>
+      ScholarsLecturesService.instance.getLecturesForScholar(id);
 }
 
 /// خدمة موسوعة الدروس والمحاضرات الصوتية الكبرى (١١٥ شيخاً وعالماً وداعية)
@@ -101,6 +104,7 @@ class ScholarsLecturesService extends ChangeNotifier {
   bool _isInitialized = false;
 
   List<ScholarProfile> get allScholars => List.unmodifiable(_scholars);
+  List<ScholarProfile> get scholars => allScholars;
   List<ScholarAudioLecture> get allLectures => List.unmodifiable(_allLectures);
   Set<String> get favoriteLectureIds => Set.unmodifiable(_favoriteLectureIds);
   Set<String> get favoriteScholarIds => Set.unmodifiable(_favoriteScholarIds);
@@ -1372,6 +1376,82 @@ class ScholarsLecturesService extends ChangeNotifier {
               'المسارعة إلى الخيرات طريق الفوز بالفردوس الأعلى.',
             ],
           ),
+          const ScholarAudioLecture(
+            id: 'awadi_stories_04',
+            scholarId: 'nabil_alawadi',
+            scholarName: 'الشيخ نبيل العوضي',
+            title: 'قصة يوسف عليه السلام وأحسن القصص في الصبر والوفاء',
+            seriesName: 'موسوعة قصص الأنبياء',
+            category: LectureContentCategory.stories,
+            durationFormatted: '54:12',
+            primaryAudioUrl: 'https://archive.org/download/qasas-anbiya/06.mp3',
+            fallbackAudioUrls: [
+              'https://archive.org/download/qasas-anbiya/07.mp3',
+              'https://archive.org/download/way2sona_20160319_2258/01.mp3',
+            ],
+            summary: 'سيرة الصديق يوسف عليه السلام من غيابات الجب إلى ملك مصر وعاقبة الصبر والتقوى.',
+            keyTakeaways: [
+              'إنه من يتق ويصبر فإن الله لا يضيع أجر المحسنين.',
+              'الثبات على العفة عند اشتداد الفتن رفعة في الدنيا والآخرة.',
+            ],
+          ),
+          const ScholarAudioLecture(
+            id: 'awadi_stories_05',
+            scholarId: 'nabil_alawadi',
+            scholarName: 'الشيخ نبيل العوضي',
+            title: 'قصة داود وسليمان عليهما السلام وعظمة الملك والشكر لله',
+            seriesName: 'موسوعة قصص الأنبياء',
+            category: LectureContentCategory.stories,
+            durationFormatted: '48:30',
+            primaryAudioUrl: 'https://archive.org/download/qasas-anbiya/15.mp3',
+            fallbackAudioUrls: [
+              'https://archive.org/download/qasas-anbiya/16.mp3',
+              'https://archive.org/download/way2sona_20160319_2258/02.mp3',
+            ],
+            summary: 'نعم الله على داود وسليمان وحكمتهما في القضاء وسخرية الجن والريح والشكر لله وحده.',
+            keyTakeaways: [
+              'اعملوا آل داود شكراً وقليل من عبادي الشكور.',
+              'تسخير النعم في طاعة الله هو كمال العبودية.',
+            ],
+          ),
+          const ScholarAudioLecture(
+            id: 'awadi_seerah_03',
+            scholarId: 'nabil_alawadi',
+            scholarName: 'الشيخ نبيل العوضي',
+            title: 'غزوة بدر الكبرى ويوم الفرقان — نصر الله للمؤمنين الصابرين',
+            seriesName: 'سلسلة السيرة النبوية العطرة',
+            category: LectureContentCategory.seerah,
+            durationFormatted: '50:40',
+            primaryAudioUrl: 'https://archive.org/download/qasas-anbiya/26.mp3',
+            fallbackAudioUrls: [
+              'https://archive.org/download/qasas-anbiya/27.mp3',
+              'https://archive.org/download/way2sona_20160319_2258/03.mp3',
+            ],
+            summary: 'أولى المعارك الفاصلة في الإسلام واستجابة الله لدعاء نبيه ﷺ وتأييد الملائكة الكرام.',
+            keyTakeaways: [
+              'النصر من عند الله وحده العزيز الحكيم.',
+              'الدعاء والتضرع أعظم سلاح للمؤمن في المحن.',
+            ],
+          ),
+          const ScholarAudioLecture(
+            id: 'awadi_seerah_04',
+            scholarId: 'nabil_alawadi',
+            scholarName: 'الشيخ نبيل العوضي',
+            title: 'فتح مكة وحجة الوداع — إتمام الدين ودخول الناس في دين الله أفواجاً',
+            seriesName: 'سلسلة السيرة النبوية العطرة',
+            category: LectureContentCategory.seerah,
+            durationFormatted: '53:15',
+            primaryAudioUrl: 'https://archive.org/download/qasas-anbiya/28.mp3',
+            fallbackAudioUrls: [
+              'https://archive.org/download/qasas-anbiya/29.mp3',
+              'https://archive.org/download/way2sona_20160319_2258/04.mp3',
+            ],
+            summary: 'دخول النبي ﷺ مكة خاشعاً متواضعاً لله، وعفوه عن قريش، ووصاياه الخالدة في حجة الوداع.',
+            keyTakeaways: [
+              'العفو عند المقدرة من شيم الأنبياء والكرام.',
+              'حرمة دماء المسلمين وأموالهم وأعراضهم إلى يوم الدين.',
+            ],
+          ),
         ],
       },
       {
@@ -1496,6 +1576,120 @@ class ScholarsLecturesService extends ChangeNotifier {
             keyTakeaways: [
               'نحن قوم أعزنا الله بالإسلام فمهما ابتغينا العزة في غيره أذلنا الله.',
               'القدوات الصالحة تصنع الأجيال الحية.',
+            ],
+          ),
+          const ScholarAudioLecture(
+            id: 'hasanat_khutbah_03',
+            scholarId: 'mahmoud_alhasanat',
+            scholarName: 'الداعية محمود الحسنات',
+            title: 'خطبة الصبر عند البلاء — كيف يحول المؤمن المحنة إلى منحة',
+            seriesName: 'خطب الجمعة المنبرية المؤثرة',
+            category: LectureContentCategory.khutbah,
+            durationFormatted: '34:20',
+            primaryAudioUrl: 'https://archive.org/download/20230918_20230918_0013/05.mp3',
+            fallbackAudioUrls: [
+              'https://download.media.islamway.net/lessons/mahmoud_alhasanat/khutbah_03.mp3',
+              'https://d1.islamhouse.com/data/ar/ih_sounds/mahmoud_alhasanat/hasanat_khutbah_03.mp3',
+            ],
+            summary: 'خطبة مؤثرة عن عظمة الصبر والرضا بقضاء الله وقدره وثواب الصابرين بغير حساب.',
+            keyTakeaways: [
+              'إنما يوفى الصابرون أجرهم بغير حساب.',
+              'ما من شدة إلا ولها نهاية وفرج قريب بإذن الله.',
+            ],
+          ),
+          const ScholarAudioLecture(
+            id: 'hasanat_khutbah_04',
+            scholarId: 'mahmoud_alhasanat',
+            scholarName: 'الداعية محمود الحسنات',
+            title: 'خطبة بر الوالدين — كنز الجنة المفقود وقرة عين الأوفياء',
+            seriesName: 'خطب الجمعة المنبرية المؤثرة',
+            category: LectureContentCategory.khutbah,
+            durationFormatted: '39:10',
+            primaryAudioUrl: 'https://archive.org/download/20230918_20230918_0013/06.mp3',
+            fallbackAudioUrls: [
+              'https://download.media.islamway.net/lessons/mahmoud_alhasanat/khutbah_04.mp3',
+              'https://d1.islamhouse.com/data/ar/ih_sounds/mahmoud_alhasanat/hasanat_khutbah_04.mp3',
+            ],
+            summary: 'رسالة إيمانية مبكية إلى كل مقصر في حق والديه وعظمة رضاهما في التوفيق والبركة.',
+            keyTakeaways: [
+              'رضا الرب في رضا الوالدين وسخطه في سخطهما.',
+              'دعوة الوالدين مستجابة تفتح أبواب السماء.',
+            ],
+          ),
+          const ScholarAudioLecture(
+            id: 'hasanat_raqaiq_03',
+            scholarId: 'mahmoud_alhasanat',
+            scholarName: 'الداعية محمود الحسنات',
+            title: 'دمعة السحر — فضل قيام الليل والاستغفار في الأسحار',
+            seriesName: 'سلسلة جبر الخواطر والرقائق',
+            category: LectureContentCategory.raqaiq,
+            durationFormatted: '31:45',
+            primaryAudioUrl: 'https://archive.org/download/20230918_20230918_0013/07.mp3',
+            fallbackAudioUrls: [
+              'https://download.media.islamway.net/lessons/mahmoud_alhasanat/raqaiq_03.mp3',
+              'https://d1.islamhouse.com/data/ar/ih_sounds/mahmoud_alhasanat/hasanat_raqaiq_03.mp3',
+            ],
+            summary: 'موعظة قلبية حول لذة الخلوة بالله ومناجاة التائبين وسهام الليل التي لا تخطئ.',
+            keyTakeaways: [
+              'ركعتان في جوف الليل خير من الدنيا وما فيها.',
+              'المستغفرون بالأسحار في معية الرحمن ورعايته.',
+            ],
+          ),
+          const ScholarAudioLecture(
+            id: 'hasanat_raqaiq_04',
+            scholarId: 'mahmoud_alhasanat',
+            scholarName: 'الداعية محمود الحسنات',
+            title: 'رحيل الأحبة وعبرة الموت — الاستعداد ليوم لا ينفع فيه مال ولا بنون',
+            seriesName: 'سلسلة جبر الخواطر والرقائق',
+            category: LectureContentCategory.raqaiq,
+            durationFormatted: '36:15',
+            primaryAudioUrl: 'https://archive.org/download/20230918_20230918_0013/010.mp3',
+            fallbackAudioUrls: [
+              'https://download.media.islamway.net/lessons/mahmoud_alhasanat/raqaiq_04.mp3',
+              'https://d1.islamhouse.com/data/ar/ih_sounds/mahmoud_alhasanat/hasanat_raqaiq_04.mp3',
+            ],
+            summary: 'تذكرة بمفارقة الدنيا والمصير إلى القبر وضرورة التزود بالعمل الصالح قبل الرحيل.',
+            keyTakeaways: [
+              'كل نفس ذائقة الموت وإنما توفون أجوركم يوم القيامة.',
+              'خير الزاد التقوى والعمل الصالح هو الرفيق الباقي.',
+            ],
+          ),
+          const ScholarAudioLecture(
+            id: 'hasanat_raqaiq_05',
+            scholarId: 'mahmoud_alhasanat',
+            scholarName: 'الداعية محمود الحسنات',
+            title: 'سلامة الصدر ونقاء القلب — طريق الفردوس الأعلى والسكينة',
+            seriesName: 'رسائل إلى الشباب والتائبين',
+            category: LectureContentCategory.raqaiq,
+            durationFormatted: '33:50',
+            primaryAudioUrl: 'https://archive.org/download/20230918_20230918_0013/011.mp3',
+            fallbackAudioUrls: [
+              'https://download.media.islamway.net/lessons/mahmoud_alhasanat/raqaiq_05.mp3',
+              'https://d1.islamhouse.com/data/ar/ih_sounds/mahmoud_alhasanat/hasanat_raqaiq_05.mp3',
+            ],
+            summary: 'فضل العفو والصفح وطهارة القلب من الغل والحسد وكيف يدخل العبد الجنة بسلامة صدره.',
+            keyTakeaways: [
+              'أفضل الناس مخموم القلب صدوق اللسان.',
+              'العفو عن المسيء يورث العزة والرفعة في الدنيا والآخرة.',
+            ],
+          ),
+          const ScholarAudioLecture(
+            id: 'hasanat_raqaiq_06',
+            scholarId: 'mahmoud_alhasanat',
+            scholarName: 'الداعية محمود الحسنات',
+            title: 'حسن الظن بالله وأثره في تفريج الكروب والهموم',
+            seriesName: 'سلسلة جبر الخواطر والرقائق',
+            category: LectureContentCategory.raqaiq,
+            durationFormatted: '35:20',
+            primaryAudioUrl: 'https://archive.org/download/20230918_20230918_0013/012.mp3',
+            fallbackAudioUrls: [
+              'https://download.media.islamway.net/lessons/mahmoud_alhasanat/raqaiq_06.mp3',
+              'https://d1.islamhouse.com/data/ar/ih_sounds/mahmoud_alhasanat/hasanat_raqaiq_06.mp3',
+            ],
+            summary: 'أنا عند ظن عبدي بي — حقيقة التوكل وجميل الظن بالله الكريم في كل أحوال المؤمن.',
+            keyTakeaways: [
+              'من توكل على الله كفاه ومن ظن بربه خيراً أفاض عليه من فضله.',
+              'ما ظنك برب العالمين وهو أرحم بالعبد من أمه.',
             ],
           ),
         ],

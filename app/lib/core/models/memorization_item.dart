@@ -136,7 +136,11 @@ class MemorizationItem {
 
     final interval = getIntervalForBox(newBox);
     // Schedule due date at the start of the target calendar day (Bug #9 fix)
-    final nextDue = todayStart.add(interval);
+    final nextDue = DateTime(
+      todayStart.year,
+      todayStart.month,
+      todayStart.day + interval.inDays,
+    );
 
     return MemorizationItem(
       id: id,

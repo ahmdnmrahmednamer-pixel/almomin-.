@@ -31,19 +31,21 @@ void main() {
       expect(navBar.destinations.length, equals(5));
 
       // Check all 5 primary destinations are present
-      expect(find.text('الرئيسية'), findsOneWidget);
-      expect(find.text('القرآن'), findsOneWidget);
-      expect(find.text('الصلاة'), findsOneWidget);
-      expect(find.text('الأذكار'), findsOneWidget);
-      expect(find.text('المكتبة'), findsOneWidget);
+      expect(find.text('إشراقة اليوم'), findsOneWidget);
+      expect(find.text('رحاب القرآن'), findsOneWidget);
+      expect(find.text('محراب الصلاة'), findsOneWidget);
+      expect(find.text('أُنس الذاكرين'), findsOneWidget);
+      expect(find.text('رياض العلم'), findsOneWidget);
 
       // Verify that 'الإعدادات' is NOT a destination in the bottom navigation bar
       expect(find.widgetWithText(NavigationDestination, 'الإعدادات'), findsNothing);
     });
 
     testWidgets('AppNavigationDrawer includes dedicated button for Settings & Support', (tester) async {
-      await tester.binding.setSurfaceSize(const Size(800, 1400));
-      addTearDown(() => tester.binding.setSurfaceSize(null));
+      tester.view.physicalSize = const Size(1080, 2400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
 
       await tester.pumpWidget(
         const MaterialApp(
@@ -59,10 +61,23 @@ void main() {
       scaffoldState.openDrawer();
       await tester.pumpAndSettle();
 
+      await tester.scrollUntilVisible(
+        find.text('تهيئة الخشوع وإعدادات التطبيق'),
+        200,
+        scrollable: find.byType(Scrollable).last,
+      );
+
       // Check Drawer elements
-      expect(find.text('الإعدادات والتخصيص'), findsOneWidget);
-      expect(find.text('تواصل معنا والدعم'), findsOneWidget);
-      expect(find.text('عن التطبيق'), findsOneWidget);
+      expect(find.text('تهيئة الخشوع وإعدادات التطبيق'), findsOneWidget);
+
+      await tester.scrollUntilVisible(
+        find.text('التواصل والمقترحات'),
+        100,
+        scrollable: find.byType(Scrollable).last,
+      );
+
+      expect(find.text('التواصل والمقترحات'), findsOneWidget);
+      expect(find.text('رسالة التطبيق'), findsOneWidget);
       expect(find.textContaining('الدعاء للمرحوم مؤمن'), findsOneWidget);
     });
 
@@ -78,7 +93,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Check AppBar Title
-      expect(find.text('الإعدادات والتخصيص'), findsOneWidget);
+      expect(find.text('تهيئة الخشوع وإعدادات التطبيق'), findsOneWidget);
       // Check Home action button
       expect(find.byIcon(Icons.home_rounded), findsOneWidget);
     });

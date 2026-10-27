@@ -111,7 +111,7 @@ class QuranLinguisticsResult {
 class QuranLinguisticsService {
   /// Comprehensive Classical Vocabulary & Ghareeb Lexicon Dictionary
   static final Map<String, String> _ghareebDictionary = {
-    'الصمد': 'السيد الكامل في سؤدده الذي تصمد إليه الخلائق في حوائجها، الغني عن كل أحد.',
+    'الصمد': 'السيد الذي يُصمد إليه في الحوائج، الكامل في سؤدده الذي تصمد إليه الخلائق في حوائجها، الغني عن كل أحد.',
     'أحد': 'المتفرد بالوحدانية في ذاته وأسمائه وصفاته، لا شبيه له ولا نظير.',
     'كفوا': 'مثيلاً ونظيراً ومكافئاً.',
     'الفلق': 'الصبح إذا انفلق ضوؤه عن الظلام، وكل ما فلقه الله وأبرزه من العدم.',
@@ -312,7 +312,7 @@ class QuranLinguisticsService {
     '112:1': const AsbabNuzul(
       surahId: 112,
       ayahNumber: 1,
-      title: 'سؤال المشركين: انسب لنا ربك',
+      title: 'سؤال المشركين عن نسب الله وصفته',
       narration: 'قال المشركون لرسول الله ﷺ: انسب لنا ربك، فأنزل الله تبارك وتعالى: ﴿قُلْ هُوَ اللَّهُ أَحَدٌ ۝ اللَّهُ الصَّمَدُ ۝ لَمْ يَلِدْ وَلَمْ يُولَدْ ۝ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ﴾، وهي تعدل ثلث القرآن.',
       source: 'مسند أحمد وجامع الترمذي (حديث 3364)',
     ),
@@ -436,7 +436,7 @@ class QuranLinguisticsService {
         surahId: surahId,
         ayahNumber: ayahNumber,
         title: 'سياق نزول سورة $surahName ومقاصدها',
-        narration: 'وردت هذه الآية ضمن سياق سورة $surahName المباركة: ${base.narration}',
+        narration: 'وردت هذه الآية ضمن سياق سورة $surahName المباركة وأسباب النزول ومقاصدها تشريعاً وهداية: ${base.narration}',
         source: base.source,
         hasSpecificIncident: base.hasSpecificIncident,
       );

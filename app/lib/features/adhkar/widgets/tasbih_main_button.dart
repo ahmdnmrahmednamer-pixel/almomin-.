@@ -98,34 +98,43 @@ class TasbihMainButton extends StatelessWidget {
                         color: Colors.white12,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Text(
-                        'الدورة: ${currentInCycle == 0 && count > 0 ? target : currentInCycle} / $target',
-                        style: const TextStyle(
-                          color: AppColors.softGold,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          'الدورة: ${currentInCycle == 0 && count > 0 ? target : currentInCycle} / $target',
+                          style: const TextStyle(
+                            color: AppColors.softGold,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     )
                   else
-                    const Text(
-                      'تسبيح مفتوح',
-                      style: TextStyle(color: AppColors.softGold, fontSize: 13),
+                    const FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        'تسبيح مفتوح',
+                        style: TextStyle(color: AppColors.softGold, fontSize: 13),
+                      ),
                     ),
                   const SizedBox(height: 8),
-                  const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.touch_app, color: Colors.white70, size: 16),
-                      SizedBox(width: 4),
-                      Text(
-                        'المس للتسبيح',
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 12,
+                  const FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.touch_app, color: Colors.white70, size: 16),
+                        SizedBox(width: 4),
+                        Text(
+                          'المس للتسبيح',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 12,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),

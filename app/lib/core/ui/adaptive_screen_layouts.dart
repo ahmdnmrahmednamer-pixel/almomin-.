@@ -185,26 +185,32 @@ class AdaptiveStructuredCollectionView extends StatelessWidget {
         );
 
       case ScreenStructureMode.compact:
-        return Container(
-          decoration: BoxDecoration(
-            color: isDark ? AppTheme.darkCard : Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: AppColors.primaryGreen.withValues(alpha: 0.15),
+        return Material(
+          color: isDark ? AppTheme.darkCard : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: AppColors.primaryGreen.withValues(alpha: 0.15),
+              ),
             ),
-          ),
-          child: Column(
-            children: [
-              for (int i = 0; i < items.length; i++) ...[
-                _buildCompactTile(items[i], isDark),
-                if (i < items.length - 1)
-                  Divider(
-                    height: 1,
-                    indent: 52,
-                    color: Colors.grey.withValues(alpha: 0.15),
+            child: Column(
+              children: [
+                for (int i = 0; i < items.length; i++) ...[
+                  Material(
+                    color: Colors.transparent,
+                    child: _buildCompactTile(items[i], isDark),
                   ),
+                  if (i < items.length - 1)
+                    Divider(
+                      height: 1,
+                      indent: 52,
+                      color: Colors.grey.withValues(alpha: 0.15),
+                    ),
+                ],
               ],
-            ],
+            ),
           ),
         );
 

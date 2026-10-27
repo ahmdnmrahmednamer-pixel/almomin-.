@@ -684,6 +684,8 @@ class SettingsService extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> setLanguageCode(String code) => setLanguage(code);
+
   Future<void> setLanguage(String code) async {
     final normalized = code.trim().toLowerCase();
     final isValid = AppLanguage.values.any((l) => l.code == normalized);
@@ -722,7 +724,7 @@ class SettingsService extends ChangeNotifier {
   }
 
   Future<void> setMushafFontSize(double size) async {
-    _mushafFontSize = size.clamp(16.0, 42.0);
+    _mushafFontSize = size.clamp(18.0, 38.0);
     await _prefs?.setDouble('mushaf_font_size', _mushafFontSize);
     notifyListeners();
   }
@@ -895,6 +897,9 @@ class SettingsService extends ChangeNotifier {
     } catch (_) {}
     notifyListeners();
   }
+
+  Future<void> setTasbihVolumeButtonEnabled(bool enabled) => toggleTasbihVolumeButton(enabled);
+  Future<void> setTasbihSliderEnabled(bool enabled) => toggleTasbihSlider(enabled);
 
   Future<void> toggleDownloadOverWifiOnly(bool enabled) async {
     _downloadOverWifiOnly = enabled;

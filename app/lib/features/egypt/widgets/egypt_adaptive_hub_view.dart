@@ -23,7 +23,7 @@ class EgyptAdaptiveHubView extends StatelessWidget {
         id: 'eg_hub_radio',
         title: 'إذاعة القرآن الكريم من القاهرة (98.2 FM)',
         subtitle:
-            '${EgyptianHeritageService.radioStations.length} محطات بث مباشر تشمل إذاعة القاهرة والخريطة البرامجية اليومية وأعلام التلاوة',
+            '${service.radioStations.length} محطات بث مباشر تشمل إذاعة القاهرة والخريطة البرامجية اليومية وأعلام التلاوة',
         badgeText: '98.2 FM',
         category: 'البث الإذاعي الحي',
         icon: Icons.radio_rounded,
@@ -34,7 +34,7 @@ class EgyptAdaptiveHubView extends StatelessWidget {
         id: 'eg_hub_ibtihalat',
         title: 'مدرسة الابتهالات وخواطر الشيخ الشعراوي',
         subtitle:
-            '${service.ibtihalat.length} ابتهالات خالدة (النقشبندي، طوبار، عمران، الفشني) + ${EgyptianHeritageService.shaarawiReflections.length} خواطر وأدعية للشعراوي',
+            '${service.ibtihalat.length} ابتهالات خالدة (النقشبندي، طوبار، عمران، الفشني) + ${service.shaarawiReflections.length} خواطر وأدعية للشعراوي',
         badgeText: 'صوتيات وكلمات',
         category: 'التراث الروحي',
         icon: Icons.music_note_rounded,
@@ -45,7 +45,7 @@ class EgyptAdaptiveHubView extends StatelessWidget {
         id: 'eg_hub_mosques',
         title: 'دليل مساجد مصر التاريخية ومآذن المحروسة',
         subtitle:
-            '${EgyptianHeritageService.historicMosques.length} مساجد تاريخية كبرى مع حساب المسافة بالكيلومتر وضبط المواقيت والقبلة بلمسة واحدة',
+            '${service.historicMosques.length} مساجد تاريخية كبرى مع حساب المسافة بالكيلومتر وضبط المواقيت والقبلة بلمسة واحدة',
         badgeText: '١٠ مساجد',
         category: 'المعالم الإسلامية',
         icon: Icons.mosque_rounded,

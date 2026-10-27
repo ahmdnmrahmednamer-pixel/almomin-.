@@ -25,7 +25,7 @@ void main() {
 
       expect(AppLanguage.fromCode('ar'), equals(AppLanguage.arabic));
       expect(AppLanguage.fromCode('en'), equals(AppLanguage.english));
-      expect(AppLanguage.fromCode('fr'), equals(AppLanguage.arabic)); // Default fallback
+      expect(AppLanguage.fromCode('xyz'), equals(AppLanguage.arabic)); // Default fallback
     });
   });
 
@@ -37,17 +37,17 @@ void main() {
       expect(locAr.isEnglish, isFalse);
       expect(locAr.textDirection, equals(TextDirection.rtl));
       expect(locAr.tr('app_name'), equals('نور المؤمن'));
-      expect(locAr.tr('nav_home'), equals('الرئيسية'));
-      expect(locAr.tr('nav_quran'), equals('القرآن'));
-      expect(locAr.tr('nav_prayer'), equals('الصلاة'));
-      expect(locAr.tr('nav_adhkar'), equals('الأذكار'));
-      expect(locAr.tr('nav_library'), equals('المكتبة'));
+      expect(locAr.tr('nav_home'), equals('إشراقة اليوم'));
+      expect(locAr.tr('nav_quran'), equals('رحاب القرآن'));
+      expect(locAr.tr('nav_prayer'), equals('محراب الصلاة'));
+      expect(locAr.tr('nav_adhkar'), equals('أُنس الذاكرين'));
+      expect(locAr.tr('nav_library'), equals('رياض العلم'));
       expect(locAr.tr('prayer_fajr'), equals('الفجر'));
       expect(locAr.tr('prayer_dhuhr'), equals('الظهر'));
       expect(locAr.tr('prayer_asr'), equals('العصر'));
       expect(locAr.tr('prayer_maghrib'), equals('المغرب'));
       expect(locAr.tr('prayer_isha'), equals('العشاء'));
-      expect(locAr.tr('app_language'), equals('لغة التطبيق'));
+      expect(locAr.tr('app_language'), equals('لغة واجهة التطبيق (٦ لغات عالمية)'));
       expect(locAr.getPrayerName('fajr'), equals('الفجر'));
       expect(locAr.getPrayerName('مغرب'), equals('مغرب')); // Unknown fallback
     });
@@ -59,17 +59,17 @@ void main() {
       expect(locEn.isEnglish, isTrue);
       expect(locEn.textDirection, equals(TextDirection.ltr));
       expect(locEn.tr('app_name'), equals('Noor Al-Momin'));
-      expect(locEn.tr('nav_home'), equals('Home'));
-      expect(locEn.tr('nav_quran'), equals('Quran'));
-      expect(locEn.tr('nav_prayer'), equals('Prayer'));
-      expect(locEn.tr('nav_adhkar'), equals('Adhkar'));
-      expect(locEn.tr('nav_library'), equals('Library'));
+      expect(locEn.tr('nav_home'), equals('Serenity'));
+      expect(locEn.tr('nav_quran'), equals('Noble Quran'));
+      expect(locEn.tr('nav_prayer'), equals('Mihrab'));
+      expect(locEn.tr('nav_adhkar'), equals('Remembrance'));
+      expect(locEn.tr('nav_library'), equals('Wisdom'));
       expect(locEn.tr('prayer_fajr'), equals('Fajr'));
       expect(locEn.tr('prayer_dhuhr'), equals('Dhuhr'));
       expect(locEn.tr('prayer_asr'), equals('Asr'));
       expect(locEn.tr('prayer_maghrib'), equals('Maghrib'));
       expect(locEn.tr('prayer_isha'), equals('Isha'));
-      expect(locEn.tr('app_language'), equals('App Language'));
+      expect(locEn.tr('app_language'), equals('App Interface Language (6 Global Languages)'));
       expect(locEn.getPrayerName('fajr'), equals('Fajr'));
     });
 
@@ -159,11 +159,11 @@ void main() {
       await tester.pumpAndSettle();
 
       // Verify header and both language options are rendered
-      expect(find.text('لغة التطبيق'), findsOneWidget);
-      expect(find.text('اختر لغة التطبيق (App Language)'), findsOneWidget);
+      expect(find.text('لغة واجهة التطبيق (٦ لغات عالمية)'), findsOneWidget);
+      expect(find.text('اختر لغة التطبيق واتجاه العرض'), findsOneWidget);
       expect(find.text('العربية'), findsOneWidget);
       expect(find.text('English'), findsOneWidget);
-      expect(find.text('🇸🇦'), findsOneWidget);
+      expect(find.text('🇪🇬'), findsOneWidget);
       expect(find.text('🇬🇧'), findsOneWidget);
     });
 

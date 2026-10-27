@@ -349,7 +349,9 @@ class _FajrQiyamAlarmScreenState extends State<FajrQiyamAlarmScreen> {
                     width: isSelected ? 1.5 : 1,
                   ),
                 ),
-                child: ListTile(
+                child: Material(
+                  color: Colors.transparent,
+                  child: ListTile(
                   dense: true,
                   leading: Radio<String>(
                     value: tone.id,
@@ -385,7 +387,8 @@ class _FajrQiyamAlarmScreenState extends State<FajrQiyamAlarmScreen> {
                   ),
                   onTap: () => _alarmService.setPreFajrTone(tone.id),
                 ),
-              );
+              ),
+            );
             }),
             const SizedBox(height: 8),
             SizedBox(

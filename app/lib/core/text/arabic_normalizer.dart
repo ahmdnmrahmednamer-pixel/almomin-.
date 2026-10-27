@@ -58,7 +58,7 @@ class ArabicNormalizer {
         sb.write(digitMap[ch]);
       } else if (ch == '٫') {
         sb.write('.');
-      } else if (ch == '،' || ch == ',') {
+      } else if (ch == '،' || ch == ',' || ch == '٬') {
         // strip thousand separators
       } else {
         sb.write(ch);

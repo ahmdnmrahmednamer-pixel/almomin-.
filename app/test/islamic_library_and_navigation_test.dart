@@ -21,19 +21,17 @@ void main() {
       await tester.pumpAndSettle();
 
       // Check AppBar Title
-      expect(find.text('المكتبة الإسلامية والسنّة والعلوم'), findsOneWidget);
+      expect(find.text('رياض العلم والهدي النبوي'), findsOneWidget);
 
       // Check Tabs
-      expect(find.text('الحديث النبوي'), findsOneWidget);
-      expect(find.text('قصص الأنبياء'), findsOneWidget);
-      expect(find.text('واحة رمضان'), findsOneWidget);
-      expect(find.text('حاسبة الزكاة'), findsOneWidget);
-
-      // Check Hadith search box
-      expect(find.text('ابحث في نصوص الأحاديث النبوية الشريفة...'), findsOneWidget);
+      expect(find.text('رياض المعرفة الشاملة'), findsAtLeastNWidgets(1));
+      expect(find.text('مشكاة الحديث النبوي'), findsOneWidget);
+      expect(find.text('قصص الوحي والأنبياء'), findsOneWidget);
+      expect(find.text('نفحات رمضان والريّان'), findsOneWidget);
+      expect(find.text('طُهرة المال والفرائض'), findsOneWidget);
     });
 
-    testWidgets('Renders HomeShortcutsList clean categorized grid with 12 services', (tester) async {
+    testWidgets('Renders HomeShortcutsList clean categorized grid with 9 spiritual doors', (tester) async {
       await tester.binding.setSurfaceSize(const Size(800, 1200));
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -49,26 +47,22 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Check grid header
-      expect(find.text('الخدمات والأقسام السريعة'), findsOneWidget);
-      expect(find.text('١٢ خدمة إسلامية'), findsOneWidget);
+      // Check Egyptian heritage banner
+      expect(find.textContaining('نسائم القاهرة'), findsOneWidget);
 
-      // Check key service tiles
-      expect(find.text('البحث القرآني'), findsOneWidget);
-      expect(find.text('محفّظ القرآن'), findsOneWidget);
-      expect(find.text('محراب رمضان'), findsOneWidget);
-      expect(find.text('موسوعة الحديث'), findsOneWidget);
-      expect(find.text('قصص الأنبياء'), findsOneWidget);
-      expect(find.text('أحكام التجويد'), findsOneWidget);
-      expect(find.text('اتجاه القبلة'), findsOneWidget);
-      expect(find.text('حاسبة الزكاة'), findsOneWidget);
-      expect(find.text('مواضيع القرآن'), findsOneWidget);
-      expect(find.text('خواطر الآيات'), findsOneWidget);
-      expect(find.text('المشغل الصوتي'), findsOneWidget);
-      expect(find.text('دليل الأذان'), findsOneWidget);
+      // Check key spiritual door tiles
+      expect(find.textContaining('مجالس العلماء'), findsOneWidget);
+      expect(find.textContaining('طِبّ القلوب'), findsOneWidget);
+      expect(find.textContaining('رواتب الجنة'), findsOneWidget);
+      expect(find.textContaining('بصائر المفسرين'), findsOneWidget);
+      expect(find.textContaining('مدارج التدبر'), findsOneWidget);
+      expect(find.textContaining('باب الريّان'), findsOneWidget);
+      expect(find.textContaining('رحلة الحرمين'), findsOneWidget);
+      expect(find.textContaining('مشكاة الحديث'), findsOneWidget);
+      expect(find.textContaining('وِرد القرب'), findsOneWidget);
 
       // Check Daily Spotlight Card
-      expect(find.text('عِبرة وقصة اليوم'), findsOneWidget);
+      expect(find.text('قبس من قصص الوحي اليوم'), findsOneWidget);
     });
   });
 }

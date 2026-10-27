@@ -237,9 +237,26 @@ class _PrayerTrackerScreenState extends State<PrayerTrackerScreen> {
             final recentDays = service.getRecent7Days();
             final weeklyReport = service.getWeeklyDiagnosticReport();
 
-            return ListView(
+            return SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              children: [
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                // Noble dedication & motivation banner
+                Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryGreen.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.primaryGreen.withValues(alpha: 0.2)),
+                  ),
+                  child: const Text(
+                    'حافظ على صلواتك في أوقاتها 🤲 صدقة جارية عن روح مؤمن إبراهيم رحمه الله',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold, color: AppColors.primaryGreen),
+                  ),
+                ),
                 // Quick Banner to Pre-Fajr & Qiyam Alarm
                 InkWell(
                   borderRadius: BorderRadius.circular(14),
@@ -516,11 +533,6 @@ class _PrayerTrackerScreenState extends State<PrayerTrackerScreen> {
                       service.toggleSunnah('isha_sunnah', _selectedDate),
                 ),
 
-                const SizedBox(height: 16),
-
-                // SECTION 2: Weekly Summary & Missed-Prayer Diagnostic Report
-                _buildWeeklyDiagnosticSection(weeklyReport, isDark),
-
                 const SizedBox(height: 14),
 
                 // Extra Voluntary Prayers
@@ -592,7 +604,7 @@ class _PrayerTrackerScreenState extends State<PrayerTrackerScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: 14),
 
                 // Hadith Card on 12 Sunan Rawatib
                 Container(
@@ -633,9 +645,16 @@ class _PrayerTrackerScreenState extends State<PrayerTrackerScreen> {
                     ],
                   ),
                 ),
+
+                const SizedBox(height: 16),
+
+                // SECTION 2: Weekly Summary & Missed-Prayer Diagnostic Report
+                _buildWeeklyDiagnosticSection(weeklyReport, isDark),
+
                 const SizedBox(height: 24),
               ],
-            );
+            ),
+          );
           },
         ),
       ),

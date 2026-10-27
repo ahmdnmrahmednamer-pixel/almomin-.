@@ -15,6 +15,8 @@ enum PrayerPerformanceStatus {
   final String labelAr;
   const PrayerPerformanceStatus(this.id, this.labelAr);
 
+  static const PrayerPerformanceStatus qada = PrayerPerformanceStatus.lateQada;
+
   static PrayerPerformanceStatus fromId(String? id) {
     for (final s in PrayerPerformanceStatus.values) {
       if (s.id == id) return s;
@@ -63,6 +65,8 @@ class WeeklyPrayerDiagnosticReport {
     required this.diagnosticEntries,
     required this.actionableRemedies,
   });
+
+  List<String> get personalizedRemedies => actionableRemedies;
 }
 
 /// Single day record of prayers, sunnah rawatib, statuses, and missed/delayed reasons
@@ -343,6 +347,22 @@ class PrayerTrackerService extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> setPrayerPerformanceStatus(
+    DateTime date,
+    String prayerNameAr,
+    PrayerPerformanceStatus status, {
+    String? reason,
+  }) =>
+      setPrayerFormStatus(
+        date: date,
+        prayerNameAr: prayerNameAr,
+        status: status,
+        reasonText: reason,
+      );
+
+  WeeklyPrayerDiagnosticReport getWeeklyAccountabilityReport({DateTime? endDate}) =>
+      getWeeklyDiagnosticReport(endDate);
+
   Future<bool> toggleObligatory(String prayerNameAr, [DateTime? date]) async {
     final record = getRecordForDate(date ?? DateTime.now());
     final newVal = !record._getBoolByName(prayerNameAr);
@@ -526,9 +546,9 @@ class PrayerTrackerService extends ChangeNotifier {
       return 'هنيئاً لك! أتممت الصلوات الخمس والسنن الرواتب الـ 12 ركعة، لك بيت في الجنة بإذن الله 🕌✨';
     }
     if (r.isAllObligatoryCompleted) {
-      return 'بارك الله فيك! أتممت الفرائض الخمس اليوم، ويمكنك إتمام السنن الرواتب لزيادة الأجر 🌟';
+      return 'بارك الله فيك! أتممت الصلوات الخمس اليوم، ويمكنك إتمام السنن الرواتب لزيادة الأجر 🌟';
     }
     final remaining = 5 - r.completedObligatoryCount;
-    return 'أنجزت ${r.completedObligatoryCount} من 5 صلوات اليوم (متبقي $remaining فروض) — سجل حالة كل صلاة أو سبب التأخير لمعالجته 🤲';
+    return 'أنجزت ${r.completedObligatoryCount} من 5 صلوات اليوم (متبقي $remaining فروض) — استعن بالله وحافظ على الصلاة في وقتها، سجل حالة كل صلاة أو سبب التأخير لمعالجته 🤲';
   }
 }

@@ -722,10 +722,11 @@ class AdhkarService extends ChangeNotifier {
 
   // Tasbih Operations
   /// Increments Tasbih count and returns true if target was reached
-  bool incrementTasbih() {
+  bool incrementTasbih({int step = 1}) {
     _ensureTodayDate();
-    _tasbihCount++;
-    _tasbihTotalToday++;
+    final actualStep = step > 0 ? step : 1;
+    _tasbihCount += actualStep;
+    _tasbihTotalToday += actualStep;
 
     final bool reachedTarget = _tasbihTarget > 0 && (_tasbihCount % _tasbihTarget == 0);
 
@@ -765,9 +766,9 @@ class AdhkarService extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setTasbihTarget(int target) {
+  Future<void> setTasbihTarget(int target) async {
     _tasbihTarget = target;
-    _prefs?.setInt('tasbih_target', target);
+    await _prefs?.setInt('tasbih_target', target);
     notifyListeners();
   }
 

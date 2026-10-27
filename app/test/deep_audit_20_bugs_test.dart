@@ -22,7 +22,7 @@ void main() {
       await SettingsService.instance.init();
       await PrayerService.instance.init();
 
-      const alexandria = CityCoordinate(
+      const alexandria = CityCoordinate.named(
         name: 'الإسكندرية، مصر',
         country: 'مصر',
         latitude: 31.2001,

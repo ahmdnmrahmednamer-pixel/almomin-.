@@ -21,26 +21,32 @@ class HadithLibraryScreen extends StatefulWidget {
   State<HadithLibraryScreen> createState() => _HadithLibraryScreenState();
 }
 
-class _HadithLibraryScreenState extends State<HadithLibraryScreen> {
+class _HadithLibraryScreenState extends State<HadithLibraryScreen>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
-  String _selectedCollectionId = 'riyad_full'; // Default or selected via Dropdown
+  String _selectedCollectionId = 'nawawi40';
   int _selectedRiyadBookNumber = 0;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 3, vsync: this);
     HadithService.instance.init();
     RiyadAlSalihinService.instance.init();
     if (widget.initialBookId == 'nawawi40') {
       _selectedCollectionId = 'nawawi40';
+      _tabController.index = 0;
     } else if (widget.initialBookId == 'riyadh') {
       _selectedCollectionId = 'riyad_full';
+      _tabController.index = 1;
     }
   }
 
   @override
   void dispose() {
+    _tabController.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -308,7 +314,7 @@ class _HadithLibraryScreenState extends State<HadithLibraryScreen> {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('موسوعة رياض الصالحين والحديث الشريف'),
+            title: const Text('مكتبة الأحاديث النبوية الشريفة'),
             actions: [
               IconButton(
                 icon: const Icon(Icons.open_in_new_rounded),
@@ -321,94 +327,33 @@ class _HadithLibraryScreenState extends State<HadithLibraryScreen> {
                 },
               ),
             ],
+            bottom: TabBar(
+              controller: _tabController,
+              indicatorColor: AppColors.accentGold,
+              tabs: const [
+                Tab(text: 'الأربعون النووية'),
+                Tab(text: 'رياض الصالحين'),
+                Tab(text: 'المفضلة'),
+              ],
+              onTap: (index) {
+                setState(() {
+                  if (index == 0) _selectedCollectionId = 'nawawi40';
+                  if (index == 1) {
+                    _selectedCollectionId = 'riyad_full';
+                    _selectedRiyadBookNumber = 0;
+                  }
+                  if (index == 2) _selectedCollectionId = 'favorites';
+                });
+              },
+            ),
           ),
           body: Directionality(
             textDirection: SettingsService.instance.textDirection,
             child: Column(
               children: [
-                // 1. Dropdown Selector for Hadith Collection / Encyclopedia (Phase 4 Dropdown Rule)
+                // 1. Search Bar
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(14, 12, 14, 6),
-                  child: AppDropdownField<String>(
-                    label: 'اختر السفر أو كتاب الحديث من القائمة المنسدلة',
-                    value: _selectedCollectionId,
-                    prefixIcon: Icons.menu_book_rounded,
-                    options: [
-                      const AppDropdownOption(
-                        value: 'riyad_full',
-                        label: 'رياض الصالحين للإمام النووي كاملاً (١٩ كتاباً وأبوابها)',
-                        icon: Icons.auto_stories_rounded,
-                      ),
-                      AppDropdownOption(
-                        value: 'nawawi40',
-                        label: 'الأربعون النووية وتتمة ابن رجب (${nawawiHadiths.length} حديثاً)',
-                        icon: Icons.verified_rounded,
-                      ),
-                      AppDropdownOption(
-                        value: 'riyadh_selected',
-                        label: 'مختارات جوامع رياض الصالحين (${riyadhSelected.length} حديثاً)',
-                        icon: Icons.collections_bookmark_rounded,
-                      ),
-                      const AppDropdownOption(
-                        value: 'hisn',
-                        label: 'حصن المسلم من أذكار الكتاب والسنة',
-                        icon: Icons.shield_rounded,
-                      ),
-                      const AppDropdownOption(
-                        value: 'adab_mufrad',
-                        label: 'الأدب المفرد للإمام البخاري (البر والأخلاق)',
-                        icon: Icons.favorite_rounded,
-                      ),
-                      const AppDropdownOption(
-                        value: 'jawami_dua',
-                        label: 'روضة جوامع الدعاء القرآني والنبوي المسموع HD',
-                        icon: Icons.record_voice_over_rounded,
-                      ),
-                      AppDropdownOption(
-                        value: 'favorites',
-                        label: 'الأحاديث المفضلة والمحفوظة (${favHadiths.length})',
-                        icon: Icons.star_rounded,
-                      ),
-                    ],
-                    onChanged: (val) {
-                      setState(() {
-                        _selectedCollectionId = val;
-                        _selectedRiyadBookNumber = 0;
-                      });
-                    },
-                  ),
-                ),
-
-                // 2. Secondary Dropdown for Book / Kitab when in Riyad As-Salihin / Hisn / Adab mode
-                if (isEncyclopediaMode && riyadBooks.length > 1)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(14, 4, 14, 6),
-                    child: AppDropdownField<int>(
-                      label: 'اختر الكتاب الفرعي أو الباب',
-                      value: _selectedRiyadBookNumber,
-                      dense: true,
-                      prefixIcon: Icons.bookmark_border_rounded,
-                      options: [
-                        const AppDropdownOption<int>(
-                          value: 0,
-                          label: 'جميع الكتب والأبواب الكاملة',
-                        ),
-                        ...riyadBooks.map(
-                          (b) => AppDropdownOption<int>(
-                            value: b.key,
-                            label: b.value,
-                          ),
-                        ),
-                      ],
-                      onChanged: (val) {
-                        setState(() => _selectedRiyadBookNumber = val);
-                      },
-                    ),
-                  ),
-
-                // 3. Search Bar
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(14, 4, 14, 6),
+                  padding: const EdgeInsets.fromLTRB(14, 10, 14, 6),
                   child: TextField(
                     controller: _searchController,
                     decoration: InputDecoration(
@@ -438,7 +383,34 @@ class _HadithLibraryScreenState extends State<HadithLibraryScreen> {
                   ),
                 ),
 
-                // 4. Content Body
+                // 2. Secondary Dropdown for Book / Kitab when in Riyad As-Salihin mode
+                if (isEncyclopediaMode && riyadBooks.length > 1)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(14, 4, 14, 6),
+                    child: AppDropdownField<int>(
+                      label: 'اختر الكتاب الفرعي أو الباب',
+                      value: _selectedRiyadBookNumber,
+                      dense: true,
+                      prefixIcon: Icons.bookmark_border_rounded,
+                      options: [
+                        const AppDropdownOption<int>(
+                          value: 0,
+                          label: 'جميع الكتب والأبواب الكاملة',
+                        ),
+                        ...riyadBooks.map(
+                          (b) => AppDropdownOption<int>(
+                            value: b.key,
+                            label: b.value,
+                          ),
+                        ),
+                      ],
+                      onChanged: (val) {
+                        setState(() => _selectedRiyadBookNumber = val);
+                      },
+                    ),
+                  ),
+
+                // 3. Content Body
                 Expanded(
                   child: isEncyclopediaMode
                       ? ListView.builder(

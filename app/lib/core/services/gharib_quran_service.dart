@@ -40,7 +40,11 @@ class GharibQuranService extends ChangeNotifier {
   static final GharibQuranService instance = GharibQuranService._internal();
   GharibQuranService._internal();
 
-  static const List<GharibWordEntry> allWords = [
+  static List<GharibWordEntry> get allWords => defaultWords;
+  int get masteredCount => _masteredWordIds.length;
+  bool isMastered(String wordId) => _masteredWordIds.contains(wordId);
+
+  static const List<GharibWordEntry> defaultWords = [
     GharibWordEntry(
       id: 'gh_1_sadaqa',
       word: 'نِحْلَةً',
@@ -307,4 +311,8 @@ class GharibQuranService extends ChangeNotifier {
           ArabicNormalizer.normalize(w.surahName, loose: true).contains(normQ);
     }).toList();
   }
+}
+
+extension GharibQuranServiceInstanceExt on GharibQuranService {
+  List<GharibWordEntry> get allWords => GharibQuranService.allWords;
 }

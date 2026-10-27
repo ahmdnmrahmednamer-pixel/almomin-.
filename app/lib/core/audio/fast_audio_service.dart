@@ -15,6 +15,10 @@ class FastAudioService {
   static final FastAudioService instance = FastAudioService._internal();
   FastAudioService._internal();
 
+  /// Builds a collision-resistant isolated cache key bound to both track ID and exact URL
+  static String buildIsolatedCacheKey(String trackId, String url) =>
+      '${trackId}_${url.hashCode.abs()}';
+
   Directory? _cacheDir;
   bool _isInitialized = false;
   AudioPlayer? _activePlayer;
@@ -98,7 +102,7 @@ class FastAudioService {
 
   static const Map<String, String> fastStreamingHeaders = {
     'User-Agent':
-        'Mozilla/5.0 (Linux; Android 13; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 AlMominApp/11.0 (Isolated-Scholar-Audio-Engine)',
+        'Mozilla/5.0 (Linux; Android 13; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 AlMominApp/11.0 (High-Speed-Audio-Engine Isolated-Scholar-Audio-Engine)',
     'Connection': 'keep-alive',
     'Accept-Encoding': 'identity',
   };

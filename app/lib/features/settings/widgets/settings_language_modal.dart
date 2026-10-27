@@ -151,24 +151,27 @@ void showSettingsLanguageModal(BuildContext context) {
                             onChanged: (val) =>
                                 settings.setQuranTranslationEdition(val),
                           ),
-                          SwitchListTile(
-                            contentPadding: EdgeInsets.zero,
-                            secondary: const Icon(Icons.subtitles_rounded,
-                                color: AppColors.primaryGreen),
-                            title: Text(
-                              context.tr('bilingual_mode'),
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w800, fontSize: 13.5),
+                          Material(
+                            color: Colors.transparent,
+                            child: SwitchListTile(
+                              contentPadding: EdgeInsets.zero,
+                              secondary: const Icon(Icons.subtitles_rounded,
+                                  color: AppColors.primaryGreen),
+                              title: Text(
+                                context.tr('bilingual_mode'),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w800, fontSize: 13.5),
+                              ),
+                              subtitle: Text(
+                                context.tr('bilingual_mode_sub'),
+                                style: const TextStyle(fontSize: 11.5),
+                              ),
+                              activeColor: AppColors.accentGold,
+                              activeTrackColor: AppColors.primaryGreen,
+                              value: settings.bilingualDisplayEnabled,
+                              onChanged: (val) =>
+                                  settings.toggleBilingualDisplay(val),
                             ),
-                            subtitle: Text(
-                              context.tr('bilingual_mode_sub'),
-                              style: const TextStyle(fontSize: 11.5),
-                            ),
-                            activeColor: AppColors.accentGold,
-                            activeTrackColor: AppColors.primaryGreen,
-                            value: settings.bilingualDisplayEnabled,
-                            onChanged: (val) =>
-                                settings.toggleBilingualDisplay(val),
                           ),
                         ],
                       ),

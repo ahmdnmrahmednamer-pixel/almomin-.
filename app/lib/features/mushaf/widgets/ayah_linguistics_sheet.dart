@@ -72,6 +72,12 @@ class _AyahLinguisticsSheetState extends State<AyahLinguisticsSheet>
     }
   }
 
+  void _navigateToTab(int idx) {
+    if (_tabController.length > 0) {
+      _tabController.animateTo(idx.clamp(0, _tabController.length - 1));
+    }
+  }
+
   @override
   void dispose() {
     _tabController.removeListener(_onTabChanged);
@@ -191,41 +197,20 @@ class _AyahLinguisticsSheetState extends State<AyahLinguisticsSheet>
               ),
             ),
 
-            // Dropdown Selector for Linguistic Section (Phase 4 Dropdown Requirement)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: AppDropdownField<int>(
-                label: 'اختر العلم القرآني للآية الكريمة',
-                value: _selectedSectionIndex,
-                dense: true,
-                prefixIcon: Icons.school_rounded,
-                options: const [
-                  AppDropdownOption(
-                    value: 0,
-                    label: 'معاني الكلمات وغريب القرآن',
-                    icon: Icons.auto_stories_rounded,
-                  ),
-                  AppDropdownOption(
-                    value: 1,
-                    label: 'أسباب النزول المحققة (الواحدي والسيوطي)',
-                    icon: Icons.history_edu_rounded,
-                  ),
-                  AppDropdownOption(
-                    value: 2,
-                    label: 'إعراب الآية التفصيلي والتحليل النحوي',
-                    icon: Icons.spellcheck_rounded,
-                  ),
-                  AppDropdownOption(
-                    value: 3,
-                    label: 'البلاغة والبيان واللطائف القرآنية',
-                    icon: Icons.auto_awesome_rounded,
-                  ),
-                ],
-                onChanged: (idx) {
-                  setState(() => _selectedSectionIndex = idx);
-                  if (_tabController.length > 0) _tabController.animateTo(idx.clamp(0, _tabController.length - 1));
-                },
-              ),
+            // Linguistic Section Tabs
+            TabBar(
+              controller: _tabController,
+              onTap: _navigateToTab,
+              labelColor: AppColors.primaryGreen,
+              indicatorColor: AppColors.primaryGreen,
+              unselectedLabelColor: isDark ? Colors.white60 : Colors.black54,
+              labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              tabs: const [
+                Tab(text: 'معاني الكلمات'),
+                Tab(text: 'أسباب النزول'),
+                Tab(text: 'إعراب الآية'),
+                Tab(text: 'البلاغة والبيان'),
+              ],
             ),
 
             // Content Area

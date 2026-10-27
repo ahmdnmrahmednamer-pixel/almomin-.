@@ -38,30 +38,50 @@ class MawarithCalculationSummary {
     this.hasAwl = false,
     this.hasRadd = false,
   });
+
+  double get netEstate => netDistributableEstate;
 }
 
 /// الميزة الرابعة الجديدة: محرك حساب المواريث الشرعية والفرائض وفق الكتاب والسنة وقانون المواريث المصري
 class MawarithCalculatorService {
+  static final MawarithCalculatorService instance = MawarithCalculatorService();
+
   static MawarithCalculationSummary calculate({
-    required double grossEstate,
+    double? grossEstate,
+    double? estateValue,
+    double debts = 0.0,
     double debtsAndFuneral = 0.0,
+    double funeralExpenses = 0.0,
     double bequest = 0.0,
-    required String spouseStatus, // 'none', 'husband', 'wife_1', 'wife_2', 'wife_3', 'wife_4'
-    required bool hasFather,
-    required bool hasMother,
-    required int sonsCount,
-    required int daughtersCount,
-    required int fullBrothersCount,
-    required int fullSistersCount,
+    double bequestAmount = 0.0,
+    String spouseStatus = 'none',
+    bool hasHusband = false,
+    int wivesCount = 0,
+    bool hasFather = false,
+    bool hasMother = false,
+    int sonsCount = 0,
+    int daughtersCount = 0,
+    int fullBrothersCount = 0,
+    int fullSistersCount = 0,
   }) {
+    final effectiveGross = grossEstate ?? estateValue ?? 0.0;
+    final effectiveDebts = debtsAndFuneral > 0 ? debtsAndFuneral : (debts + funeralExpenses);
+    final effectiveBequest = bequest > 0 ? bequest : bequestAmount;
+    String effectiveSpouse = spouseStatus;
+    if (hasHusband) {
+      effectiveSpouse = 'husband';
+    } else if (wivesCount > 0) {
+      final safeWives = wivesCount.clamp(1, 4);
+      effectiveSpouse = 'wife_$safeWives';
+    }
     sonsCount = sonsCount.clamp(0, 50);
     daughtersCount = daughtersCount.clamp(0, 50);
     fullBrothersCount = fullBrothersCount.clamp(0, 50);
     fullSistersCount = fullSistersCount.clamp(0, 50);
-    final afterDebts = (grossEstate - debtsAndFuneral).clamp(0.0, double.infinity);
+    final afterDebts = (effectiveGross - effectiveDebts).clamp(0.0, double.infinity);
     // الوصية تنفذ في حدود الثلث شرعاً
     final maxBequest = afterDebts / 3.0;
-    final allowedBequest = bequest.clamp(0.0, maxBequest);
+    final allowedBequest = effectiveBequest.clamp(0.0, maxBequest);
     final netEstate = (afterDebts - allowedBequest).clamp(0.0, double.infinity);
 
     final bool hasDescendant = sonsCount > 0 || daughtersCount > 0;
@@ -240,9 +260,9 @@ class MawarithCalculatorService {
     }
 
     return MawarithCalculationSummary(
-      grossEstate: grossEstate,
-      debtsAndFuneral: debtsAndFuneral,
-      requestedBequest: bequest,
+      grossEstate: effectiveGross,
+      debtsAndFuneral: effectiveDebts,
+      requestedBequest: effectiveBequest,
       allowedBequest: allowedBequest,
       netDistributableEstate: netEstate,
       shares: results,
@@ -250,4 +270,43 @@ class MawarithCalculatorService {
       hasRadd: hasRadd,
     );
   }
+}
+
+extension MawarithCalculatorServiceInstanceExt on MawarithCalculatorService {
+  MawarithCalculationSummary calculate({
+    double? grossEstate,
+    double? estateValue,
+    double debts = 0.0,
+    double debtsAndFuneral = 0.0,
+    double funeralExpenses = 0.0,
+    double bequest = 0.0,
+    double bequestAmount = 0.0,
+    String spouseStatus = 'none',
+    bool hasHusband = false,
+    int wivesCount = 0,
+    bool hasFather = false,
+    bool hasMother = false,
+    int sonsCount = 0,
+    int daughtersCount = 0,
+    int fullBrothersCount = 0,
+    int fullSistersCount = 0,
+  }) =>
+      MawarithCalculatorService.calculate(
+        grossEstate: grossEstate,
+        estateValue: estateValue,
+        debts: debts,
+        debtsAndFuneral: debtsAndFuneral,
+        funeralExpenses: funeralExpenses,
+        bequest: bequest,
+        bequestAmount: bequestAmount,
+        spouseStatus: spouseStatus,
+        hasHusband: hasHusband,
+        wivesCount: wivesCount,
+        hasFather: hasFather,
+        hasMother: hasMother,
+        sonsCount: sonsCount,
+        daughtersCount: daughtersCount,
+        fullBrothersCount: fullBrothersCount,
+        fullSistersCount: fullSistersCount,
+      );
 }

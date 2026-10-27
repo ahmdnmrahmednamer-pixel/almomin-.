@@ -18,6 +18,9 @@ class EgyptianHeritageService extends ChangeNotifier {
   Set<String> get favoriteIds => Set.unmodifiable(_favoriteIds);
   String get selectedGoldKarat => _selectedGoldKarat;
 
+  List<EgyptianRadioStation> get radioStations => defaultRadioStations;
+  List<ShaarawiReflectionItem> get shaarawiReflections => defaultShaarawiReflections;
+  List<EgyptianHistoricMosque> get historicMosques => defaultHistoricMosques;
   List<String> get mubtahileenList => ['الكل', ...ibtihalatCatalog.map((e) => e.mubtahilName).toSet()];
   List<EgyptianIbtihalItem> getIbtihalatByMubtahil(String m) =>
       m == 'الكل' ? ibtihalatCatalog : ibtihalatCatalog.where((e) => e.mubtahilName == m).toList();
@@ -140,9 +143,9 @@ class EgyptianHeritageService extends ChangeNotifier {
   // ---------------------------------------------------------------------------
   // 1. إذاعة القرآن الكريم من القاهرة والإذاعات المصرية الأصيلة
   // ---------------------------------------------------------------------------
-  static const List<EgyptianRadioStation> radioStations = [
+  static const List<EgyptianRadioStation> defaultRadioStations = [
     EgyptianRadioStation(
-      id: 'radio_cairo_quran_live',
+      id: 'eqr_cairo_main',
       name: 'إذاعة القرآن الكريم من القاهرة',
       subtitle: 'البث المباشر لأعرق إذاعة قرآنية في العالم (تأسست ٢٥ مارس ١٩٦٤م)',
       frequencyOrBadge: '98.2 FM القاهرة',
@@ -319,7 +322,7 @@ class EgyptianHeritageService extends ChangeNotifier {
   // ---------------------------------------------------------------------------
   // 3. واحة إمام الدعاة الشيخ محمد متولي الشعراوي رحمه الله (أدعية وخواطر إيمانية)
   // ---------------------------------------------------------------------------
-  static const List<ShaarawiReflectionItem> shaarawiReflections = [
+  static const List<ShaarawiReflectionItem> defaultShaarawiReflections = [
     ShaarawiReflectionItem(
       id: 'shaarawi_duaa_adhan',
       title: 'دعاء الشيخ الشعراوي الشهير عقب الأذان والصلاة',
@@ -380,7 +383,7 @@ class EgyptianHeritageService extends ChangeNotifier {
   // ---------------------------------------------------------------------------
   // 4. دليل المساجد التاريخية الكبرى والمعالم الإسلامية في مصر
   // ---------------------------------------------------------------------------
-  static const List<EgyptianHistoricMosque> historicMosques = [
+  static const List<EgyptianHistoricMosque> defaultHistoricMosques = [
     EgyptianHistoricMosque(
       id: 'mosque_al_azhar',
       name: 'الجامع الأزهر الشريف',
@@ -529,7 +532,7 @@ class EgyptianHeritageService extends ChangeNotifier {
       issuingAuthority: 'دار الإفتاء المصرية ومجمع البحوث الإسلامية بالأزهر الشريف',
     ),
     EgyptianFatwaItem(
-      id: 'fatwa_egypt_gold_jewelry_zakat',
+      id: 'fatwa_gold_jewelry_shabka',
       title: 'حكم زكاة الذهب الملبوس للزينة (الشبكة والحلي) للمرأة المصرية',
       category: 'الزكاة والمعاملات',
       questionSummary: 'هل تجب الزكاة في الذهب الذي تقتنيه المرأة المصرية للزينة المعتادة (الشبكة والمصوغات)؟',

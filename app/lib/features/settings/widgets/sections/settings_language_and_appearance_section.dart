@@ -132,37 +132,57 @@ class SettingsLanguageAndAppearanceSection extends StatelessWidget {
           ),
         ),
 
-        // Theme Mode & Screen Layout Dropdowns
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-          child: AppDropdownField<String>(
-            label: context.tr('theme'),
-            value: s.themeMode,
-            prefixIcon: Icons.brightness_medium_rounded,
-            options: [
-              AppDropdownOption(
-                value: 'system',
-                label: context.tr('theme_system'),
-              ),
-              AppDropdownOption(
-                value: 'light',
-                label: context.tr('theme_light'),
-              ),
-              AppDropdownOption(
-                value: 'sepia',
-                label: context.tr('theme_sepia'),
-              ),
-              AppDropdownOption(
-                value: 'dark',
-                label: context.tr('theme_dark'),
-              ),
-              AppDropdownOption(
-                value: 'oled',
-                label: context.tr('theme_oled'),
-              ),
-            ],
-            onChanged: (val) => s.setThemeMode(val),
+        // Theme Mode ListTile & Modal
+        ListTile(
+          leading: const Icon(
+            Icons.brightness_medium_rounded,
+            color: AppColors.primaryGreen,
           ),
+          title: const Text(
+            'مظهر التطبيق والوضع الليلي (Dark & OLED)',
+            style: TextStyle(fontWeight: FontWeight.w800),
+          ),
+          subtitle: Text(s.themeModeName),
+          trailing: const Icon(Icons.chevron_left_rounded),
+          onTap: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (ctx) => SafeArea(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ListTile(
+                      title: const Text('الوضع الليلي الفاخر (OLED أسود نقي)'),
+                      onTap: () {
+                        Navigator.pop(ctx);
+                        s.setThemeMode('oled');
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                                'تم تفعيل: الوضع الليلي الفاخر (OLED أسود نقي)'),
+                          ),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      title: const Text('الوضع الداكن الهادئ'),
+                      onTap: () {
+                        Navigator.pop(ctx);
+                        s.setThemeMode('dark');
+                      },
+                    ),
+                    ListTile(
+                      title: const Text('الوضع الفاتح (النهاري)'),
+                      onTap: () {
+                        Navigator.pop(ctx);
+                        s.setThemeMode('light');
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         ),
 
         Padding(

@@ -338,20 +338,27 @@ class UnifiedLibrarySearchService {
     return results;
   }
 
-  List<String> get libraryFilters => const [
-        'الكل',
-        'مجالس العلماء والدروس',
-        'الحديث النبوي',
-        'رياض الصالحين',
-        'الفقه الميسر',
-        'علوم القرآن',
-        'غريب القرآن',
-        'المتون العلمية',
-        'أسماء الله والشمائل',
-        'التاريخ والسيرة',
-        'التراث المصري',
-        'قصص الأنبياء',
-        'التجويد ومواضيع القرآن',
-        'صيدلية القلوب',
-      ];
+  Future<List<UnifiedLibrarySearchResult>> search(String query, {String? category}) async =>
+      searchAllLibraries(query, selectedLibrary: category ?? 'الكل');
+
+  static const List<String> libraryFilters = [
+    'الكل',
+    'مجالس العلماء والدروس',
+    'الحديث النبوي',
+    'رياض الصالحين',
+    'الفقه الميسر',
+    'علوم القرآن',
+    'غريب القرآن',
+    'المتون العلمية',
+    'أسماء الله والشمائل',
+    'التاريخ والسيرة',
+    'التراث المصري',
+    'قصص الأنبياء',
+    'التجويد ومواضيع القرآن',
+    'صيدلية القلوب',
+  ];
+}
+
+extension UnifiedLibrarySearchServiceInstanceExt on UnifiedLibrarySearchService {
+  List<String> get libraryFilters => UnifiedLibrarySearchService.libraryFilters;
 }

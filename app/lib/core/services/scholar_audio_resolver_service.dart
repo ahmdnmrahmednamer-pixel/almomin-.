@@ -167,8 +167,9 @@ class ScholarAudioResolverService extends ChangeNotifier {
   }
 
   /// حارس العزل الصوتي الصارم (Strict Scholar Voice Isolation Guard):
-  /// يتحقق من أن الرابط ينتمي حصرياً للشيخ المطلوب [scholarId] ولا ينتمي لأي شيخ آخر في التطبيق.
-  bool verifyUrlBelongsToScholar(String url, String scholarId) {
+  /// يتحقق من أن الرابط ينتمي حصرياً للشيخ المطلوب [scholar] ولا ينتمي لأي شيخ آخر في التطبيق.
+  bool verifyUrlBelongsToScholar(String url, dynamic scholar) {
+    final scholarId = scholar is String ? scholar : (scholar is ScholarProfile ? scholar.id : scholar.toString());
     final cleanUrl = url.trim();
     if (cleanUrl.isEmpty) return false;
     final lowerUrl = cleanUrl.toLowerCase();
@@ -267,6 +268,14 @@ class ScholarAudioResolverService extends ChangeNotifier {
       _resolvingScholarIds.remove(scholarId);
       notifyListeners();
     }
+  }
+
+  /// ترشيح وترتيب الروابط الصوتية الموثقة للدرس والشيخ
+  List<String> buildPrioritizedCandidateUrls(ScholarProfile scholar, ScholarAudioLecture lecture) {
+    final urls = <String>[];
+    if (lecture.primaryAudioUrl.isNotEmpty) urls.add(lecture.primaryAudioUrl);
+    urls.addAll(lecture.fallbackAudioUrls);
+    return urls.where((u) => verifyUrlBelongsToScholar(u, scholar.id)).toList();
   }
 
   /// الدالة الرئيسية: جلب وتوثيق قائمة الروابط الصوتية الخاصة بالدرس والشيخ حصرياً

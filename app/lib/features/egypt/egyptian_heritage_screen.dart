@@ -237,10 +237,10 @@ class _EgyptianHeritageScreenState extends State<EgyptianHeritageScreen>
 
   Widget _buildRadioTab(bool isDark) {
     final stations = _favoritesOnly
-        ? EgyptianHeritageService.radioStations
+        ? _service.radioStations
             .where((s) => _service.isFavorite(s.id))
             .toList()
-        : EgyptianHeritageService.radioStations;
+        : _service.radioStations;
 
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -447,10 +447,10 @@ class _EgyptianHeritageScreenState extends State<EgyptianHeritageScreen>
         .toList();
 
     final shaarawiItems = _favoritesOnly
-        ? EgyptianHeritageService.shaarawiReflections
+        ? _service.shaarawiReflections
             .where((r) => _service.isFavorite(r.id))
             .toList()
-        : EgyptianHeritageService.shaarawiReflections;
+        : _service.shaarawiReflections;
 
     return ListView(
       padding: const EdgeInsets.all(16),

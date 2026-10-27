@@ -17,6 +17,14 @@ class CityCoordinate {
     this.country = 'مصر',
   ]);
 
+  const CityCoordinate.named({
+    required this.name,
+    required this.latitude,
+    required this.longitude,
+    this.method = 'egyptian',
+    this.country = 'مصر',
+  });
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -583,4 +591,9 @@ class ArabCountriesData {
       orElse: () => countries.first,
     );
   }
+
+  static ArabCountry getCountryById(String id) => findCountryById(id);
+  ArabCountry getCountryByIdInstance(String id) => findCountryById(id);
 }
+
+typedef ArabCountriesCatalog = ArabCountriesData;

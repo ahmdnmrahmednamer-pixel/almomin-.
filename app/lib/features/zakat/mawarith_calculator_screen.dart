@@ -49,7 +49,7 @@ class _MawarithCalculatorScreenState extends State<MawarithCalculatorScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final summary = MawarithCalculatorService.calculate(
+    final summary = MawarithCalculatorService.instance.calculate(
       grossEstate: _parseNum(_estateController.text),
       debtsAndFuneral: _parseNum(_debtsController.text),
       bequest: _parseNum(_bequestController.text),

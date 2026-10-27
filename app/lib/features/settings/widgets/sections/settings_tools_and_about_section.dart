@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/localization/app_localizations.dart';
+import '../../../../core/services/settings_service.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../adhkar/widgets/sharawi_post_prayer_card.dart';
 import '../../../audio/widgets/islamic_audio_player_sheet.dart';
@@ -69,13 +70,24 @@ class SettingsToolsAndAboutSection extends StatelessWidget {
         ListTile(
           leading: const Icon(Icons.volunteer_activism_rounded,
               color: AppColors.accentGold),
-          title: Text(context.tr('memorial_duaa'),
-              style: const TextStyle(fontWeight: FontWeight.w800)),
+          title: const Text('دعاء لمؤمن إبراهيم رحمهُ الله (صدقة جارية)',
+              style: TextStyle(fontWeight: FontWeight.w800)),
+          subtitle: const Text('فتح شاشة الإهداء والدعاء للمرحوم بإذن الله',
+              style: TextStyle(fontSize: 12)),
           onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (_) =>
                       const MomenDuaaScreen(isFromInsideApp: true))),
+        ),
+        SwitchListTile(
+          secondary: const Icon(Icons.school_rounded, color: AppColors.primaryGreen),
+          title: const Text('إظهار شاشات شرح البرنامج عند الفتح',
+              style: TextStyle(fontWeight: FontWeight.w800)),
+          subtitle: const Text('تفعيل عرض الجولة التعريفية عند بدء التشغيل',
+              style: TextStyle(fontSize: 12)),
+          value: SettingsService.instance.showTutorialScreens,
+          onChanged: (val) => SettingsService.instance.setShowTutorialScreens(val),
         ),
         ListTile(
           leading: const Icon(Icons.help_outline_rounded,
@@ -88,8 +100,10 @@ class SettingsToolsAndAboutSection extends StatelessWidget {
         ListTile(
           leading: const Icon(Icons.support_agent_rounded,
               color: AppColors.primaryGreen),
-          title: Text(context.tr('contact_support'),
-              style: const TextStyle(fontWeight: FontWeight.w800)),
+          title: const Text('الدعم والتواصل مع المطور',
+              style: TextStyle(fontWeight: FontWeight.w800)),
+          subtitle: const Text('إرسال اقتراح، ملاحظة، أو إبلاغ عن مشكلة بريدياً للمطور',
+              style: TextStyle(fontSize: 12)),
           onTap: () => Navigator.push(context,
               MaterialPageRoute(builder: (_) => const ContactSupportScreen())),
         ),
