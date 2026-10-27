@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+  <defs>
+    <radialGradient id="qiblaGlow" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#1D5A47"/>
+      <stop offset="60%" stop-color="#0F382B"/>
+      <stop offset="100%" stop-color="#0A1F18"/>
+    </radialGradient>
+  </defs>
+  <rect width="1080" height="1920" fill="url(#qiblaGlow)"/>
+  <g stroke="#B8893A" stroke-opacity="0.3" fill="none">
+    <circle cx="540" cy="860" r="380" stroke-width="1.5"/>
+    <circle cx="540" cy="860" r="320" stroke-width="1.0" stroke-dasharray="6,6"/>
+    <circle cx="540" cy="860" r="240" stroke-width="1.2"/>
+    <circle cx="540" cy="860" r="160" stroke-width="0.8"/>
+    <line x1="540" y1="440" x2="540" y2="1280" stroke-width="0.8"/>
+    <line x1="120" y1="860" x2="960" y2="860" stroke-width="0.8"/>
+  </g>
+</svg>

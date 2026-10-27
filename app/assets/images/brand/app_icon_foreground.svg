@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="112" fill="#0F5B45"/>
+  <g transform="translate(256, 256)" stroke="#B8893A" stroke-width="4.5" fill="none">
+    <rect x="-140" y="-140" width="280" height="280" rx="16"/>
+    <rect x="-140" y="-140" width="280" height="280" rx="16" transform="rotate(45)"/>
+    <circle r="96" stroke-width="3" opacity="0.8"/>
+  </g>
+  <!-- Stylized central gold leaf / Quranic rehal shape -->
+  <path d="M 256,180 C 290,230 310,275 300,315 C 290,355 240,360 256,330 C 272,360 222,355 212,315 C 202,275 222,230 256,180 Z" fill="#D9B25F"/>
+  <circle cx="256" cy="170" r="10" fill="#B8893A"/>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+  <defs>
+    <linearGradient id="prayerGrad_bg_08" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#123528"/>
+      <stop offset="40%" stop-color="#1E654C"/>
+      <stop offset="75%" stop-color="#439A77"/>
+      <stop offset="100%" stop-color="#F0F7F4"/>
+    </linearGradient>
+  </defs>
+  <rect width="1080" height="1920" fill="url(#prayerGrad_bg_08)"/>
+  
+  <!-- Atmospheric soft arch silhouette -->
+  <path d="M 140,1920 L 140,1350 C 140,1050 540,950 540,950 C 540,950 940,1050 940,1350 L 940,1920 Z" fill="#123528" opacity="0.45"/>
+  <path d="M 220,1920 L 220,1400 C 220,1150 540,1070 540,1070 C 540,1070 860,1150 860,1400 L 860,1920 Z" fill="none" stroke="#B8893A" stroke-width="1.5" opacity="0.3"/>
+</svg>

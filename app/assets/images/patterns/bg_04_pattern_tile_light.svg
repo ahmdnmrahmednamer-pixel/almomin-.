@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="200" height="200" fill="#FBF8F1"/>
+  <g stroke="#B8893A" stroke-width="1.2" fill="none" opacity="0.35">
+    <!-- Centered 8-point star -->
+    <rect x="60" y="60" width="80" height="80"/>
+    <rect x="60" y="60" width="80" height="80" transform="rotate(45 100 100)"/>
+    <!-- Corner repeat stars for seamless tiling -->
+    <rect x="-40" y="-40" width="80" height="80"/>
+    <rect x="-40" y="-40" width="80" height="80" transform="rotate(45 0 0)"/>
+    <rect x="160" y="-40" width="80" height="80"/>
+    <rect x="160" y="-40" width="80" height="80" transform="rotate(45 200 0)"/>
+    <rect x="-40" y="160" width="80" height="80"/>
+    <rect x="-40" y="160" width="80" height="80" transform="rotate(45 0 200)"/>
+    <rect x="160" y="160" width="80" height="80"/>
+    <rect x="160" y="160" width="80" height="80" transform="rotate(45 200 200)"/>
+  </g>
+</svg>

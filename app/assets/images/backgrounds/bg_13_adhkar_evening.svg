@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+  <defs>
+    <linearGradient id="adhkarEve" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#081410"/>
+      <stop offset="50%" stop-color="#0F2820"/>
+      <stop offset="100%" stop-color="#1B4336"/>
+    </linearGradient>
+  </defs>
+  <rect width="1080" height="1920" fill="url(#adhkarEve)"/>
+  <path d="M 520,380 A 60,60 0 1 0 575,465 A 50,50 0 1 1 520,380 Z" fill="#D9B25F" opacity="0.65"/>
+  <circle cx="620" cy="400" r="3" fill="#FFF" opacity="0.8"/>
+  <circle cx="440" cy="320" r="2" fill="#FFF" opacity="0.6"/>
+</svg>

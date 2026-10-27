@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+  <defs>
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0A3D2E"/>
+      <stop offset="35%" stop-color="#0F5B45"/>
+      <stop offset="70%" stop-color="#216D54"/>
+      <stop offset="85%" stop-color="#5FC29A" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#D7EBE2"/>
+    </linearGradient>
+    <linearGradient id="horizonGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#B8893A" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#B8893A" stop-opacity="0.35"/>
+    </linearGradient>
+  </defs>
+  <!-- Background sky -->
+  <rect width="1080" height="1920" fill="url(#skyGrad)"/>
+  <rect y="1200" width="1080" height="720" fill="url(#horizonGlow)"/>
+
+  <!-- Stars in upper sky -->
+  <g fill="#FFF" opacity="0.65">
+    <circle cx="880" cy="240" r="2.5"/>
+    <circle cx="760" cy="180" r="1.8"/>
+    <circle cx="920" cy="360" r="2.0"/>
+    <circle cx="640" cy="280" r="1.5"/>
+    <circle cx="820" cy="420" r="1.2"/>
+    <circle cx="200" cy="300" r="1.5"/>
+    <circle cx="280" cy="200" r="2.0"/>
+    <circle cx="150" cy="450" r="1.8"/>
+  </g>
+
+  <!-- Slim crescent moon -->
+  <path d="M 850,220 A 28,28 0 1 0 876,260 A 24,24 0 1 1 850,220 Z" fill="#FBF8F1" opacity="0.85"/>
+
+  <!-- Mosque Silhouette on Lower Horizon -->
+  <g fill="#0A3D2E" opacity="0.95">
+    <!-- Base horizon -->
+    <rect y="1680" width="1080" height="240"/>
+    <!-- Central Dome -->
+    <path d="M 440,1680 C 440,1540 500,1470 540,1450 C 580,1470 640,1540 640,1680 Z"/>
+    <path d="M 537,1450 L 543,1450 L 540,1425 Z" fill="#B8893A"/>
+    <!-- Side Domes -->
+    <path d="M 320,1680 C 320,1590 360,1540 390,1530 C 420,1540 460,1590 460,1680 Z" opacity="0.8"/>
+    <path d="M 620,1680 C 620,1590 660,1540 690,1530 C 720,1540 760,1590 760,1680 Z" opacity="0.8"/>
+    <!-- Left Minaret -->
+    <rect x="230" y="1420" width="24" height="260"/>
+    <polygon points="230,1420 242,1350 254,1420"/>
+    <!-- Right Minaret -->
+    <rect x="826" y="1420" width="24" height="260"/>
+    <polygon points="826,1420 838,1350 850,1420"/>
+  </g>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 500" width="1024" height="500">
+  <defs>
+    <linearGradient id="promoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A3D2E"/>
+      <stop offset="60%" stop-color="#0F5B45"/>
+      <stop offset="100%" stop-color="#1A7A5D"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="500" fill="url(#promoGrad)"/>
+  <!-- Gold geometric accents on left and right -->
+  <g stroke="#B8893A" stroke-width="2" fill="none" opacity="0.35">
+    <circle cx="150" cy="250" r="160"/>
+    <rect x="70" y="170" width="160" height="160" transform="rotate(45 150 250)"/>
+    <circle cx="874" cy="250" r="160"/>
+    <rect x="794" y="170" width="160" height="160" transform="rotate(45 874 250)"/>
+  </g>
+  <!-- Central Emblem -->
+  <g transform="translate(512, 230) scale(1.1)">
+    <rect x="-60" y="-60" width="120" height="120" rx="12" fill="#0A3D2E" stroke="#D9B25F" stroke-width="3"/>
+    <rect x="-60" y="-60" width="120" height="120" rx="12" fill="none" stroke="#D9B25F" stroke-width="3" transform="rotate(45)"/>
+    <path d="M 0,-35 C 16,-12 25,10 20,30 C 15,50 -10,52 0,38 C 10,52 -15,50 -20,30 C -25,10 -16,-12 0,-35 Z" fill="#D9B25F"/>
+  </g>
+</svg>
