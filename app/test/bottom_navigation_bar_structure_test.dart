@@ -7,8 +7,8 @@ import 'package:almomin/features/settings/settings_screen.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Bottom Navigation Bar & Drawer Settings Separation Tests', () {
-    testWidgets('MainScaffold contains exactly 5 primary religious destinations without Settings', (tester) async {
+  group('Bottom Navigation Bar & Drawer Settings Tests', () {
+    testWidgets('MainScaffold contains 6 destinations including dedicated Settings', (tester) async {
       await tester.binding.setSurfaceSize(const Size(800, 1400));
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -27,18 +27,19 @@ void main() {
       expect(navBarFinder, findsOneWidget);
 
       final navBar = tester.widget<NavigationBar>(navBarFinder);
-      // Verify exactly 5 destinations
-      expect(navBar.destinations.length, equals(5));
+      // Verify exactly 6 destinations
+      expect(navBar.destinations.length, equals(6));
 
-      // Check all 5 primary destinations are present
+      // Check all 6 destinations are present
       expect(find.text('إشراقة اليوم'), findsOneWidget);
       expect(find.text('رحاب القرآن'), findsOneWidget);
       expect(find.text('محراب الصلاة'), findsOneWidget);
       expect(find.text('أُنس الذاكرين'), findsOneWidget);
       expect(find.text('رياض العلم'), findsOneWidget);
+      expect(find.text('الإعدادات'), findsOneWidget);
 
-      // Verify that 'الإعدادات' is NOT a destination in the bottom navigation bar
-      expect(find.widgetWithText(NavigationDestination, 'الإعدادات'), findsNothing);
+      // Verify that 'الإعدادات' is a dedicated destination in the bottom navigation bar
+      expect(find.widgetWithText(NavigationDestination, 'الإعدادات'), findsOneWidget);
     });
 
     testWidgets('AppNavigationDrawer includes dedicated button for Settings & Support', (tester) async {
